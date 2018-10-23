@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<resultMap class="com.bps.dal.object.bps.BpsUserInfo" id="bpsUserInfoMap">
+		<result property="userName" column="user_name" jdbcType="VARCHAR"/> 
+		<result property="userRealName" column="user_real_name" jdbcType="VARCHAR"/> 
+		<result property="groupId" column="groupId" jdbcType="VARCHAR"/> 
+		<result property="centerId" column="centerId" jdbcType="VARCHAR"/> 
+	</resultMap>
+	
+	<resultMap id="centerMap" class="java.util.HashMap">  
+        <result property="bmId" column="bm_id" javaType="java.lang.String" jdbcType="INT"/>  
+        <result property="bmName" column="bm_name" javaType="java.lang.String" jdbcType="VARCHAR"/>  
+	</resultMap>  
+	
+	<resultMap id="selectMap" class="com.bps.bean.SelectObj">  
+        <result property="id" column="bm_id" javaType="java.lang.String" jdbcType="INT"/>  
+        <result property="text" column="bm_name" javaType="java.lang.String" jdbcType="VARCHAR"/>  
+	</resultMap>  
+	
+	<resultMap class="com.bps.dal.object.bps.DefinedReportInfo" id="definedReportMap">
+		<result property="id" column="id" jdbcType="int"/> 
+		<result property="baobiaoName" column="baobiao_name" jdbcType="VARCHAR"/> 
+		<result property="yxyData" column="yxy_data" jdbcType="VARCHAR"/> 
+		<result property="startTime" column="start_time" jdbcType="datetime"/> 
+		<result property="endTime" column="end_time" jdbcType="datetime"/> 
+		<result property="zhongxin" column="zhongxin" jdbcType="VARCHAR"/> 
+		<result property="xiaozu" column="xiaozu" jdbcType="VARCHAR"/>
+		<result property="assignName" column="assign_name" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getUserInfoByTime" parameterClass="HashMap" resultMap="bpsUserInfoMap">
+		SELECT user_name, user_real_name, bm_id AS groupId, SUBSTRING_INDEX(SUBSTRING_INDEX(bm_path,'_',2),'_',-1) AS centerId FROM `user_list` WHERE user_status in ('正常','冻结') AND CONCAT(',',user_role_id,',') LIKE '%,161,%'
+		
+		<isNotEmpty property="center" prepend="and">
+			SUBSTRING_INDEX(SUBSTRING_INDEX(bm_path,'_',2),'_',-1) = #center#
+		</isNotEmpty>
+		
+		<isNotEmpty property="group" prepend="and">
+			bm_id = #group# 
+		</isNotEmpty>
+		<isNotEmpty property="userName" prepend="and">
+			user_name = #userName# 
+		</isNotEmpty>
+		ORDER BY centerId
+		<isNotEqual property="skipRow" compareValue="-1">
+			limit #skipRow#, #rows# 
+		</isNotEqual>
+	</select>
+	
+	<select id="getAllCenter" resultMap="centerMap">
+		SELECT DISTINCT b.bm_id as bm_id,b.bm_name as bm_name FROM bm_list a LEFT JOIN bm_list b on SUBSTRING_INDEX(SUBSTRING_INDEX(a.bm_path,'_',2),'_',-1)=b.bm_id WHERE a.bm_feiqi=0 AND a.bm_id!=0 AND b.bm_feiqi=0
+	</select>
+	
+	<select id="getGroupByCenterId" resultMap="centerMap" parameterClass="String">
+		SELECT bm_id, bm_name FROM bm_list WHERE SUBSTRING_INDEX(SUBSTRING_INDEX(bm_path,'_',2),'_',-1)=  #centerId#  AND leaf ='true' AND bm_feiqi = 0;
+	</select>
+	
+	<select id="getAllCenterToSelect" resultMap="selectMap">
+		SELECT DISTINCT b.bm_id as bm_id,b.bm_name as bm_name FROM bm_list a LEFT JOIN bm_list b on SUBSTRING_INDEX(SUBSTRING_INDEX(a.bm_path,'_',2),'_',-1)=b.bm_id WHERE a.bm_feiqi=0 AND a.bm_id!=0 AND b.bm_feiqi=0
+	</select>
+	
+	<select id="getGroupByCenterIdToSelect" resultMap="selectMap" parameterClass="String">
+		SELECT bm_id, bm_name FROM bm_list WHERE SUBSTRING_INDEX(SUBSTRING_INDEX(bm_path,'_',2),'_',-1)=  #centerId#  AND leaf ='true' AND bm_feiqi = 0;
+	</select>
+	
+	<select id="getUserByGroupIdToSelect" resultClass="String" parameterClass="String">
+		SELECT user_name FROM user_list WHERE bm_id = #groupId#;
+	</select>
+	
+	<select id="getWhDateNum" parameterClass="HashMap" resultClass="Long">
+		SELECT COUNT(DISTINCT a.md_id) AS amount from bps_rw_history a 
+		<isEqual property="ywType" compareValue="EPP">
+			 WHERE str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &gt; #beginTime# AND str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.callid !='' and user_name= #userName# AND yw_type ='EPP';
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			 WHERE str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &gt; #beginTime# AND str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.callid !='' and user_name= #userName# AND yw_type ='账单分期';
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			 WHERE str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &gt; #beginTime# AND str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.callid !='' and user_name= #userName# AND yw_type ='大额EPPC';
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt; #beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.yw_type ='EPPC' AND b.DataType!='新发卡备用金' and a.user_name= #userName#;
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt; #beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.yw_type ='EPPC' AND b.DataType='新发卡备用金'  and a.user_name= #userName#;
+		</isEqual>
+		
+	</select>
+	
+	<select id="getCountUserInfoByTime" parameterClass="HashMap" resultClass="Long">
+		SELECT COUNT(user_name) AS num FROM `user_list` WHERE user_status in ('正常','冻结') AND CONCAT(',',user_role_id,',') LIKE '%,161,%'
+		
+		<isNotEmpty property="center" prepend="and">
+			SUBSTRING_INDEX(SUBSTRING_INDEX(bm_path,'_',2),'_',-1) = #center#
+		</isNotEmpty>
+		
+		<isNotEmpty property="group" prepend="and">
+			bm_id = #group# 
+		</isNotEmpty>
+		<isNotEmpty property="userName" prepend="and">
+			user_name = #userName# 
+		</isNotEmpty>
+	</select>
+	
+	<insert id="insertReportSave" parameterClass="com.bps.bean.ReportSaveObj">
+		insert into baobiaotj(fileName,file_num,type,time,name,down_num,state,file_path) 
+		values(#fileName#,#fileNum#,#type#,#time#,#name#,#downNum#,#state#,#filePath#)
+	</insert>
+	
+	<select id="getDefinedReportInfo" resultMap="definedReportMap">
+		SELECT id, baobiao_name, yxy_data, start_time, end_time, zhongxin, xiaozu, assign_name 
+ 		 FROM ks_baobiao_task where assign_time > DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 1 DAY),'%Y-%m-%d 00:00:00')
+	</select>
+	
+	<update id="updateDefinedReportInfo" parameterClass="com.bps.dal.object.bps.DefinedReportInfo">
+		UPDATE ks_baobiao_task SET state = #state#, zhixing_time = #zhixingTime#
+		,filezu_name = #filezuName#, filezu_realname = #filezuRealname#
+		<isNotEmpty property="fileyxyName" prepend=",">
+			fileyxy_name = #fileyxyName#
+		</isNotEmpty>
+		<isNotEmpty property="fileyxyRealname" prepend=",">
+			fileyxy_realname = #fileyxyRealname#
+		</isNotEmpty>
+		 WHERE id = #id#
+	</update>
+	
+	<select id="getUserRole" parameterClass="String" resultClass="String">
+		SELECT user_role FROM user_list WHERE user_name = #userName#;
+	</select>
+	
+	<select id="getTextById" resultClass="String" parameterClass="String">
+		SELECT bm_name FROM bm_list WHERE bm_id = #bmId#;
+	</select>
+	
+	<select id="getHaveDataUser" resultClass="String" parameterClass="HashMap">
+		SELECT DISTINCT user_name FROM `md_success` WHERE  yw_id in ('1','2','10','11') AND md_atime &gt;=#beginTime#  AND md_atime &lt;=#endTime#
+	</select>
+</sqlMap>

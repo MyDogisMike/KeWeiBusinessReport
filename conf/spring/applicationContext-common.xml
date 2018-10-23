@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns:aop="http://www.springframework.org/schema/aop"
+     xmlns:tx="http://www.springframework.org/schema/tx"
+     xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+     xmlns:context="http://www.springframework.org/schema/context"
+     xsi:schemaLocation="
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	 <!-- 读.properties的配置文件 -->
+   <context:property-placeholder location="classpath*:jdbc.properties,classpath*:redis.properties,classpath*:ReportSaveUrl.properties" />
+
+<!-- 配置bpsdataSource数据源(连接bps源数据库) 支持oracel与mybatis -->
+	<bean id="bpsdataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${bpsjdbc.driverClassName}" />
+		<property name="url" value="${bpsjdbc.url}" />
+		<property name="username" value="${bpsjdbc.username}" />
+		<property name="password" value="${bpsjdbc.password}" />
+		 <!-- 初始化连接大小 -->
+        <property name="initialSize" value="${jdbc.initialSize}" />
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="${jdbc.maxActive}" />
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="${jdbc.maxIdle}" />
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="${jdbc.minIdle}" />
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="${jdbc.maxWait}" />
+	</bean> 
+	<!-- TransactionManager定义。 -->
+	<bean id="transactionManagerBps"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="bpsdataSource" />
+	</bean>
+	<bean id="transactionTemplateBps"
+		class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager" ref="transactionManagerBps" />
+	</bean>
+	<!-- iBatis SQL map定义。 -->
+	<bean id="sqlMapClientBps" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:dal/sqlmap-config-bps.xml" />
+	</bean>
+	<bean id="daoDefinitionBps" abstract="true">
+		<property name="sqlMapClient">
+			<ref local="sqlMapClientBps" />
+		</property>
+		<property name="dataSource">
+			<ref local="bpsdataSource" />
+		</property>
+	</bean>
+	
+	<!-- 配置hwjdbcdataSource数据源(连接ibreport源数据库) 支持oracel与mybatis -->
+	<bean id="hwdataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${hwjdbc.driverClassName}" />
+		<property name="url" value="${hwjdbc.url}" />
+		<property name="username" value="${hwjdbc.username}" />
+		<property name="password" value="${hwjdbc.password}" />
+		 <!-- 初始化连接大小 -->
+        <property name="initialSize" value="${jdbc.initialSize}" />
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="${jdbc.maxActive}" />
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="${jdbc.maxIdle}" />
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="${jdbc.minIdle}" />
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="${jdbc.maxWait}" />
+	</bean> 
+	<!-- TransactionManager定义。 -->
+	<bean id="transactionManagerhw"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="hwdataSource" />
+	</bean>
+	<bean id="transactionTemplatehw"
+		class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager" ref="transactionManagerhw" />
+	</bean>
+	<!-- iBatis SQL map定义。 -->
+	<bean id="sqlMapClienthw" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:dal/sqlmap-config-hw.xml" />
+	</bean>
+	<bean id="daoDefinitionHw" abstract="true">
+		<property name="sqlMapClient">
+			<ref local="sqlMapClienthw" />
+		</property>
+		<property name="dataSource">
+			<ref local="hwdataSource" />
+		</property>
+	</bean>
+
+	<!-- 配置dianyingdataSource数据源(连接dianying源数据库) 支持oracel与mybatis -->
+	<bean id="DianyingdataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${dianyingjdbc.driverClassName}" />
+		<property name="url" value="${dianyingjdbc.url}" />
+		<property name="username" value="${dianyingjdbc.username}" />
+		<property name="password" value="${dianyingjdbc.password}" />
+		 <!-- 初始化连接大小 -->
+        <property name="initialSize" value="${jdbc.initialSize}" />
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="${jdbc.maxActive}" />
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="${jdbc.maxIdle}" />
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="${jdbc.minIdle}" />
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="${jdbc.maxWait}" />
+	</bean> 
+	<!-- TransactionManager定义。 -->
+	<bean id="transactionManagerDianying"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="DianyingdataSource" />
+	</bean>
+	<bean id="transactionTemplatedianying"
+		class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager" ref="transactionManagerDianying" />
+	</bean>
+	<!-- iBatis SQL map定义。 -->
+	<bean id="sqlMapClientDianying" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:dal/sqlmap-config-dianying.xml" />
+	</bean>
+	<bean id="daoDefinitionDianying" abstract="true">
+		<property name="sqlMapClient">
+			<ref local="sqlMapClientDianying" />
+		</property>
+		<property name="dataSource">
+			<ref local="DianyingdataSource" />
+		</property>
+	</bean>
+</beans>

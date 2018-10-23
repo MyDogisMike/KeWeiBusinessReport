@@ -1,0 +1,92 @@
+package com.bps.web.controller.dataview;
+
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.bps.service.daymeter.DataViewService;
+import com.bps.service.dianying.VoiceFileService;
+import com.bps.util.DateUtil;
+
+
+@Controller
+@RequestMapping("/dataview")
+public class DataViewController {
+	@Autowired
+	private VoiceFileService voiceFileService;
+	 
+	 @RequestMapping(value={"checkAction"})
+	 public String checkAction(HttpServletRequest request,HttpSession session) throws Exception {
+	       String target_par = request.getParameter("target");
+	       String target="message";
+	       String ipaddress = session.getServletContext().getInitParameter("IpAddress");
+	       String[] ipaddresses=ipaddress.split("_");//合法IP数组
+	      // String targetip = request.getRemoteAddr();//来源IP
+	       String referer = request.getHeader("referer");//请求来源url
+	      // System.out.println("获取到的referer:"+referer);
+	       if(referer!=null){
+	    	   int b=referer.indexOf("/ui/");
+		       String c=referer.substring(7, b);
+		       boolean  returnvlue=ArrayUtils.contains(ipaddresses,c);
+		       if(returnvlue){
+		    	   if(!"".equals(target_par) && target_par!=null){
+			    	   target=target_par;
+			       }
+		       }
+	       }
+	      else{
+	    	   target=target_par;
+	       }
+		   return target; 
+	    }
+	 
+		@ResponseBody
+		@RequestMapping(value = {"kewei"}, method = RequestMethod.POST)
+		public Map<String, Object> keweiView( 
+				@RequestParam("center") String center_par,
+				@RequestParam("area") String area_par,
+				@RequestParam("group") String group_par,
+				@RequestParam("date") String date_par,
+				@RequestParam("isreport") String isreport_par,
+				@RequestParam("username") String username_par,
+				@RequestParam("currentUser") String currentUser_par,
+				@RequestParam("currentTime") String currentTime_par){
+			String username="";
+			String date="";
+			String currentUser="";
+			String currentTime="";
+		       if(!"null".equals(username_par) && !"".equals(username_par)){
+		    	   byte[] encode=Base64.decodeBase64(username_par.getBytes());
+		    	   username=new String(encode);
+		       }
+		       if(!"null".equals(date_par) && !"".equals(date_par)){
+		    	   byte[] encode=Base64.decodeBase64(date_par.getBytes());
+		    	   date=new String(encode);
+		       }
+		       if(!"null".equals(currentUser_par) && !"".equals(currentUser_par)){
+		        	byte[] encode=Base64.decodeBase64(currentUser_par.getBytes());
+		        	currentUser=new String(encode);
+		        }
+		        if(!"null".equals(currentTime_par) && !"".equals(currentTime_par)){
+		        	byte[] encode=Base64.decodeBase64(currentTime_par.getBytes());
+		        	currentTime=new String(encode);
+		        }
+		        
+			Map<String, Object> resultMap=new HashMap<String, Object>();
+			String returnstr=voiceFileService.getFFile("werq", "F");
+			
+			return resultMap;
+		}
+}

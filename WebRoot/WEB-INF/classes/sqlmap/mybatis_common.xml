@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+	<typeAlias alias="LinkedHashMap" type="java.util.LinkedHashMap" />
+
+	<sql id="page_top">
+		<isNotNull   property="limit" >
+			<isNotNull property="start" > 
+			<![CDATA[  	
+			]]>  
+			</isNotNull> 
+		</isNotNull>
+	</sql>
+	<sql id="page_bottom"> 
+		<isNotNull   property="limit" >
+			<isNotNull property="start" > 
+			<![CDATA[  	 
+				limit $start$,$limit$
+			]]> 
+			</isNotNull> 
+		</isNotNull>
+	</sql>
+	<sql id="count_top"> 
+	<![CDATA[  	
+		 select count(*) from (
+	]]> 
+	</sql>
+	<sql id="count_bottom"> 
+	<![CDATA[  	
+		)t
+	]]> 
+	</sql>
+	
+	
+	<sql id="new_page_top">
+		<isNotNull   property="page" >
+			<isNotNull property="page.start" > 
+			<![CDATA[  	
+			]]>  
+			</isNotNull> 
+		</isNotNull>
+	</sql>
+	<sql id="new_page_bottom"> 
+		<isNotNull   property="page" >
+			<isNotNull property="page.start" > 
+			<![CDATA[  	 
+				limit $page.start$,$page.limit$
+			]]> 
+			</isNotNull> 
+		</isNotNull>
+	</sql>
+		
+	<!--通用的插入-->
+	<insert id="IbatisCommonDao_insert"     parameterClass="Map"  >
+	<![CDATA[  
+		insert into $tableName$ (   
+	]]> 
+		<iterate property="conditionList"     conjunction="," > 
+		<![CDATA[ 
+			   $conditionList[].key$ 
+		]]> 
+		</iterate>
+	<![CDATA[ 
+		)VALUES (  
+	]]>   
+		<iterate property="conditionList"   conjunction="," >   
+		<![CDATA[ 
+			$conditionList[].value$  
+		]]> 
+		</iterate> 
+	<![CDATA[ 
+)  
+	]]>  
+		<selectKey resultClass="long" keyProperty="primaryKeyValue"> 
+        SELECT LAST_INSERT_ID()  as primaryKeyValue
+		</selectKey> 
+	</insert>
+	
+	<!--通用的删除-->
+	<delete id="IbatisCommonDao_delete"     parameterClass="Map"  >
+	<![CDATA[  
+		delete from $tableName$ where $primaryKeyName$=$primaryKeyValue$ 
+	]]> 
+	</delete>
+	
+	<!--根据属性来删除-->
+	<delete id="IbatisCommonDao_deleteEqual"     parameterClass="Map"  >
+	<![CDATA[  
+		delete from $tableName$   
+	]]> 
+		<dynamic prepend="where">    
+			<isNotNull prepend="and" property="conditionList" >
+				<iterate property="conditionList"   conjunction="and">
+				<![CDATA[  
+					  $conditionList[].key$=$conditionList[].value$
+				]]> 
+				</iterate>
+			</isNotNull>
+		</dynamic> 
+	</delete>
+	
+	<!--通用的修改-->
+	<update id="IbatisCommonDao_update"     parameterClass="Map"  >
+	<![CDATA[  
+		update $tableName$ set    
+	]]> 
+		<iterate property="conditionList"    conjunction="," >  
+		<![CDATA[ 
+			   $conditionList[].key$=$conditionList[].value$
+		]]> 
+		</iterate>
+		<dynamic prepend="where">    
+		<![CDATA[ 
+			$primaryKeyName$=#primaryKeyValue#
+		]]>   
+		</dynamic>    
+	</update>
+	
+	<!--通用的加载操作-->
+	<select id="IbatisCommonDao_load"     parameterClass="Map" resultClass="LinkedHashMap"  >
+	<![CDATA[  
+		select * from $tableName$ where $primaryKeyName$=$primaryKeyValue$ 
+	]]> 
+	</select>
+	
+	
+	
+	<!--通用的加载操作-->
+	<select id="IbatisCommonDao_loadEqual"     parameterClass="Map" resultClass="LinkedHashMap"   >
+	<![CDATA[  
+		select * from $tableName$  
+	]]> 
+		<dynamic prepend="where">    
+			<isNotNull prepend="and" property="conditionList" >
+				<iterate property="conditionList"   conjunction="and">
+				<![CDATA[  
+					  $conditionList[].key$=$conditionList[].value$
+				]]> 
+				</iterate>
+			</isNotNull>
+		</dynamic> 
+	</select>
+	
+	
+	<!--通用的加载操作-->
+	<select id="IbatisCommonDao_findByExample"     parameterClass="Map" resultClass="LinkedHashMap" remapResults="true"  >
+		<include refid="page_top"/> 
+	<![CDATA[  
+		select * from $tableName$  
+	]]> 
+		<dynamic prepend="where">    
+			<isNotNull prepend="and" property="conditionList" >
+				<iterate property="conditionList"   conjunction="and">
+				<![CDATA[  
+					  $conditionList[].key$=$conditionList[].value$
+				]]> 
+				</iterate>
+			</isNotNull>
+		</dynamic> 
+		<isNotNull   property="sort" >
+		<![CDATA[  
+			  order by $sort$ $dir$
+		]]> 
+		</isNotNull>
+		<include refid="page_bottom"/>
+	</select>
+	
+	<!--通用的统计操作-->
+	<select id="IbatisCommonDao_countEqual"     parameterClass="Map" resultClass="Long"   >
+	<![CDATA[  
+		select count(*) from $tableName$  
+	]]> 
+		<dynamic prepend="where">    
+			<isNotNull prepend="and" property="conditionList" >
+				<iterate property="conditionList"   conjunction="and">
+				<![CDATA[  
+					  $conditionList[].key$=$conditionList[].value$
+				]]> 
+				</iterate>
+			</isNotNull>
+		</dynamic> 
+	</select>
+</sqlMap>

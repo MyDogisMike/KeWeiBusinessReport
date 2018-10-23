@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:/spring/spring-maya.xml,classpath:dal/**/dal-*.xml,WEB-INF/controller-servlet.xml</param-value>
+	</context-param>
+  
+    <context-param><!--环境参数,设置常量:龙行HA代理IP,取得常量  this.getInitParameter("Ip_Url");-->
+    <param-name>IpAddress</param-name>
+    <param-value>yewu2.guangfa.uat_telesales.guangfa.uat_</param-value>
+  </context-param>
+  
+	<filter>  
+		<filter-name>encodingFilter</filter-name>  
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
+		<init-param>  
+			<param-name>encoding</param-name>  
+			<param-value>UTF-8</param-value>  
+		</init-param>  
+	</filter>
+	<filter-mapping>  
+		<filter-name>encodingFilter</filter-name>  
+		<url-pattern>/*</url-pattern>  
+	</filter-mapping>  
+
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+	<!-- 自定义的监听器 -->
+	<listener>  
+		<listener-class>  
+         com.bps.web.listener.MyServletContextListener 
+		</listener-class>  
+	</listener> 
+	<listener>  
+		<listener-class>  
+         com.bps.web.listener.MyHttpSessionListener 
+		</listener-class>  
+	</listener> 
+	
+	<servlet>
+		<servlet-name>controller</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>controller</servlet-name>
+		<url-pattern>*.json</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>freemarker</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>freemarker</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>jspview</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>jspview</servlet-name>
+		<url-pattern>*.action</url-pattern>
+	</servlet-mapping>
+	
+	<filter>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<servlet-name>controller</servlet-name>
+	</filter-mapping>
+	
+	
+	
+	<servlet>
+		<servlet-name>InitServlet</servlet-name>
+		<servlet-class>com.bps.web.servlet.InitServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>AjaxRequestServlet</servlet-name>
+		<servlet-class>com.bps.web.servlet.AjaxRequestServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>ValidateCode</servlet-name>
+		<servlet-class>com.bps.web.servlet.ValidateCode</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>ValidateCodeForFornt</servlet-name>
+		<servlet-class>
+			com.bps.web.servlet.ValidateCodeForFornt
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AjaxRequestServlet</servlet-name>
+		<url-pattern>/servlet/doAjaxRequest</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet-mapping>
+		<servlet-name>ValidateCode</servlet-name>
+		<url-pattern>/servlet/validateCodeImage</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ValidateCodeForFornt</servlet-name>
+		<url-pattern>/servlet/validateCodeImageFornt</url-pattern>
+	</servlet-mapping>
+     
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+	<session-config>   
+		<session-timeout>300000</session-timeout>   
+	</session-config> 
+
+</web-app>

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 162
+/svn/new_workspace2012/!svn/ver/67676/Project/%E5%B9%BF%E5%8F%91%E9%A1%B9%E7%9B%AE/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/SourceCode/KeWeiBusinessReport/conf/spring
+END
+applicationContext-common.xml
+K 25
+svn:wc:ra_dav:version-url
+V 192
+/svn/new_workspace2012/!svn/ver/67676/Project/%E5%B9%BF%E5%8F%91%E9%A1%B9%E7%9B%AE/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/SourceCode/KeWeiBusinessReport/conf/spring/applicationContext-common.xml
+END
+spring-common.xml
+K 25
+svn:wc:ra_dav:version-url
+V 180
+/svn/new_workspace2012/!svn/ver/67676/Project/%E5%B9%BF%E5%8F%91%E9%A1%B9%E7%9B%AE/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/SourceCode/KeWeiBusinessReport/conf/spring/spring-common.xml
+END
+spring-maya.xml
+K 25
+svn:wc:ra_dav:version-url
+V 178
+/svn/new_workspace2012/!svn/ver/67676/Project/%E5%B9%BF%E5%8F%91%E9%A1%B9%E7%9B%AE/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/SourceCode/KeWeiBusinessReport/conf/spring/spring-maya.xml
+END
+redis-context.xml
+K 25
+svn:wc:ra_dav:version-url
+V 180
+/svn/new_workspace2012/!svn/ver/67676/Project/%E5%B9%BF%E5%8F%91%E9%A1%B9%E7%9B%AE/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/SourceCode/KeWeiBusinessReport/conf/spring/redis-context.xml
+END
+freemarker-servlet.xml
+K 25
+svn:wc:ra_dav:version-url
+V 185
+/svn/new_workspace2012/!svn/ver/67676/Project/%E5%B9%BF%E5%8F%91%E9%A1%B9%E7%9B%AE/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/SourceCode/KeWeiBusinessReport/conf/spring/freemarker-servlet.xml
+END
+jsp-servlet.xml
+K 25
+svn:wc:ra_dav:version-url
+V 178
+/svn/new_workspace2012/!svn/ver/67676/Project/%E5%B9%BF%E5%8F%91%E9%A1%B9%E7%9B%AE/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/SourceCode/KeWeiBusinessReport/conf/spring/jsp-servlet.xml
+END
+spring-service.xml
+K 25
+svn:wc:ra_dav:version-url
+V 181
+/svn/new_workspace2012/!svn/ver/67676/Project/%E5%B9%BF%E5%8F%91%E9%A1%B9%E7%9B%AE/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/SourceCode/KeWeiBusinessReport/conf/spring/spring-service.xml
+END
+Spring-task.xml
+K 25
+svn:wc:ra_dav:version-url
+V 178
+/svn/new_workspace2012/!svn/ver/67676/Project/%E5%B9%BF%E5%8F%91%E9%A1%B9%E7%9B%AE/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/SourceCode/KeWeiBusinessReport/conf/spring/Spring-task.xml
+END

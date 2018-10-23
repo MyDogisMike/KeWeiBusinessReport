@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="profiler.settings.instrument.empty.methods">true</entry>
+<entry key="ProfilerCPUSettings_profile_runnables">true</entry>
+<entry key="ProfilerCPUSettings_filter_type">2</entry>
+<entry key="ProfilerMemorySettings_track_every">10</entry>
+<entry key="ProfilerMemorySettings_mode">4</entry>
+<entry key="ProfilerCPUSettings_root_classes">com.bps.annotation.**
+com.bps.bean.**
+com.bps.cache.**
+com.bps.dal.dao.**
+com.bps.dal.object.**
+com.bps.exception.**
+com.bps.service.base.**
+com.bps.service.user.**
+com.bps.task.**
+com.bps.util.**
+com.bps.web.constants.**
+com.bps.web.controller.base.**
+com.bps.web.controller.user.**
+com.bps.web.interceptor.**
+com.bps.web.listener.**
+com.bps.web.servlet.**
+com.bps.web.util.**
+com.bps.web.view.**
+</entry>
+<entry key="ProfilerCPUSettings_filter_value">com.bps.annotation.*,
+com.bps.bean.*,
+com.bps.cache.*,
+com.bps.dal.dao.*,
+com.bps.dal.object.*,
+com.bps.exception.*,
+com.bps.service.base.*,
+com.bps.service.user.*,
+com.bps.task.*,
+com.bps.util.*,
+com.bps.web.constants.*,
+com.bps.web.controller.base.*,
+com.bps.web.controller.user.*,
+com.bps.web.interceptor.*,
+com.bps.web.listener.*,
+com.bps.web.servlet.*,
+com.bps.web.util.*,
+com.bps.web.view.*</entry>
+<entry key="profiler.settings.istrument.getter.setter.methods">true</entry>
+<entry key="myeclipse.profiling.mode">0</entry>
+<entry key="ProfilerMemorySettings_stacktraces">-1</entry>
+</properties>

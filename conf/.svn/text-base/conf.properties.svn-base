@@ -1,0 +1,5 @@
+#\u9759\u6001\u8d44\u6e90\u8def\u5f84
+resource.admin.path=http://localhost:8080/admin
+#\u7cfb\u7edf\u53d8\u91cf
+sys.debug=true
+

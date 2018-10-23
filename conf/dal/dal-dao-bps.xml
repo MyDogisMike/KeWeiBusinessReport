@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+	default-autowire="byName">
+	<!-- ======================================================================== -->
+	<!-- DAO定义。 -->
+	<!-- ======================================================================== -->
+	<bean id="bpsRwHistoryDao" class="com.bps.dal.dao.bps.impl.BpsRwHistoryDaoImp" parent="daoDefinitionBps"  autowire="byName" />
+	<!-- 话务报表 -->
+	<bean id="telephoneReportDao" class="com.bps.dal.dao.bps.impl.TelephoneReportDaoImp" parent="daoDefinitionBps"  autowire="byName" />
+	<!-- 上标报表 -->
+	<bean id="superscriptDao" class="com.bps.dal.dao.bps.impl.SuperscriptDaoImpl" parent="daoDefinitionBps"  autowire="byName" />
+	<!-- 交叉营销成效 -->
+	<bean id="crossMarketingReportDao" class="com.bps.dal.dao.bps.impl.CrossMarketingReportDaoImpl" parent="daoDefinitionBps"  autowire="byName" />
+	<!-- 专项营销成效 -->
+	<bean id="specialMarketingReportDao" class="com.bps.dal.dao.bps.impl.SpecialMarketingReportDaoImpl" parent="daoDefinitionBps"  autowire="byName" />
+	<!-- 新数据派发及成效 -->
+	<bean id="newDataDistributeReportDao" class="com.bps.dal.dao.bps.impl.NewDataDistributeReportDaoImpl" parent="daoDefinitionBps"  autowire="byName" />
+	
+	<bean id="newNumberMonitorDao" class="com.bps.dal.dao.bps.impl.NewNumberMonitorDaoImpl" parent="daoDefinitionBps"  autowire="byName" />
+	<bean id="marketingPerformanceDao" class="com.bps.dal.dao.bps.impl.MarketingPerformanceDaoImpl" parent="daoDefinitionBps"  autowire="byName" />
+	<bean id="marketingProcess" class="com.bps.dal.dao.bps.impl.MarketingProcessDaoImpl" parent="daoDefinitionBps"  autowire="byName" />
+</beans>

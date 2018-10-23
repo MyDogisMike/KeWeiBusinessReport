@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+    <sqlMap resource="sqlmap/mybatis_common.xml" /><!-- 通用的查询 -->
+	<sqlMap resource="sqlmap/bps/mybatis_bpsRwHistory.xml" />
+	<sqlMap resource="sqlmap/bps/mybatis_telephoneReport.xml" />
+	<sqlMap resource="sqlmap/bps/mybatis_superscriptReport.xml" />
+	<sqlMap resource="sqlmap/bps/mybatis_crossMarketingReport.xml" />
+	<sqlMap resource="sqlmap/bps/mybatis_specialMarketingReport.xml" />
+	<sqlMap resource="sqlmap/bps/mybatis_newDataDistributeReport.xml" />
+	<sqlMap resource="sqlmap/bps/mybatis_newNumberMonitor.xml" />
+	<sqlMap resource="sqlmap/bps/mybatis_marketingPerformance.xml" />
+	<sqlMap resource="sqlmap/bps/mybatis_marketingProcess.xml" />
+</sqlMapConfig>

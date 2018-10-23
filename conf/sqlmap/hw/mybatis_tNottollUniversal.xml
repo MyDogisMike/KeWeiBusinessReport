@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<select id="getTotalCallsTime" parameterClass="HashMap" resultClass="Double">
+		SELECT SUM(UNIX_TIMESTAMP(endTime)-UNIX_TIMESTAMP(beginTime)) FROM `t_toll_universal` WHERE  agentID =  #userName#  AND invokeId IN 
+		<iterate property="recordList" conjunction="," open="(" close=")">
+  		#recordList[]#
+ 		</iterate>
+	</select>
+	
+	<select id="getTodayTotalCallsTime" parameterClass="HashMap" resultClass="Long">
+		SELECT SUM(UNIX_TIMESTAMP(endTime)-UNIX_TIMESTAMP(beginTime)) FROM `t_toll_universal` WHERE  agentID =  #userName# AND endTime &gt;=CONCAT(CURDATE(),' 00:00:00') AND invokeId IN 
+		<iterate property="recordList" conjunction="," open="(" close=")">
+  		#recordList[]#
+ 		</iterate>
+	</select>
+</sqlMap>

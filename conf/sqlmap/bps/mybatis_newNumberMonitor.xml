@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+	<select id="getDistributeNum" parameterClass="HashMap" resultClass="Long">
+		select  count(*) AS amount from  `md_success` where baoxianqi &gt;=CURDATE() AND md_atime &gt;=CONCAT(CURDATE(),' 00:00:00')  AND md_atime &lt;=CONCAT(CURDATE(),' 23:59:59') AND user_name = #userName# 
+		<isEqual property="ywType" compareValue="EPP">
+			and yw_id=1
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			and yw_id=10
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			and yw_id=11
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			and yw_id=2 AND pettycash!= '新发卡备用金'
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			and yw_id=2 AND pettycash= '新发卡备用金'
+		</isEqual>
+	</select>
+	
+	<select id="getDistributeMoney1" parameterClass="HashMap" resultClass="Double">
+		select 
+		<isEqual property="ywType" compareValue="EPP">
+			IFNULL(sum(TRAN_AMT), 0.00) AS money from mdx_epp 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			IFNULL(sum(R_BDJE), 0.00) AS money from mdx_zdfq 
+		</isEqual>
+		where baoxianqi &gt;=CURDATE() AND md_atime &gt;=CONCAT(CURDATE(),' 00:00:00')  AND md_atime &lt;=CONCAT(CURDATE(),' 23:59:59') AND user_name =#userName#;
+	</select>
+	
+	<select id="getDistributeMoney2A" parameterClass="HashMap" resultClass="Double">
+		select IFNULL(sum(YSED), 0.00) AS money from 
+		<isEqual property="ywType" compareValue="大额EPPC">
+			mdx_deczj where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			mdx_eppc where Data_type!='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			mdx_eppc  where Data_type='新发卡备用金' 
+		</isEqual>
+		 and baoxianqi &gt;=CURDATE() AND md_atime &gt;=CONCAT(CURDATE(),' 00:00:00')  AND md_atime &lt;=CONCAT(CURDATE(),' 23:59:59') and md_source ='get' and user_name =#userName#
+	</select>
+	
+	<select id="getDistributeMoney2B" parameterClass="HashMap" resultClass="Double">
+		select IFNULL(sum(PHJE), 0.00) AS money from 
+		<isEqual property="ywType" compareValue="大额EPPC">
+			mdx_deczj where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			mdx_eppc where Data_type!='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			mdx_eppc  where Data_type='新发卡备用金' 
+		</isEqual>
+		 and baoxianqi &gt;=CURDATE() AND md_atime &gt;=CONCAT(CURDATE(),' 00:00:00')  AND md_atime &lt;=CONCAT(CURDATE(),' 23:59:59') and md_source in('S','T','U') and user_name =#userName#
+	</select>
+	
+	<select id="getOutboundNum" parameterClass="HashMap" resultClass="Long">
+		SELECT COUNT(a.rw_hid) AS amount FROM `bps_rw_history` a left join md_success b on a.md_id=b.md_id where a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00')
+ 		AND a.rw_ctime &lt;=CONCAT(CURDATE(),' 23:59:59') AND a.callid !=' ' AND b.md_atime &gt;=CONCAT(CURDATE(),' 00:00:00') AND b.md_atime &lt;=CONCAT(CURDATE(),' 23:59:59')  AND a.user_name=#userName#
+		<isEqual property="ywType" compareValue="EPP">
+			and b.yw_id=1
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			and b.yw_id=10
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			and b.yw_id=11
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			and b.yw_id=2 AND b.assignDataType!= '新发卡备用金'
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			and b.yw_id=2 AND b.assignDataType= '新发卡备用金'
+		</isEqual>
+	</select>
+	
+	<select id="getNConnectNum" parameterClass="HashMap" resultClass="Long">
+		select DISTINCT a.md_id from  bps_rw_history a LEFT JOIN md_success b ON a.md_id=b.md_id LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where 
+		 b.md_atime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00')  AND c.invokeId!=''
+		<isEqual property="ywType" compareValue="EPP">
+			and b.yw_id=1 AND a.yw_type='EPP'
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			and b.yw_id=10 AND a.yw_type='账单分期'
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			and b.yw_id=11 AND a.yw_type='大额EPPC'
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			and b.yw_id=2 AND b.pettycash!= '新发卡备用金' AND a.yw_type='EPPC'
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			and b.yw_id=2 AND b.pettycash= '新发卡备用金' AND a.yw_type='EPPC'
+		</isEqual>
+	</select>
+	
+	<select id="getSuccessAccept" parameterClass="HashMap" resultClass="Long">
+		SELECT COUNT(DISTINCT a.md_id) AS amount FROM `bps_rw_history` a left join md_success b on a.md_id=b.md_id where a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00')
+ 		 AND a.rw_ctime &lt;=CONCAT(CURDATE(),' 23:59:59') AND a.callid !='' and a.Rw_Status_sn='A' AND b.md_atime &gt;=CONCAT(CURDATE(),' 00:00:00') AND b.md_atime &lt;=CONCAT(CURDATE(),' 23:59:59') AND a.user_name=#userName# 
+		<isEqual property="ywType" compareValue="EPP">
+			AND b.yw_type='EPP'
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			AND b.yw_type='账单分期'
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			AND b.yw_type='大额EPPC'
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			AND b.pettycash!= '新发卡备用金' AND b.yw_type='EPPC'
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			AND b.pettycash= '新发卡备用金' AND b.yw_type='EPPC'
+		</isEqual>
+	</select>
+
+</sqlMap>

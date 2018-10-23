@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+	<select id="getDataType" resultClass="String" parameterClass="HashMap">
+		select DISTINCT Remark2 from 
+		<isEqual property="ywType" compareValue="EPP">
+			mdx_epp where 1=1
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			mdx_zdfq where 1=1
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			mdx_deczj where 1=1
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			mdx_eppc where Data_type!='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			mdx_eppc where Data_type='新发卡备用金' 
+		</isEqual>
+		 and md_atime &gt;=#beginTime#  AND md_atime &lt;=#endTime#
+	</select>
+
+	<select id="getDistributeAmount" parameterClass="HashMap" resultClass="Long">
+		select count(*) AS num from 
+		<isEqual property="ywType" compareValue="EPP">
+			mdx_epp where Remark2=#dataType# AND user_name = #userName# 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			mdx_zdfq where Remark2=#dataType# AND user_name = #userName# 
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			mdx_deczj where Remark2=#dataType# AND user_name = #userName# 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			mdx_eppc where Data_type!='新发卡备用金' AND Remark2=#dataType# AND user_name = #userName# 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			mdx_eppc where Data_type='新发卡备用金' AND Remark2=#dataType# AND user_name = #userName# 
+		</isEqual>
+		 and md_atime &gt;=#beginTime#  AND md_atime &lt;=#endTime#
+	</select>
+	
+	<select id="getNewDistributeMoney1" parameterClass="HashMap" resultClass="Double">
+		select 
+		<isEqual property="ywType" compareValue="EPP">
+			IFNULL(sum(TRAN_AMT), 0.00) AS money from mdx_epp 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			IFNULL(sum(R_BDJE), 0.00) AS money from mdx_zdfq 
+		</isEqual>
+		where Remark2=#dataType# AND md_atime &gt;=#beginTime#  AND md_atime &lt;=#endTime# AND user_name =#userName#;
+	</select>
+	
+	<select id="getNewDistributeMoney2A" parameterClass="HashMap" resultClass="Double">
+		select IFNULL(sum(YSED), 0.00) AS money from 
+		<isEqual property="ywType" compareValue="大额EPPC">
+			mdx_deczj where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			mdx_eppc where Data_type!='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			mdx_eppc  where Data_type='新发卡备用金' 
+		</isEqual>
+		 AND Remark2=#dataType# AND md_atime &gt;=#beginTime# AND md_atime &lt;=#endTime# and md_source ='get' and user_name =#userName#
+	</select>
+	
+	<select id="getNewDistributeMoney2B" parameterClass="HashMap" resultClass="Double">
+		select IFNULL(sum(PHJE), 0.00) AS money from 
+		<isEqual property="ywType" compareValue="大额EPPC">
+			mdx_deczj where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			mdx_eppc where Data_type!='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			mdx_eppc  where Data_type='新发卡备用金' 
+		</isEqual>
+		 AND Remark2=#dataType# AND md_atime &gt;=#beginTime# AND md_atime &lt;=#endTime# and md_source in('S','T','U') and user_name =#userName#
+	</select>
+	
+	<select id="getWhNum" parameterClass="HashMap" resultClass="Long">
+		select COUNT(DISTINCT a.md_id) AS num from  bps_rw_history a LEFT JOIN 
+		<isEqual property="ywType" compareValue="EPP">
+			mdx_epp b ON a.dr_key=b.dr_key where a.yw_type='EPP' AND a.gd_type='EPP工单' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			mdx_zdfq b ON a.dr_key=b.dr_key where a.yw_type='账单分期' AND a.gd_type='账单分期工单' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			mdx_deczj b ON a.dr_key=b.dr_key where a.yw_type='大额EPPC' AND a.gd_type='大额EPPC工单' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND a.gd_type='EPPC工单' and b.Data_type !='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND a.gd_type='EPPC工单' and b.Data_type ='新发卡备用金' 
+		</isEqual>
+		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;=#beginTime# AND a.rw_ctime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.rw_ctime);
+	</select>
+	
+	<select id="getNewConnectNum" parameterClass="HashMap" resultClass="Long">
+		select COUNT(DISTINCT a.md_id) AS num from  bps_rw_history a LEFT JOIN 
+		<isEqual property="ywType" compareValue="EPP">
+			mdx_epp b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='EPP' AND a.gd_type='EPP工单' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			mdx_zdfq b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='账单分期' AND a.gd_type='账单分期工单' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			mdx_deczj b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='大额EPPC' AND a.gd_type='大额EPPC工单' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			mdx_eppc b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='EPPC' AND a.gd_type='EPPC工单' and b.Data_type !='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			mdx_eppc b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='EPPC' AND a.gd_type='EPPC工单' and b.Data_type ='新发卡备用金' 
+		</isEqual>
+		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;=#beginTime# AND a.rw_ctime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.rw_ctime) AND c.invokeId!='';
+	</select>
+	
+	<select id="getNewSuccessAcceptAmount" parameterClass="HashMap" resultClass="Long">
+		select 
+		<isEqual property="ywType" compareValue="EPP">
+			COUNT(DISTINCT a.mdx_eppid) AS num from  bps_gdx_epp a LEFT JOIN mdx_epp b ON a.mdx_eppid=b.mdx_eppid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			COUNT(DISTINCT a.mdx_zdfqid) AS num from  bps_gdx_zdfq a LEFT JOIN mdx_zdfq b ON a.mdx_zdfqid=b.mdx_eppid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			COUNT(DISTINCT a.mdx_deczjid) AS num from  bps_gdx_deczj a LEFT JOIN mdx_deczj b ON a.mdx_deczjid=b.mdx_deczjid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			COUNT(DISTINCT a.mdx_eppcid) AS num from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			COUNT(DISTINCT a.mdx_eppcid) AS num from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
+		</isEqual>
+		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime);
+	</select>
+	
+	<select id="getNewSuccessAcceptMoney" parameterClass="HashMap" resultClass="Double">
+		select 
+		<isEqual property="ywType" compareValue="EPP">
+			IFNULL(sum(a.transAmt), 0.00) AS money from  bps_gdx_epp a LEFT JOIN mdx_epp b ON a.mdx_eppid=b.mdx_eppid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			IFNULL(sum(a.acceptAmt), 0.00) AS money from  bps_gdx_zdfq a LEFT JOIN mdx_zdfq b ON a.mdx_zdfqid=b.mdx_eppid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			IFNULL(sum(a.applyAmt), 0.00) AS money from  bps_gdx_deczj a LEFT JOIN mdx_deczj b ON a.mdx_deczjid=b.mdx_deczjid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
+		</isEqual>
+		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime);
+	</select>
+	
+	<select id="getSuccessApproveDataA" parameterClass="HashMap" resultClass="String">
+		select DISTINCT 
+		<isEqual property="ywType" compareValue="EPP">
+			a.mdx_eppid from  bps_gdx_epp a LEFT JOIN mdx_epp b ON a.mdx_eppid=b.mdx_eppid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			a.mdx_zdfqid from  bps_gdx_zdfq a LEFT JOIN mdx_zdfq b ON a.mdx_zdfqid=b.mdx_eppid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			a.mdx_deczjid from  bps_gdx_deczj a LEFT JOIN mdx_deczj b ON a.mdx_deczjid=b.mdx_deczjid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			a.mdx_eppcid from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			a.mdx_eppcid from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
+		</isEqual>
+		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime) AND a.forceTransfer !=1;
+	</select>
+	
+	<select id="getSuccessApproveDataB" parameterClass="HashMap" resultClass="String">
+		select DISTINCT 
+		<isEqual property="ywType" compareValue="EPP">
+			a.mdx_eppid from  bps_gdx_epp a LEFT JOIN mdx_epp b ON a.mdx_eppid=b.mdx_eppid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			a.mdx_zdfqid from  bps_gdx_zdfq a LEFT JOIN mdx_zdfq b ON a.mdx_zdfqid=b.mdx_eppid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			a.mdx_deczjid from  bps_gdx_deczj a LEFT JOIN mdx_deczj b ON a.mdx_deczjid=b.mdx_deczjid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			a.mdx_eppcid from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			a.mdx_eppcid from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
+		</isEqual>
+		   AND a.Update_t &gt;=#beginTime# AND a.Update_t &lt;=#endTime# AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime) AND a.forceTransfer =1 AND a.approve_rst = '成功' and a.status_Approved = '已批核';
+	</select>
+	
+	<select id="getNewSuccessApproveMoneyA" parameterClass="HashMap" resultClass="Double">
+		select 
+		<isEqual property="ywType" compareValue="EPP">
+			IFNULL(sum(a.transAmt), 0.00) AS money from  bps_gdx_epp a LEFT JOIN mdx_epp b ON a.mdx_eppid=b.mdx_eppid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			IFNULL(sum(a.acceptAmt), 0.00) AS money from  bps_gdx_zdfq a LEFT JOIN mdx_zdfq b ON a.mdx_zdfqid=b.mdx_eppid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			IFNULL(sum(a.applyAmt), 0.00) AS money from  bps_gdx_deczj a LEFT JOIN mdx_deczj b ON a.mdx_deczjid=b.mdx_deczjid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
+		</isEqual>
+		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime) AND a.forceTransfer !=1;
+	</select>
+	
+	<select id="getNewSuccessApproveMoneyB" parameterClass="HashMap" resultClass="Double">
+		select 
+		<isEqual property="ywType" compareValue="EPP">
+			IFNULL(sum(a.transAmt), 0.00) AS money from  bps_gdx_epp a LEFT JOIN mdx_epp b ON a.mdx_eppid=b.mdx_eppid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			IFNULL(sum(a.acceptAmt), 0.00) AS money from  bps_gdx_zdfq a LEFT JOIN mdx_zdfq b ON a.mdx_zdfqid=b.mdx_eppid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			IFNULL(sum(a.applyAmt), 0.00) AS money from  bps_gdx_deczj a LEFT JOIN mdx_deczj b ON a.mdx_deczjid=b.mdx_deczjid where 1=1 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
+		</isEqual>
+		  AND a.Update_t &gt;=#beginTime# AND a.Update_t &lt;=#endTime# AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime) AND a.forceTransfer =1 AND a.approve_rst = '成功' and a.status_Approved = '已批核';
+	</select>
+	
+	<select id="getWrongDataNum" parameterClass="HashMap" resultClass="Long">
+		select COUNT(DISTINCT a.md_id) AS num from  bps_rw_history a LEFT JOIN 
+		<isEqual property="ywType" compareValue="EPP">
+			mdx_epp b ON a.dr_key=b.dr_key where a.yw_type='EPP' AND a.gd_type='EPP工单' AND a.Rw_Status='M数据错误'
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			mdx_zdfq b ON a.dr_key=b.dr_key where a.yw_type='账单分期' AND a.gd_type='账单分期工单' AND a.Rw_Status='M数据错误' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			 mdx_deczj b ON a.dr_key=b.dr_key where a.yw_type='大额EPPC' AND a.gd_type='大额EPPC工单' AND a.Rw_Status='M数据' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND b.Data_type !='新发卡备用金' AND a.Rw_Status='M数据错误' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND b.Data_type ='新发卡备用金' AND a.Rw_Status='M数据错误' 
+		</isEqual>
+		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.user_name = #userName# AND a.rw_ctime &gt;=#beginTime# AND a.rw_ctime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.rw_ctime);
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<import resource="applicationContext-common.xml" /><!--加载数据源配置-->
+	<import resource="spring-service.xml" /><!--加载spring-->
+	<import resource="spring-common.xml" />
+   <import resource="Spring-task.xml" />   <!--定时器  还没用到暂时注释-->
+	<import resource="freemarker-servlet.xml" />
+	<import resource="jsp-servlet.xml" />
+</beans>

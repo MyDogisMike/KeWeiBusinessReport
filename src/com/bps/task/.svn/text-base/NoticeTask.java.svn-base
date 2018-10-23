@@ -1,0 +1,11 @@
+package com.bps.task;
+
+
+
+
+
+public class NoticeTask {
+	
+	public void run(){}
+
+}

@@ -1,0 +1,31 @@
+#日志级别是DEBUG,标签是KeWeiBusinessAPILogs
+log4j.logger.logs= DEBUG,KeWeiBusinessAPILogs
+#输出到指定文件logs中
+log4j.additivity.logs = false
+#文件大小到达指定尺寸的时候产生一个新的文件
+log4j.appender.KeWeiBusinessAPILogs=org.apache.log4j.RollingFileAppender
+#指定输出日志级别分OFF、FATAL、ERROR、WARN、INFO、DEBUG、ALL
+log4j.appender.KeWeiBusinessAPILogs.Threshold=debug
+#表示所有消息都会被立即输出，设为false则不输出，默认值是true
+#log4j.appender.KeWeiBusinessAPILogs.ImmediateFlush=false
+log4j.appender.KeWeiBusinessAPILogs.File=${catalina.home}/logs/KeWeiBusinessAPILogs.log
+#超过20M就重新创建一个文件
+log4j.appender.KeWeiBusinessAPILogs.MaxFileSize=20480KB
+#设置保存备份文件数量 
+log4j.appender.KeWeiBusinessAPILogs.MaxBackupIndex=10
+log4j.appender.KeWeiBusinessAPILogs.layout=org.apache.log4j.PatternLayout
+log4j.appender.KeWeiBusinessAPILogs.BufferedIO=true
+log4j.appender.KeWeiBusinessAPILogs.BufferSize=1024
+log4j.appender.KeWeiBusinessAPILogs.layout.ConversionPattern=[%-5p] %d(%r) --> [%t] %l: %m %x %n
+
+####显示SQL语句部分
+#log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+#log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+#log4j.appender.stdout.layout.ConversionPattern=%d %p [%c] - %m%n
+#log4j.logger.com.ibatis=debug
+#log4j.logger.com.ibatis.common.jdbc.SimpleDataSource=debug
+#log4j.logger.com.ibatis.common.jdbc.ScriptRunner=debug
+#log4j.logger.com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate=debug
+#log4j.logger.java.sql.Connection=debug  
+#log4j.logger.java.sql.Statement=debug
+#log4j.logger.java.sql.PreparedStatement=debug,stdout

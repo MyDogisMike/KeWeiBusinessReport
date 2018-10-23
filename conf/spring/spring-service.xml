@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+   <!-- 引入同文件夹下的redis属性配置文件 --> 
+   <import resource="redis-context.xml"/>  
+	<bean id="VoiceFileService" class="com.bps.service.dianying.impl.VoiceFileServiceImpl" />
+	
+	<bean id="telephoneReportService" class="com.bps.service.bps.impl.TelephoneReportServiceImpl" />
+	
+	<bean id="superscriptReportService" class="com.bps.service.bps.impl.SuperscriptReportServiceImpl" />
+	
+	<bean id="crossMarketingReportService" class="com.bps.service.bps.impl.CrossMarketingReportServiceImpl" />
+	
+	<bean id="newDataDistributeReportService" class="com.bps.service.bps.impl.NewDataDistributeReportServiceImpl" />
+	
+	<bean id="specialMarketingReportService" class="com.bps.service.bps.impl.SpecialMarketingReportServiceImpl" />
+	
+	<bean id="newNumberMonitorService" class="com.bps.service.bps.impl.NewNumberMonitorServiceImpl" />
+	<bean id="marketingPerformanceService" class="com.bps.service.bps.impl.MarketingPerformanceServiceImpl" />
+	<bean id="marketingProcessService" class="com.bps.service.bps.impl.MarketingProcessServiceImpl" />
+</beans>
