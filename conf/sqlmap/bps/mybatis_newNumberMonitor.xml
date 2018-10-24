@@ -44,7 +44,7 @@
 			mdx_eppc where Data_type!='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			mdx_eppc  where Data_type='新发卡备用金' 
+			mdx_eppc where Data_type='新发卡备用金' 
 		</isEqual>
 		 and baoxianqi &gt;=CURDATE() AND md_atime &gt;=CONCAT(CURDATE(),' 00:00:00')  AND md_atime &lt;=CONCAT(CURDATE(),' 23:59:59') and md_source ='get' and user_name =#userName#
 	</select>
@@ -58,7 +58,7 @@
 			mdx_eppc where Data_type!='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			mdx_eppc  where Data_type='新发卡备用金' 
+			mdx_eppc where Data_type='新发卡备用金' 
 		</isEqual>
 		 and baoxianqi &gt;=CURDATE() AND md_atime &gt;=CONCAT(CURDATE(),' 00:00:00')  AND md_atime &lt;=CONCAT(CURDATE(),' 23:59:59') and md_source in('S','T','U') and user_name =#userName#
 	</select>

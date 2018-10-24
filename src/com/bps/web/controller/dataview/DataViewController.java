@@ -52,7 +52,8 @@ public class DataViewController {
 	 public String checkAction(HttpServletRequest request,HttpSession session) throws Exception {
 	       String target_par = request.getParameter("target");
 	       String roleInfo = request.getParameter("roleInfo");
-	       String userName = request.getParameter("userName");
+//	       String userName = request.getParameter("userName");
+	       String roleName = request.getParameter("roleName");
 	       String target="message";
 	       String ipaddress = session.getServletContext().getInitParameter("IpAddress");
 	       String[] ipaddresses=ipaddress.split("_");//合法IP数组
@@ -60,13 +61,24 @@ public class DataViewController {
 	       String referer = request.getHeader("referer");//请求来源url
 	      // System.out.println("获取到的referer:"+referer);
 	       request.setAttribute("roleInfo", roleInfo);
-	       request.setAttribute("isGroup", "no");
-	       if(userName != null){
-	    	   String roleStr = ","+bpsRwHistoryDao.getUserRole("getUserRole", userName)+",";
-	    	   if(roleStr != null && roleStr.contains(",组长,")){
-	    		   request.setAttribute("isGroup", "yes");
-	    	   }
+	       if("组长".equals(roleName)){
+	    	   request.setAttribute("isGroup", "yes");
+	       }else{
+	    	   request.setAttribute("isGroup", "no");
 	       }
+	       
+//	       if(userName != null){
+//	    	   String roleStr = ","+bpsRwHistoryDao.getUserRole("getUserRole", userName)+",";
+//	    	   if("MarketingProcess".equals(target_par)){
+//	    		   if(roleStr != null && roleStr.contains(",总经理,")){
+//	    			   request.setAttribute("isGroup", "no");
+//	    		   }
+//	    	   }else{
+//	    		   if(roleStr != null && roleStr.contains(",总经理,") && roleStr.contains(",运营经理,") && roleStr.contains(",总监,")){
+//	    			   request.setAttribute("isGroup", "no");
+//	    		   }
+//	    	   }
+//	       }
 	       if(referer!=null){
 	    	   int b=referer.indexOf("/ui/");
 		       String c=referer.substring(7, b);
@@ -77,9 +89,9 @@ public class DataViewController {
 			       }
 		       }
 	       }
-//	      else{
-//	    	   target=target_par;
-//	       }
+	      else{
+	    	   target=target_par;
+	       }
 	       //System.out.println(target);
 		   return target; 
 	    }

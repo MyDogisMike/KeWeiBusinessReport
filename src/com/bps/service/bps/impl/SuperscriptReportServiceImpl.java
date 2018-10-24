@@ -178,7 +178,6 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "EPPC备用金"};
 		List<SuperscriptReport> tempDataList = new ArrayList<SuperscriptReport>();
 		
-		
 		SuperscriptReport parentRepor = new SuperscriptReport(user);
 		
 		String centerId = user.getCenterId();
@@ -245,49 +244,11 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 				String userName = user.getUserName();
 				paramMap.put("userName", userName);
 				paramMap.put("ywType", ywType);
+				report.setWhDateNum(bpsRwHistoryDao.getWhDateNum("getWhDateNum", paramMap));
 				
-				//查询A标
-				paramMap.put("bidType", "A");
-				report.setBidACrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidACrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidACrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				//查询B标
-				paramMap.put("bidType", "B");
-				report.setBidBCrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidBCrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidBCrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				//查询F00标
-				paramMap.put("bidType", "F00");
-				report.setBidF00CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidF00CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidF00CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				//查询F01标
-				paramMap.put("bidType", "F01");
-				report.setBidF01CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidF01CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidF01CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				//查询F02标
-				paramMap.put("bidType", "F02");
-				report.setBidF02CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidF02CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidF02CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				//查询G01标
-				paramMap.put("bidType", "G01");
-				report.setBidG01CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidG01CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidG01CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				//查询G02标
-				paramMap.put("bidType", "G02");
-				report.setBidG02CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidG02CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidG02CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				//查询M标
-				paramMap.put("bidType", "M");
-				report.setBidMCrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidMCrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				report.setBidMCrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				
-				if("EPP".equals(ywType)) {
+				//查询交叉EPP
+				paramMap.put("dataType", "EPP");
+				if("EPP".equals(ywType)){
 					report.setBidACrossEPP(0L);
 					report.setBidBCrossEPP(0L);
 					report.setBidF00CrossEPP(0L);
@@ -296,7 +257,51 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 					report.setBidG01CrossEPP(0L);
 					report.setBidG02CrossEPP(0L);
 					report.setBidMCrossEPP(0L);
-				}else if("账单分期".equals(ywType)){
+				}else{
+					//查询A标的交叉EPP
+					paramMap.put("bidType", "A");
+					report.setBidACrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidACrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidACrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询B标的交叉EPP
+					paramMap.put("bidType", "B");
+					report.setBidBCrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidBCrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidBCrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询F00标的交叉EPP
+					paramMap.put("bidType", "F00");
+					report.setBidF00CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF00CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF00CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询F01标的交叉EPP
+					paramMap.put("bidType", "F01");
+					report.setBidF01CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF01CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF01CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询F02标的交叉EPP
+					paramMap.put("bidType", "F02");
+					report.setBidF02CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF02CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF02CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询G01标的交叉EPP
+					paramMap.put("bidType", "G01");
+					report.setBidG01CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG01CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG01CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询G02标的交叉EPP
+					paramMap.put("bidType", "G02");
+					report.setBidG02CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG02CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG02CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询M标的交叉EPP
+					paramMap.put("bidType", "M");
+					report.setBidMCrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidMCrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidMCrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+				}
+				//查询交叉账单分期
+				paramMap.put("dataType", "账单分期");
+				if("账单分期".equals(ywType)){
 					report.setBidACrossBill(0L);
 					report.setBidBCrossBill(0L);
 					report.setBidF00CrossBill(0L);
@@ -305,16 +310,51 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 					report.setBidG01CrossBill(0L);
 					report.setBidG02CrossBill(0L);
 					report.setBidMCrossBill(0L);
-				}else if("大额EPPC".equals(ywType)){
-					report.setBidACrossBigEPPC(0L);
-					report.setBidBCrossBigEPPC(0L);
-					report.setBidF00CrossBigEPPC(0L);
-					report.setBidF01CrossBigEPPC(0L);
-					report.setBidF02CrossBigEPPC(0L);
-					report.setBidG01CrossBigEPPC(0L);
-					report.setBidG02CrossBigEPPC(0L);
-					report.setBidMCrossBigEPPC(0L);
-				}else if("EPPC".equals(ywType)){
+				}else{
+					//查询A标的交叉账单分期
+					paramMap.put("bidType", "A");
+					report.setBidACrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidACrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidACrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询B标的交叉账单分期
+					paramMap.put("bidType", "B");
+					report.setBidBCrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidBCrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidBCrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询F00标的交叉账单分期
+					paramMap.put("bidType", "F00");
+					report.setBidF00CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF00CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF00CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询F01标的交叉账单分期
+					paramMap.put("bidType", "F01");
+					report.setBidF01CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF01CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF01CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询F02标的交叉账单分期
+					paramMap.put("bidType", "F02");
+					report.setBidF02CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF02CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF02CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询G01标的交叉账单分期
+					paramMap.put("bidType", "G01");
+					report.setBidG01CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG01CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG01CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询G02标的交叉账单分期
+					paramMap.put("bidType", "G02");
+					report.setBidG02CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG02CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG02CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询M标的交叉账单分期
+					paramMap.put("bidType", "M");
+					report.setBidMCrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidMCrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidMCrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+				}
+				//查询交叉EPPC
+				paramMap.put("dataType", "EPPC");
+				if("EPPC".equals(ywType) || "EPPC备用金".equals(ywType)){
 					report.setBidACrossEPPC(0L);
 					report.setBidBCrossEPPC(0L);
 					report.setBidF00CrossEPPC(0L);
@@ -323,54 +363,101 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 					report.setBidG01CrossEPPC(0L);
 					report.setBidG02CrossEPPC(0L);
 					report.setBidMCrossEPPC(0L);
-				}else if("EPPC备用金".equals(ywType)){
+				}else{
+					//查询A标的交叉EPPC
 					paramMap.put("bidType", "A");
-					report.setBidAMainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
+					report.setBidACrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidACrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidACrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询B标的交叉EPPC
 					paramMap.put("bidType", "B");
-					report.setBidBMainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
-					paramMap.put("bidType", "F");
-					report.setBidF(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
+					report.setBidBCrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidBCrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidBCrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询F00标的交叉EPPC
 					paramMap.put("bidType", "F00");
-					report.setBidF00MainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
+					report.setBidF00CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF00CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF00CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询F01标的交叉EPPC
 					paramMap.put("bidType", "F01");
-					report.setBidF01MainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
+					report.setBidF01CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF01CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF01CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询F02标的交叉EPPC
 					paramMap.put("bidType", "F02");
-					report.setBidF02MainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
+					report.setBidF02CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF02CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF02CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询G01标的交叉EPPC
 					paramMap.put("bidType", "G01");
-					report.setBidG01MainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
+					report.setBidG01CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG01CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG01CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询G02标的交叉EPPC
 					paramMap.put("bidType", "G02");
-					report.setBidG02MainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
+					report.setBidG02CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG02CrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG02CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询M标的交叉EPPC
 					paramMap.put("bidType", "M");
-					report.setBidMMainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
+					report.setBidMCrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidMCrossBigEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidMCrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
 				}
-				
-				report.setWhDateNum(bpsRwHistoryDao.getWhDateNum("getWhDateNum", paramMap));
-				paramMap.put("bidType", "A");
-				report.setBidAMainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
-				report.setBidACrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				paramMap.put("bidType", "B");
-				report.setBidBMainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
-				report.setBidBCrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				paramMap.put("bidType", "F");
-				report.setBidF(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
-				paramMap.put("bidType", "F00");
-				report.setBidF00MainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
-				report.setBidF00CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				paramMap.put("bidType", "F01");
-				report.setBidF01MainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
-				report.setBidF01CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				paramMap.put("bidType", "F02");
-				report.setBidF02MainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
-				report.setBidF02CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				paramMap.put("bidType", "G01");
-				report.setBidG01MainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
-				report.setBidG01CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				paramMap.put("bidType", "G02");
-				report.setBidG02MainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
-				report.setBidG02CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
-				paramMap.put("bidType", "M");
-				report.setBidMMainBusi(superscriptReportDao.getBidMainBusi("getBidMainBusi", paramMap));
-				report.setBidMCrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+				//查询交叉大额EPPC
+				paramMap.put("dataType", "大额EPPC");
+				if("大额EPPC".equals(ywType)){
+					report.setBidACrossBigEPPC(0L);
+					report.setBidBCrossBigEPPC(0L);
+					report.setBidF00CrossBigEPPC(0L);
+					report.setBidF01CrossBigEPPC(0L);
+					report.setBidF02CrossBigEPPC(0L);
+					report.setBidG01CrossBigEPPC(0L);
+					report.setBidG02CrossBigEPPC(0L);
+					report.setBidMCrossBigEPPC(0L);
+				}else{
+					//查询A标的交叉大额EPPC
+					paramMap.put("bidType", "A");
+					report.setBidACrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidACrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidACrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询B标的交叉大额EPPC
+					paramMap.put("bidType", "B");
+					report.setBidBCrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidBCrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidBCrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询F00标的交叉大额EPPC
+					paramMap.put("bidType", "F00");
+					report.setBidF00CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF00CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF00CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询F01标的交叉大额EPPC
+					paramMap.put("bidType", "F01");
+					report.setBidF01CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF01CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF01CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询F02标的交叉大额EPPC
+					paramMap.put("bidType", "F02");
+					report.setBidF02CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF02CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidF02CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询G01标的交叉大额EPPC
+					paramMap.put("bidType", "G01");
+					report.setBidG01CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG01CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG01CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询G02标的交叉大额EPPC
+					paramMap.put("bidType", "G02");
+					report.setBidG02CrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG02CrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidG02CrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					//查询M标的交叉大额EPPC
+					paramMap.put("bidType", "M");
+					report.setBidMCrossEPP(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidMCrossEPPC(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+					report.setBidMCrossBill(superscriptReportDao.getBidCrossData("getBidCrossData", paramMap));
+				}
 				
 				report.setDgjDataNum(superscriptReportDao.getDgjDataNum("getDgjDataNum", paramMap));
 				report.setGqDataNum(superscriptReportDao.getGqDataNum("getGqDataNum", paramMap));

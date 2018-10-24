@@ -66,7 +66,7 @@ public class NewNumberMonitorServiceImpl implements NewNumberMonitorService{
 		userParam.put("group", params.getGroup());
 		userParam.put("userName", params.getUserName());
 		userParam.put("beginTime", format.format(new Date())+" 00:00:00");
-		userParam.put("endTime", userParam.get("beginTime")+" 23:59:59");
+		userParam.put("endTime", format.format(new Date())+" 23:59:59");
 		userParam.put("rows", params.getRows());
 		userParam.put("skipRow", params.getSkipRow());
 		//获取有数据派发的用户名List
@@ -97,7 +97,7 @@ public class NewNumberMonitorServiceImpl implements NewNumberMonitorService{
 			}
 			//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
 			boolean dataFlag = haveDataUser.contains(user.getUserName());
-			
+			dataFlag = true;
 			for (String ywType : ywTypeArr){
 				if(!"".equals(params.getYwType()) && !params.getYwType().equals(ywType)){
 					continue;
@@ -127,9 +127,10 @@ public class NewNumberMonitorServiceImpl implements NewNumberMonitorService{
 						
 					}
 					obj.setOutboundNum(newNumberMonitorDao.getOutboundNum("getOutboundNum", dataParam));
-					if(obj.getDistributeNum()==0 || obj.getOutboundNum()==0) obj.setPercentageComplete("0");
-					else{
-						double percent = obj.getDistributeNum() / obj.getOutboundNum() * 100;
+					if(obj.getDistributeNum()==0 || obj.getOutboundNum()==0) {
+						obj.setPercentageComplete("0");
+					}else{
+						double percent = Double.parseDouble(obj.getDistributeNum()+"") / obj.getOutboundNum() * 100;
 						percent = (double)Math.round(percent*100)/100;
 						obj.setPercentageComplete(percent + "%");
 					}

@@ -47,101 +47,101 @@
 	<select id="getMainAcceptNumA" parameterClass="HashMap" resultClass="Long">
 		SELECT count(*) AS amount FROM 
 		<isEqual property="ywType" compareValue="EPP">
-			 bps_gdx_epp WHERE forceTransfer !='1' 
+			 bps_gdx_epp WHERE AND mainyw='EPP' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			bps_gdx_zdfq WHERE forceTransfer !='1' 
+			bps_gdx_zdfq WHERE AND mainyw='账单分期' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			bps_gdx_deczj WHERE forceTransfer !='1' 
+			bps_gdx_deczj WHERE AND mainyw='大额EPPC'  
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			bps_gdx_eppc WHERE forceTransfer !='1' and pettycash!='新发卡备用金' 
+			bps_gdx_eppc WHERE and pettycash!='新发卡备用金' AND mainyw='EPPC'  
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			bps_gdx_eppc WHERE forceTransfer !='1' and pettycash='新发卡备用金' 
+			bps_gdx_eppc WHERE and pettycash='新发卡备用金' AND mainyw='EPPC'  
 		</isEqual>
-		 and gdx_exzx=#userName# and gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND gdx_extime &lt;= CONCAT(CURDATE(),' 23:59:59')
+		 and forceTransfer !='1' and gdx_exzx=#userName# and gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND gdx_extime &lt;= CONCAT(CURDATE(),' 23:59:59')
 	</select>
 	
 	<select id="getMainAcceptNumB" parameterClass="HashMap" resultClass="Long">
 		SELECT count(*) AS amount FROM 
 		<isEqual property="ywType" compareValue="EPP">
-			 bps_gdx_epp WHERE forceTransfer ='1' 
+			 bps_gdx_epp WHERE AND mainyw='EPP' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			bps_gdx_zdfq WHERE forceTransfer ='1' 
+			bps_gdx_zdfq WHERE AND mainyw='账单分期' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			bps_gdx_deczj WHERE forceTransfer ='1' 
+			bps_gdx_deczj WHERE AND mainyw='大额EPPC'  
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			bps_gdx_eppc WHERE forceTransfer ='1' and pettycash!='新发卡备用金' 
+			bps_gdx_eppc WHERE and pettycash!='新发卡备用金' AND mainyw='EPPC'  
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			bps_gdx_eppc WHERE forceTransfer ='1' and pettycash='新发卡备用金' 
+			bps_gdx_eppc WHERE and pettycash='新发卡备用金' AND mainyw='EPPC'  
 		</isEqual>
-		  and gdx_exzx=#userName# and Update_t &gt;= CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND approve_rst = '成功' and status_Approved = '已批核'
+		  and forceTransfer ='1' and gdx_exzx=#userName# and Update_t &gt;= CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND approve_rst = '成功' and status_Approved = '已批核'
 	</select>
 	
 	<select id="getMainApproveMoneyA" parameterClass="HashMap" resultClass="Double">
 		SELECT 
 		<isEqual property="ywType" compareValue="EPP">
-			 IFNULL(sum(transAmt), 0.00) AS money FROM bps_gdx_epp WHERE forceTransfer !='1' 
+			 IFNULL(sum(transAmt), 0.00) AS money FROM bps_gdx_epp WHERE mainyw='EPP'
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			 IFNULL(sum(acceptAmt), 0.00) AS money FROM bps_gdx_zdfq WHERE forceTransfer !='1' 
+			 IFNULL(sum(acceptAmt), 0.00) AS money FROM bps_gdx_zdfq WHERE mainyw='账单分期' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			 IFNULL(sum(applyAmt), 0.00) AS money FROM bps_gdx_deczj WHERE forceTransfer !='1' 
+			 IFNULL(sum(applyAmt), 0.00) AS money FROM bps_gdx_deczj WHERE mainyw='大额EPPC' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			 IFNULL(sum(amount), 0.00) AS money FROM bps_gdx_eppc WHERE forceTransfer !='1' and pettycash!='新发卡备用金' 
+			 IFNULL(sum(amount), 0.00) AS money FROM bps_gdx_eppc WHERE mainyw='EPPC' and pettycash!='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 IFNULL(sum(amount), 0.00) AS money FROM bps_gdx_eppc WHERE forceTransfer !='1' and pettycash='新发卡备用金' 
+			 IFNULL(sum(amount), 0.00) AS money FROM bps_gdx_eppc WHERE mainyw='EPPC' and pettycash='新发卡备用金' 
 		</isEqual>
-		  and gdx_exzx= #userName# and gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND gdx_extime &lt;= CONCAT(CURDATE(),' 23:59:59')
+		  and forceTransfer !='1' and gdx_exzx= #userName# and gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND gdx_extime &lt;= CONCAT(CURDATE(),' 23:59:59')
 	</select>
 	
 	<select id="getMainApproveMoneyB" parameterClass="HashMap" resultClass="Double">
 		SELECT 
 		<isEqual property="ywType" compareValue="EPP">
-			 IFNULL(sum(transAmt), 0.00) AS money FROM bps_gdx_epp WHERE forceTransfer =1 
+			 IFNULL(sum(transAmt), 0.00) AS money FROM bps_gdx_epp WHERE mainyw='EPP'
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			 IFNULL(sum(acceptAmt), 0.00) AS money FROM bps_gdx_zdfq WHERE forceTransfer =1 
+			 IFNULL(sum(acceptAmt), 0.00) AS money FROM bps_gdx_zdfq WHERE mainyw='账单分期' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			 IFNULL(sum(applyAmt), 0.00) AS money FROM bps_gdx_deczj WHERE forceTransfer =1 
+			 IFNULL(sum(applyAmt), 0.00) AS money FROM bps_gdx_deczj WHERE mainyw='大额EPPC' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			 IFNULL(sum(amount), 0.00) AS money FROM bps_gdx_eppc WHERE forceTransfer =1 and pettycash!='新发卡备用金' 
+			 IFNULL(sum(amount), 0.00) AS money FROM bps_gdx_eppc WHERE mainyw='EPPC' and pettycash!='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 IFNULL(sum(amount), 0.00) AS money FROM bps_gdx_eppc WHERE forceTransfer =1 and pettycash='新发卡备用金' 
+			 IFNULL(sum(amount), 0.00) AS money FROM bps_gdx_eppc WHERE mainyw='EPPC' and pettycash='新发卡备用金' 
 		</isEqual>
-		  and gdx_exzx= #userName# and Update_t &gt;= CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND approve_rst = '成功' and status_Approved = '已批核'
+		  and forceTransfer =1 and gdx_exzx= #userName# and Update_t &gt;= CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND approve_rst = '成功' and status_Approved = '已批核'
 	</select>
 	
 	<select id="getApproveMoneyWithPeriodA" resultClass="Double" parameterClass="HashMap">
 		select 
 		<isEqual property="dataType" compareValue="EPP">
-			 IFNULL(sum(transAmt), 0.00) AS money from bps_gdx_epp where forceTransfer !='1' 
+			 IFNULL(sum(transAmt), 0.00) AS money from bps_gdx_epp where mainyw='EPP' 
 		</isEqual>
 		<isEqual property="dataType" compareValue="账单分期">
-			 IFNULL(sum(acceptAmt), 0.00) AS money from  bps_gdx_zdfq where forceTransfer !='1' 
+			 IFNULL(sum(acceptAmt), 0.00) AS money from  bps_gdx_zdfq where mainyw='账单分期' 
 		</isEqual>
 		<isEqual property="dataType" compareValue="大额EPPC">
-			 IFNULL(sum(applyAmt), 0.00) AS money from bps_gdx_deczj where forceTransfer !='1' 
+			 IFNULL(sum(applyAmt), 0.00) AS money from bps_gdx_deczj where mainyw='大额EPPC' 
 		</isEqual>
 		<isEqual property="dataType" compareValue="EPPC">
-			 IFNULL(sum(amount), 0.00) AS money bps_gdx_eppc where forceTransfer !='1' and pettycash!='新发卡备用金' 
+			 IFNULL(sum(amount), 0.00) AS money bps_gdx_eppc where mainyw='EPPC' and pettycash!='新发卡备用金' 
 		</isEqual>
 		<isEqual property="dataType" compareValue="EPPC备用金">
-			 IFNULL(sum(amount), 0.00) AS money bps_gdx_eppc where forceTransfer !='1' and pettycash='新发卡备用金' 
+			 IFNULL(sum(amount), 0.00) AS money bps_gdx_eppc where mainyw='EPPC' and pettycash='新发卡备用金' 
 		</isEqual>
-		  AND gdx_exzx=#userName# AND gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND gdx_extime &lt;= CONCAT(CURDATE(),' 23:59:59')  
+		  and forceTransfer !='1' AND gdx_exzx=#userName# AND gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND gdx_extime &lt;= CONCAT(CURDATE(),' 23:59:59')  
 		
 		<isEqual property="period" compareValue="18期">
 			 and  bills='18';
@@ -157,21 +157,21 @@
 	<select id="getApproveMoneyWithPeriodB" resultClass="Double" parameterClass="HashMap">
 		select 
 		<isEqual property="dataType" compareValue="EPP">
-			 IFNULL(sum(transAmt), 0.00) AS money from bps_gdx_epp where forceTransfer ='1' 
+			 IFNULL(sum(transAmt), 0.00) AS money from bps_gdx_epp where mainyw='EPP' 
 		</isEqual>
 		<isEqual property="dataType" compareValue="账单分期">
-			 IFNULL(sum(acceptAmt), 0.00) AS money from  bps_gdx_zdfq where forceTransfer ='1' 
+			 IFNULL(sum(acceptAmt), 0.00) AS money from  bps_gdx_zdfq where mainyw='账单分期' 
 		</isEqual>
 		<isEqual property="dataType" compareValue="大额EPPC">
-			 IFNULL(sum(applyAmt), 0.00) AS money from bps_gdx_deczj where forceTransfer ='1' 
+			 IFNULL(sum(applyAmt), 0.00) AS money from bps_gdx_deczj where mainyw='大额EPPC' 
 		</isEqual>
 		<isEqual property="dataType" compareValue="EPPC">
-			 IFNULL(sum(amount), 0.00) AS money bps_gdx_eppc where forceTransfer ='1' and pettycash!='新发卡备用金' 
+			 IFNULL(sum(amount), 0.00) AS money bps_gdx_eppc where mainyw='EPPC' and pettycash!='新发卡备用金' 
 		</isEqual>
 		<isEqual property="dataType" compareValue="EPPC备用金">
-			 IFNULL(sum(amount), 0.00) AS money bps_gdx_eppc where forceTransfer ='1' and pettycash='新发卡备用金' 
+			 IFNULL(sum(amount), 0.00) AS money bps_gdx_eppc where mainyw='EPPC' and pettycash='新发卡备用金' 
 		</isEqual>
-		   and Update_t &gt;= CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND approve_rst = '成功' and status_Approved = '已批核' 
+		   and forceTransfer ='1' and Update_t &gt;= CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND approve_rst = '成功' and status_Approved = '已批核' 
 		<isEqual property="period" compareValue="18期">
 			 and  bills='18';
 		</isEqual>
@@ -184,37 +184,67 @@
 	</select>
 	
 	<select id="getCrossApproveMoneyA" parameterClass="HashMap" resultClass="Double">
-		SELECT 
+		SELECT IFNULL(sum(transAmt), 0.00) AS money FROM 
 		<isEqual property="dataType" compareValue="EPP">
-			 IFNULL(sum(transAmt), 0.00) AS money FROM bps_gdx_epp WHERE forceTransfer !='1'  AND mainyw!='EPP' 
+			bps_gdx_epp 
 		</isEqual>
 		<isEqual property="dataType" compareValue="账单分期">
-			 IFNULL(sum(acceptAmt), 0.00) AS money FROM bps_gdx_zdfq WHERE forceTransfer !='1' AND mainyw!='账单分期' 
+			bps_gdx_zdfq 
 		</isEqual>
 		<isEqual property="dataType" compareValue="大额EPPC">
-			 IFNULL(sum(applyAmt), 0.00) AS money FROM bps_gdx_deczj WHERE forceTransfer !='1' AND mainyw!='大额EPPC' 
+			bps_gdx_deczj 
 		</isEqual>
 		<isEqual property="dataType" compareValue="EPPC">
-			 IFNULL(sum(amount), 0.00) AS money FROM bps_gdx_eppc WHERE forceTransfer !='1' AND mainyw!='EPPC' 
+			bps_gdx_eppc 
 		</isEqual>
-		  and gdx_exzx= #userName# and gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND gdx_extime &lt;= CONCAT(CURDATE(),' 23:59:59')
+			WHERE gdx_exzx=#userName# and gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND gdx_extime &lt;= CONCAT(CURDATE(),' 23:59:59') and forceTransfer !='1' 
+		<isEqual property="ywType" compareValue="EPP">
+			AND mainyw='EPP'
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			AND mainyw='账单分期'
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			AND mainyw='大额EPPC'
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			and mainyw ='EPPC'and pettycash!='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			and mainyw ='EPPC'and pettycash='新发卡备用金' 
+		</isEqual>
 	</select>
 	
 	<select id="getCrossApproveMoneyB" parameterClass="HashMap" resultClass="Double">
-		SELECT 
+		SELECT IFNULL(sum(transAmt), 0.00) AS money FROM 
 		<isEqual property="dataType" compareValue="EPP">
-			 IFNULL(sum(transAmt), 0.00) AS money FROM bps_gdx_epp WHERE forceTransfer =1 AND mainyw!='EPP' 
+			bps_gdx_epp 
 		</isEqual>
 		<isEqual property="dataType" compareValue="账单分期">
-			 IFNULL(sum(acceptAmt), 0.00) AS money FROM bps_gdx_zdfq WHERE forceTransfer =1 AND mainyw!='账单分期'
+			bps_gdx_zdfq 
 		</isEqual>
 		<isEqual property="dataType" compareValue="大额EPPC">
-			 IFNULL(sum(applyAmt), 0.00) AS money FROM bps_gdx_deczj WHERE forceTransfer =1 AND mainyw!='大额EPPC' 
+			bps_gdx_deczj 
 		</isEqual>
 		<isEqual property="dataType" compareValue="EPPC">
-			 IFNULL(sum(amount), 0.00) AS money FROM bps_gdx_eppc WHERE forceTransfer =1 AND mainyw!='EPPC' 
+			bps_gdx_eppc 
 		</isEqual>
-		  and gdx_exzx= #userName# and Update_t &gt;= CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND approve_rst = '成功' and status_Approved = '已批核'
+			WHERE gdx_exzx=#userName# and forceTransfer =1 and Update_t &gt;= CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND approve_rst = '成功' and status_Approved = '已批核' 
+		<isEqual property="ywType" compareValue="EPP">
+			AND mainyw='EPP'
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			AND mainyw='账单分期'
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			AND mainyw='大额EPPC'
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			and mainyw ='EPPC'and pettycash!='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			and mainyw ='EPPC'and pettycash='新发卡备用金' 
+		</isEqual>
 	</select>
 	
 	<select id="getAutoBindNum" parameterClass="HashMap" resultClass="Long">

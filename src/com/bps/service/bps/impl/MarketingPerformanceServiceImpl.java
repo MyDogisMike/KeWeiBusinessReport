@@ -58,7 +58,7 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 		userParam.put("group", params.getGroup());
 		userParam.put("userName", params.getUserName());
 		userParam.put("beginTime", format.format(new Date())+" 00:00:00");
-		userParam.put("endTime", userParam.get("beginTime")+" 23:59:59");
+		userParam.put("endTime", format.format(new Date())+" 23:59:59");
 		userParam.put("rows", params.getRows());
 		userParam.put("skipRow", params.getSkipRow());
 		//获取有数据派发的用户名List
@@ -118,22 +118,41 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 					obj.setMainAcceptNum(0L);
 					obj.setMainApproveMoney(0.0);
 				}else{
-					dataParam.put("dataType", "EPPC");
-					Double moneyA = marketingPerformanceDao.getCrossApproveMoneyA("getCrossApproveMoneyA", dataParam);
-					Double moneyB = marketingPerformanceDao.getCrossApproveMoneyB("getCrossApproveMoneyB", dataParam);
-					obj.setCrossEPPCApproveMoney(moneyA + moneyB);
-					dataParam.put("dataType", "EPP");
-					moneyA = marketingPerformanceDao.getCrossApproveMoneyA("getCrossApproveMoneyA", dataParam);
-					moneyB = marketingPerformanceDao.getCrossApproveMoneyB("getCrossApproveMoneyB", dataParam);
-					obj.setCrossEPPApproveMoney(moneyA + moneyB);
-					dataParam.put("dataType", "大额EPPC");
-					moneyA = marketingPerformanceDao.getCrossApproveMoneyA("getCrossApproveMoneyA", dataParam);
-					moneyB = marketingPerformanceDao.getCrossApproveMoneyB("getCrossApproveMoneyB", dataParam);
-					obj.setCrossBigEPPCApproveMoney(moneyA + moneyB);
-					dataParam.put("dataType", "账单分期");
-					moneyA = marketingPerformanceDao.getCrossApproveMoneyA("getCrossApproveMoneyA", dataParam);
-					moneyB = marketingPerformanceDao.getCrossApproveMoneyB("getCrossApproveMoneyB", dataParam);
-					obj.setCrossBillApproveMoney(moneyA + moneyB);
+					Double moneyA = 0.00;
+					Double moneyB = 0.00;
+					if("EPPC".equals(ywType) || "EPPC备用金".equals(ywType)){
+						obj.setCrossEPPCApproveMoney(0.00);
+					}else{
+						dataParam.put("dataType", "EPPC");
+						moneyA = marketingPerformanceDao.getCrossApproveMoneyA("getCrossApproveMoneyA", dataParam);
+						moneyB = marketingPerformanceDao.getCrossApproveMoneyB("getCrossApproveMoneyB", dataParam);
+						obj.setCrossEPPCApproveMoney(moneyA + moneyB);
+					}
+					if("EPP".equals(ywType)){
+						obj.setCrossEPPApproveMoney(0.00);
+					}else{
+						dataParam.put("dataType", "EPP");
+						moneyA = marketingPerformanceDao.getCrossApproveMoneyA("getCrossApproveMoneyA", dataParam);
+						moneyB = marketingPerformanceDao.getCrossApproveMoneyB("getCrossApproveMoneyB", dataParam);
+						obj.setCrossEPPApproveMoney(moneyA + moneyB);
+					}
+					if("大额EPPC".equals(ywType)){
+						obj.setCrossBigEPPCApproveMoney(0.00);
+					}else{
+						dataParam.put("dataType", "大额EPPC");
+						moneyA = marketingPerformanceDao.getCrossApproveMoneyA("getCrossApproveMoneyA", dataParam);
+						moneyB = marketingPerformanceDao.getCrossApproveMoneyB("getCrossApproveMoneyB", dataParam);
+						obj.setCrossBigEPPCApproveMoney(moneyA + moneyB);
+					}
+					if("账单分期".equals(ywType)){
+						obj.setCrossBillApproveMoney(0.00);
+					}else{
+						dataParam.put("dataType", "账单分期");
+						moneyA = marketingPerformanceDao.getCrossApproveMoneyA("getCrossApproveMoneyA", dataParam);
+						moneyB = marketingPerformanceDao.getCrossApproveMoneyB("getCrossApproveMoneyB", dataParam);
+						obj.setCrossBillApproveMoney(moneyA + moneyB);
+					}
+					
 					
 					moneyA = marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
 					moneyB = marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);

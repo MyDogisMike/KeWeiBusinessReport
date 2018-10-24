@@ -55,7 +55,7 @@ public class MarketingProcessServiceImpl implements MarketingProcessService{
 		userParam.put("group", params.getGroup());
 		userParam.put("userName", params.getUserName());
 		userParam.put("beginTime", format.format(new Date())+" 00:00:00");
-		userParam.put("endTime", userParam.get("beginTime")+" 23:59:59");
+		userParam.put("endTime", format.format(new Date())+" 23:59:59");
 		userParam.put("rows", params.getRows());
 		userParam.put("skipRow", params.getSkipRow());
 		//获取有数据派发的用户名List

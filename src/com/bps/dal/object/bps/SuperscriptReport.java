@@ -14,7 +14,7 @@ public class SuperscriptReport implements Cloneable{
 	private String ywType;	//业务类型
 	private Long whDateNum; //外呼数据量
 	private Long bidAMainBusi;	//A标（主营）
-	private Long bidACrossEPP;	//A标（交叉EPP
+	private Long bidACrossEPP;	//A标（交叉EPP）
 	private Long bidACrossBill;	//A标（交叉账单分期）
 	private Long bidACrossEPPC;	//A标（交叉EPPC）
 	private Long bidACrossBigEPPC;	//A标（交叉大额EPPC）

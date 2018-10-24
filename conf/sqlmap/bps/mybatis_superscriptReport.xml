@@ -54,44 +54,60 @@
 	</select>
 	
 	<select id="getBidCrossData" parameterClass="HashMap" resultClass="Long">
-		select COUNT(md_id) AS bid from  bps_rw_history where user_name = #userName# AND str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;#beginTime# AND str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;=#endTime#
+		select COUNT(a.md_id) AS bid from bps_rw_history a 
 		<isEqual property="ywType" compareValue="EPP">
-			AND gd_type='EPP工单' AND yw_type IN('EPPC', '账单分期', '大额EPPC')
+			where a.yw_type='EPP' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			AND gd_type='账单分期工单' AND yw_type IN('EPPC', 'EPP', '大额EPPC')
-		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC">
-			AND gd_type='EPPC工单' AND yw_type IN('账单分期', 'EPP', '大额EPPC')
+			where a.yw_type='账单分期' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			AND gd_type='大额EPPC工单' AND yw_type IN('账单分期', 'EPP', 'EPPC')
+			where a.yw_type='大额EPPC' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND b.DataType!='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND b.DataType='新发卡备用金' 
 		</isEqual>
 		
-		
+			AND a.user_name = #userName# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;#beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;=#endTime# 
 		<isEqual property="bidType" compareValue="A">
-			AND Rw_Status_sn='A'
+			AND a.Rw_Status_sn='A' 
 		</isEqual>
 		<isEqual property="bidType" compareValue="B">
-			AND Rw_Status_sn='B'
+			AND a.Rw_Status_sn='B' 
 		</isEqual>
 		<isEqual property="bidType" compareValue="F00">
-			AND Rw_Reason_sn='F00'
+			AND a.Rw_Reason_sn='F00' 
 		</isEqual>
 		<isEqual property="bidType" compareValue="F01">
-			AND Rw_Reason_sn='F01'
+			AND a.Rw_Reason_sn='F01' 
 		</isEqual>
 		<isEqual property="bidType" compareValue="F02">
-			AND Rw_Reason_sn='F02'
+			AND a.Rw_Reason_sn='F02' 
 		</isEqual>
 		<isEqual property="bidType" compareValue="G01">
-			AND Rw_Reason_sn='G01'
+			AND a.Rw_Reason_sn='G01' 
 		</isEqual>
 		<isEqual property="bidType" compareValue="G02">
-			AND Rw_Reason_sn='G02'
+			AND a.Rw_Reason_sn='G02' 
 		</isEqual>
 		<isEqual property="bidType" compareValue="M">
-			AND Rw_Status_sn='M'
+			AND a.Rw_Status_sn='M' 
+		</isEqual>
+		
+		<isEqual property="dataType" compareValue="EPP">
+			AND a.gd_type='EPP工单' 
+		</isEqual>
+		<isEqual property="dataType" compareValue="账单分期">
+			AND a.gd_type='账单分期工单' 
+		</isEqual>
+		<isEqual property="dataType" compareValue="EPPC">
+			AND a.gd_type='EPPC工单' 
+		</isEqual>
+		<isEqual property="dataType" compareValue="大额EPPC">
+			AND a.gd_type='大额EPPC工单' 
 		</isEqual>
 		 
 	</select>

@@ -68,7 +68,7 @@ button {
 					<label>
 						所属中心
 					</label>
-					<select name="" id="center" class="easyui-combobox" editable="false">
+					<select required="true" name="" id="center" class="easyui-combobox" editable="false">
 						<option value=""></option>
 						
 					</select>
@@ -477,6 +477,10 @@ button {
 			}
 			
 			$("#searchBtn").click(function(){
+				if($('#center').combobox('getValue')==''){
+					$.messager.alert('提示','请选择所属中心');
+					return;
+				}
 				$("#searchBtn").attr('disabled',true);
 				$("#exportBtn").attr('disabled',true);
 			//alert(window.location.href);
@@ -524,6 +528,10 @@ button {
 			
 			//导出excel表格按钮的点击事件
 			$('#exportBtn').click(function(){
+				if($('#center').combobox('getValue')==''){
+					$.messager.alert('提示','请选择所属中心');
+					return;
+				}
 		        $('#condition_form').form({
 		            url : '../dataview/exportMarketingPerformanceExcel.action',
 		            dataType: 'text',
