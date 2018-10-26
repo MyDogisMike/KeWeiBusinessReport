@@ -17,9 +17,9 @@
 	<bean id="MonthNoticeTask" class="com.bps.task.MonthNoticeTask"/>
 	
 	<task:scheduled-tasks>
-<!--	    <task:scheduled ref="NoticeTask" method="run" cron="0 08 16 * * ?"/>-->
-<!--	    <task:scheduled ref="WeekNoticeTask" method="run" cron="0 09 16 * * ?"/>-->
-<!--	    <task:scheduled ref="MonthNoticeTask" method="run" cron="0 09 16 * * ?"/>-->
+<!--	    <task:scheduled ref="NoticeTask" method="run" cron="0 15 9 * * ?"/>-->
+<!--	    <task:scheduled ref="WeekNoticeTask" method="run" cron="0 16 9 * * ?"/>-->
+<!--	    <task:scheduled ref="MonthNoticeTask" method="run" cron="0 16 9 * * ?"/>-->
 	    
 	    <task:scheduled ref="NoticeTask" method="run" cron="0 00 00 * * ?"/>
 	    <task:scheduled ref="WeekNoticeTask" method="run" cron="0 05 00 ? * MON"/>

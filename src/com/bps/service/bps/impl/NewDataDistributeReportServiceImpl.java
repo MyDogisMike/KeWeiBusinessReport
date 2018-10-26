@@ -198,7 +198,6 @@ public class NewDataDistributeReportServiceImpl implements NewDataDistributeRepo
 			for (String dataType : dataTypeList){
 				NewDataDistributeReport newReport = (NewDataDistributeReport)report.clone();
 				newReport.setDataType(dataType);
-				
 				if(!dataFlag){
 					newReport.setConnectNum(0L);
 					newReport.setDistributeAmount(0L);

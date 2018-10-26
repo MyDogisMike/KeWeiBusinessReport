@@ -294,63 +294,63 @@ button {
 					title : '所属中心',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 70,
 				}, {
 					field : 'ywType',
 					title : '数据业务类型',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				}, {
 					field : 'group',
 					title : '组别',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 50
 				}, {
 					field : 'userName',
 					title : '营销员工号',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				}, {
 					field : 'userRealName',
 					title : '营销员姓名',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 100
 				}, {
 					field : 'whDataNum',
 					title : '外呼数据量',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'successAcceptNum',
 					title : '成功受理量',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'successApproveMoney',
 					title : '成功批核金额',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'communicateTotleTime',
 					title : '接通通话总时长',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				}
 				] ],

@@ -7,19 +7,19 @@
 	<select id="getTodayWhDateNum" parameterClass="HashMap" resultClass="Long">
 		SELECT COUNT(DISTINCT a.md_id) AS amount from bps_rw_history a 
 		<isEqual property="ywType" compareValue="EPP">
-			 WHERE str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;=CONCAT(CURDATE(),' 00:00:00') AND user_name= #userName# AND yw_type ='EPP';
+			 WHERE rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00') AND user_name= #userName# AND yw_type ='EPP';
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			 WHERE str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;=CONCAT(CURDATE(),' 00:00:00') AND user_name= #userName# AND yw_type ='账单分期';
+			 WHERE rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00') AND user_name= #userName# AND yw_type ='账单分期';
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			 WHERE str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;=CONCAT(CURDATE(),' 00:00:00') AND user_name= #userName# AND yw_type ='大额EPPC';
+			 WHERE rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00') AND user_name= #userName# AND yw_type ='大额EPPC';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.yw_type ='EPPC' AND b.DataType!='新发卡备用金' and a.user_name= #userName#;
+			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.yw_type ='EPPC' AND b.Data_type!='新发卡备用金' and a.user_name= #userName#;
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.yw_type ='EPPC' AND b.DataType='新发卡备用金'  and a.user_name= #userName#;
+			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.yw_type ='EPPC' AND b.Data_type='新发卡备用金'  and a.user_name= #userName#;
 		</isEqual>
 	</select>
 	
@@ -35,10 +35,10 @@
 			 where user_name = #userName# AND yw_type='大额EPPC' AND gd_type='大额EPPC工单' AND Rw_Status_sn='A' AND rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00'); 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			 left join mdx_eppc b on a.dr_key=b.dr_key where a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.Rw_Status_sn='A' and a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.user_name=#userName# AND b.DataType!= '新发卡备用金';
+			 left join mdx_eppc b on a.dr_key=b.dr_key where a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.Rw_Status_sn='A' and a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.user_name=#userName# AND b.Data_type!= '新发卡备用金';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 left join mdx_eppc b on a.dr_key=b.dr_key where a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.Rw_Status_sn='A' and a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.user_name=#userName# AND b.DataType= '新发卡备用金';
+			 left join mdx_eppc b on a.dr_key=b.dr_key where a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.Rw_Status_sn='A' and a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.user_name=#userName# AND b.Data_type= '新发卡备用金';
 		</isEqual>
 	</select>
 	
@@ -54,10 +54,10 @@
 			IFNULL(sum(applyAmt), 0.00) AS money  from bps_gdx_deczj where gdx_exzx=#userName# AND mainyw='大额EPPC' AND gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND forceTransfer !=1;
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.assignDataType!='新发卡备用金' AND a.gdx_exzx=#userName# AND a.gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.mainyw='EPPC' AND a.forceTransfer !=1;
+			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type!='新发卡备用金' AND a.gdx_exzx=#userName# AND a.gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.mainyw='EPPC' AND a.forceTransfer !=1;
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.assignDataType='新发卡备用金' AND a.gdx_exzx=#userName# AND a.gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.mainyw='EPPC' AND a.forceTransfer !=1;
+			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type='新发卡备用金' AND a.gdx_exzx=#userName# AND a.gdx_extime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.mainyw='EPPC' AND a.forceTransfer !=1;
 		</isEqual>
 	</select>
 	
@@ -73,10 +73,10 @@
 			IFNULL(sum(applyAmt), 0.00) AS money from  bps_gdx_deczj where gdx_exzx=#userName# AND mainyw='大额EPPC' AND Update_t &gt;=CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND forceTransfer =1 AND approve_rst = '成功' and status_Approved = '已批核';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.assignDataType!='新发卡备用金' AND a.gdx_exzx=#userName# AND a.Update_t &gt;=CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND a.mainyw='EPPC' AND a.forceTransfer =1 AND a.approve_rst = '成功' and a.status_Approved = '已批核';
+			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type!='新发卡备用金' AND a.gdx_exzx=#userName# AND a.Update_t &gt;=CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND a.mainyw='EPPC' AND a.forceTransfer =1 AND a.approve_rst = '成功' and a.status_Approved = '已批核';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.assignDataType='新发卡备用金' AND a.gdx_exzx=#userName# AND a.Update_t &gt;=CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND a.mainyw='EPPC' AND a.forceTransfer =1 AND a.approve_rst = '成功' and a.status_Approved = '已批核';
+			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type='新发卡备用金' AND a.gdx_exzx=#userName# AND a.Update_t &gt;=CONCAT(date_add(CURDATE(),interval -1 day),' 23:30:00') AND Update_t &lt;= CONCAT(CURDATE(),' 07:00:00') AND a.mainyw='EPPC' AND a.forceTransfer =1 AND a.approve_rst = '成功' and a.status_Approved = '已批核';
 		</isEqual>
 	</select>
 	
@@ -92,10 +92,10 @@
 			 WHERE user_name= #userName# and rw_ctime>=CONCAT(CURDATE(),' 00:00:00') AND callid != '' and yw_type='大额EPPC'; 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime>=CONCAT(CURDATE(),' 00:00:00') AND a.yw_type ='EPPC' AND b.DataType!='新发卡备用金' and a.user_name= #userName# ;
+			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime>=CONCAT(CURDATE(),' 00:00:00') AND a.yw_type ='EPPC' AND b.Data_type!='新发卡备用金' and a.user_name= #userName# ;
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime>=CONCAT(CURDATE(),' 00:00:00') AND a.yw_type ='EPPC' AND b.DataType!='新发卡备用金' and a.user_name= #userName# ;
+			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime>=CONCAT(CURDATE(),' 00:00:00') AND a.yw_type ='EPPC' AND b.Data_type!='新发卡备用金' and a.user_name= #userName# ;
 		</isEqual>
 	</select>
 	
@@ -111,10 +111,10 @@
 			 WHERE b.yw_type='大额EPPC' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			 LEFT JOIN mdx_eppc m on b.dr_key = m.dr_key WHERE b.yw_type='EPPC' and m.DataType!='新发卡备用金' 
+			 LEFT JOIN mdx_eppc m on b.dr_key = m.dr_key WHERE b.yw_type='EPPC' and m.Data_type!='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 LEFT JOIN mdx_eppc m on b.dr_key = m.dr_key WHERE b.yw_type='EPPC' and m.DataType='新发卡备用金' 
+			 LEFT JOIN mdx_eppc m on b.dr_key = m.dr_key WHERE b.yw_type='EPPC' and m.Data_type='新发卡备用金' 
 		</isEqual>
 		 and a.Begintime_Ivr>=CONCAT(CURDATE(),' 00:00:00') AND a.Endtime_Ivr >=CONCAT(CURDATE(),' 00:00:00') AND b.user_name=#userName#;
 	</select>

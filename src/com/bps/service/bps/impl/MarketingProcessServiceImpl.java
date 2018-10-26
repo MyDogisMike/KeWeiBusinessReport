@@ -87,7 +87,6 @@ public class MarketingProcessServiceImpl implements MarketingProcessService{
 			
 			//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
 			boolean dataFlag = haveDataUser.contains(user.getUserName());
-			
 			for (String ywType : ywTypeArr){
 				if(!"".equals(params.getYwType()) && !params.getYwType().equals(ywType)){
 					continue;

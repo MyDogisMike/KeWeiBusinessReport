@@ -74,6 +74,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 				
 				//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
 				boolean dataFlag = haveDataUser.contains(user.getUserName());
+				
 				List<CrossMarketingReport> tempDataList = getUserCrossMarketingReport(user, paramMap, dataFlag);
 				if(tempDataList.size() > 0){
 					dataList.addAll(tempDataList);
@@ -191,7 +192,6 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 		for (String ywType : ywTypeArr){
 			CrossMarketingReport report = (CrossMarketingReport) parentRepor.clone();
 			report.setYwType(ywType);
-			
 			//如果该用户不存在数据派发,不进行数据库查询直接赋默认值
 			if(!dataFlag){
 				report.setCrossBigEPPCAmount(0L);
@@ -237,75 +237,24 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 				paramMap.put("userName", userName);
 				paramMap.put("ywType", ywType);
 				
-				double whDistributeMoney = 0.0;
-				Map<String, String> eppDistributeMoney = crossMarketingReportDao.getEPPDistributeMoney("getEPPDistributeMoney", paramMap);
-				Map<String, String> billDistributeMoney = crossMarketingReportDao.getBillDistributeMoney("getBillDistributeMoney", paramMap);
-				Map<String, String> eppcGeneralDistributeMoney = crossMarketingReportDao.getEPPCGeneralDistributeMoney("getEPPCGeneralDistributeMoney", paramMap);
-				Map<String, String> eppcCreditDistributeMoney = crossMarketingReportDao.getEPPCCreditDistributeMoney("getEPPCCreditDistributeMoney", paramMap);
-				Map<String, String> imprestGeneralDistributeMoney = crossMarketingReportDao.getImprestGeneralDistributeMoney("getImprestGeneralDistributeMoney", paramMap);
-				Map<String, String> imprestCreditDistributeMoney = crossMarketingReportDao.getImprestCreditDistributeMoney("getImprestCreditDistributeMoney", paramMap);
-				Map<String, String> bigEPPCGeneralDistributeMoney = crossMarketingReportDao.getBigEPPCGeneralDistributeMoney("getBigEPPCGeneralDistributeMoney", paramMap);
-				Map<String, String> bigEPPCCreditDistributeMoney = crossMarketingReportDao.getBigEPPCCreditDistributeMoney("getBigEPPCCreditDistributeMoney", paramMap);
-				
-				for (String money : eppDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);;
-				for (String money : billDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);;
-				for (String money : eppcGeneralDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);;
-				for (String money : eppcCreditDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);;
-				for (String money : imprestGeneralDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);;
-				for (String money : imprestCreditDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);;
-				for (String money : bigEPPCGeneralDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);;
-				for (String money : bigEPPCCreditDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);;
-				report.setWhDistributeMoney(whDistributeMoney);
-				
 				long numA = 0L;
 				long numB = 0L;
 				double moneyA = 0.0;
 				double moneyB = 0.0;
-				//交叉EPP批核量和批核金额
-				if("EPP".equals(ywType)){
-					report.setCrossEPPAmount(0L);
-					report.setCrossEPPMoney(0.00);
-					report.setCrossEPPMoney3(0.00);
-					report.setCrossEPPMoney6(0.00);
-					report.setCrossEPPMoney12(0.00);
-					report.setCrossEPPMoney18(0.00);
-					report.setCrossEPPMoney24(0.00);
-					report.setCrossEPPMoney36(0.00);
+				//派发金额
+				if("EPP".equals(ywType) || "账单分期".equals(ywType)){
+					report.setWhDistributeMoney(crossMarketingReportDao.getWhDistributeMoney1("getWhDistributeMoney1", paramMap));
 				}else{
-					paramMap.put("dataType", "EPP");
-					numA = crossMarketingReportDao.getSuccessApproveDataNumA("getSuccessApproveDataNumA", paramMap);
-					numB = crossMarketingReportDao.getSuccessApproveDataNumB("getSuccessApproveDataNumB", paramMap);
-					report.setCrossEPPAmount(numA + numB);
-					paramMap.put("period", "0期");
-					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
-					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
-					report.setCrossEPPMoney(moneyA + moneyB);
-					paramMap.put("period", "3期");
-					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
-					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
-					report.setCrossEPPMoney3(moneyA + moneyB);
-					paramMap.put("period", "6期");
-					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
-					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
-					report.setCrossEPPMoney6(moneyA + moneyB);
-					paramMap.put("period", "12期");
-					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
-					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
-					report.setCrossEPPMoney12(moneyA + moneyB);
-					paramMap.put("period", "18期");
-					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
-					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
-					report.setCrossEPPMoney18(moneyA + moneyB);
-					paramMap.put("period", "24期");
-					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
-					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
-					report.setCrossEPPMoney24(moneyA + moneyB);
-					paramMap.put("period", "36期");
-					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
-					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
-					report.setCrossEPPMoney36(moneyA + moneyB);
+					moneyA = crossMarketingReportDao.getWhDistributeMoney2A("getWhDistributeMoney2A", paramMap);
+					moneyB = crossMarketingReportDao.getWhDistributeMoney2B("getWhDistributeMoney2B", paramMap);
+					report.setWhDistributeMoney(moneyA + moneyB);
 				}
 				
+				report.setWhDateNum(bpsRwHistoryDao.getWhDateNum("getWhDateNum", paramMap));
+				report.setCrossEPPBinding(crossMarketingReportDao.getCrossEPPBinding("getCrossEPPBinding", paramMap));
+				report.setCrossMGLWill(crossMarketingReportDao.getCrossMGLWill("getCrossMGLWill", paramMap));
+				report.setCrossInsuranceWill(crossMarketingReportDao.getCrossInsuranceWill("getCrossInsuranceWill", paramMap));
+				report.setCrossBillBinding(crossMarketingReportDao.getCrossBillBinding("getCrossBillBinding", paramMap));
 				
 				
 				//交叉账单分期批核量和批核金额
@@ -400,7 +349,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 				
 				
 				//交叉EPPC批核量和批核金额
-				if("EPPC".equals(ywType)){
+				if("EPPC".equals(ywType) || "EPPC备用金".equals(ywType)){
 					report.setCrossEPPCAmount(0L);
 					report.setCrossEPPCMoney(0.00);
 					report.setCrossEPPCMoney3(0.00);
@@ -444,12 +393,55 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 					report.setCrossEPPCMoney36(moneyA + moneyB);
 				}
 				
+				//交叉EPP批核量和批核金额
+				if("EPP".equals(ywType)){
+					report.setCrossEPPAmount(0L);
+					report.setCrossEPPMoney(0.00);
+					report.setCrossEPPMoney3(0.00);
+					report.setCrossEPPMoney6(0.00);
+					report.setCrossEPPMoney12(0.00);
+					report.setCrossEPPMoney18(0.00);
+					report.setCrossEPPMoney24(0.00);
+					report.setCrossEPPMoney36(0.00);
+				}else{
+					//由于EPPC及备用金业务交叉EPP业务时没有带备用金字段值，修改有关交叉EPP的统计SQL,其他业务不需关联即可查询，不做修改
+					if("EPPC".equals(ywType) || "EPPC备用金".equals(ywType)){
+						paramMap.put("ywType", "EPP-"+ywType);
+					}
+					paramMap.put("dataType", "EPP");
+					numA = crossMarketingReportDao.getSuccessApproveDataNumA("getSuccessApproveDataNumA", paramMap);
+					numB = crossMarketingReportDao.getSuccessApproveDataNumB("getSuccessApproveDataNumB", paramMap);
+					report.setCrossEPPAmount(numA + numB);
+					paramMap.put("period", "0期");
+					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
+					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
+					report.setCrossEPPMoney(moneyA + moneyB);
+					paramMap.put("period", "3期");
+					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
+					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
+					report.setCrossEPPMoney3(moneyA + moneyB);
+					paramMap.put("period", "6期");
+					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
+					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
+					report.setCrossEPPMoney6(moneyA + moneyB);
+					paramMap.put("period", "12期");
+					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
+					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
+					report.setCrossEPPMoney12(moneyA + moneyB);
+					paramMap.put("period", "18期");
+					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
+					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
+					report.setCrossEPPMoney18(moneyA + moneyB);
+					paramMap.put("period", "24期");
+					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
+					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
+					report.setCrossEPPMoney24(moneyA + moneyB);
+					paramMap.put("period", "36期");
+					moneyA = crossMarketingReportDao.getSuccessApproveDataMoneyA("getSuccessApproveDataMoneyA", paramMap);
+					moneyB = crossMarketingReportDao.getSuccessApproveDataMoneyB("getSuccessApproveDataMoneyB", paramMap);
+					report.setCrossEPPMoney36(moneyA + moneyB);
+				}
 				
-				report.setWhDateNum(bpsRwHistoryDao.getWhDateNum("getWhDateNum", paramMap));
-				report.setCrossEPPBinding(crossMarketingReportDao.getCrossEPPBinding("getCrossEPPBinding", paramMap));
-				report.setCrossMGLWill(crossMarketingReportDao.getCrossMGLWill("getCrossMGLWill", paramMap));
-				report.setCrossInsuranceWill(crossMarketingReportDao.getCrossInsuranceWill("getCrossInsuranceWill", paramMap));
-				report.setCrossBillBinding(crossMarketingReportDao.getCrossBillBinding("getCrossBillBinding", paramMap));
 			}
 			
 			tempDataList.add(report);

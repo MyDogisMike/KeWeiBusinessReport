@@ -76,15 +76,15 @@
 			and b.yw_id=11
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			and b.yw_id=2 AND b.assignDataType!= '新发卡备用金'
+			and b.yw_id=2 AND b.pettycash!= '新发卡备用金'
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			and b.yw_id=2 AND b.assignDataType= '新发卡备用金'
+			and b.yw_id=2 AND b.pettycash= '新发卡备用金'
 		</isEqual>
 	</select>
 	
 	<select id="getNConnectNum" parameterClass="HashMap" resultClass="Long">
-		select DISTINCT a.md_id from  bps_rw_history a LEFT JOIN md_success b ON a.md_id=b.md_id LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where 
+		select COUNT(DISTINCT a.md_id) AS amount from  bps_rw_history a LEFT JOIN md_success b ON a.md_id=b.md_id LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where 
 		 b.md_atime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00')  AND c.invokeId!=''
 		<isEqual property="ywType" compareValue="EPP">
 			and b.yw_id=1 AND a.yw_type='EPP'

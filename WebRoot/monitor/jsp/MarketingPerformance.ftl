@@ -23,7 +23,7 @@
 
 #dataShow_div {
 	border: solid 1px aqua;
-	padding: 0px 0px 20px 20px;
+	padding: 0px 0px 20px 0px;
 }
 
 #table_div {
@@ -312,126 +312,126 @@ button {
 					title : '所属中心',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 70,
 				}, {
 					field : 'ywType',
 					title : '数据业务类型',
 					align : 'center',
 					sortable : false,
-					resizable : false,
-					width : 80
+					resizable : true,
+					width : 90
 				}, {
 					field : 'group',
 					title : '组别',
 					align : 'center',
 					sortable : false,
-					resizable : false,
-					width : 50
+					resizable : true,
+					width : 35
 				}, {
 					field : 'userName',
 					title : '营销员工号',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				}, {
 					field : 'userRealName',
 					title : '营销员姓名',
 					align : 'center',
 					sortable : false,
-					resizable : false,
-					width : 100
+					resizable : true,
+					width : 70
 				}, {
 					field : 'approveMoney',
 					title : '批核收入',
 					align : 'center',
 					sortable : false,
-					resizable : false,
-					width : 80
+					resizable : true,
+					width : 60
 				}, {
 					field : 'mainAcceptNum',
 					title : '主营成功受理量',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'mainApproveMoney',
 					title : '主营成功批核金额',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'approveMoney18',
 					title : '18期批核金额',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'approveMoney24',
 					title : '24期批核金额',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'approveMoney36',
 					title : '36期批核金额',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'crossEPPApproveMoney',
 					title : '交叉EPP批核金额',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'crossBillApproveMoney',
 					title : '交叉账单批核金额',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'crossEPPCApproveMoney',
 					title : '交叉EPPC批核金额',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'crossBigEPPCApproveMoney',
 					title : '交叉大额EPPC批核金额',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'autoBindEPPNum',
 					title : '自动绑定EPP量',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'autoBindBillNum',
 					title : '自动绑定账单分期量',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'communicateTotleTime',
 					title : '接通通话总时长',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				}
 				] ],

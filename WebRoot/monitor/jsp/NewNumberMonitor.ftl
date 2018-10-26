@@ -300,77 +300,77 @@ button {
 					title : '所属中心',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 70,
 				}, {
 					field : 'ywType',
 					title : '数据业务类型',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				}, {
 					field : 'group',
 					title : '组别',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 50
 				}, {
 					field : 'userName',
 					title : '营销员工号',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				}, {
 					field : 'userRealName',
 					title : '营销员姓名',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 100
 				}, {
 					field : 'distributeNum',
 					title : '新数派发量',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'distributeMoney',
 					title : '新数派发金额',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'outboundNum',
 					title : '新数外呼量',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'percentageComplete',
 					title : '新数完成率',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'connectNum',
 					title : '新数接通量',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				},{
 					field : 'successAccept',
 					title : '新数成功受理量',
 					align : 'center',
 					sortable : false,
-					resizable : false,
+					resizable : true,
 					width : 80
 				}
 				] ],

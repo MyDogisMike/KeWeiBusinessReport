@@ -1,23 +1,13 @@
 package com.bps.dal.dao.bps;
 
-import java.util.Map;
 
 public interface CrossMarketingReportDao {
-	public Map<String, String> getEPPDistributeMoney(String sqlId, Object params);
 	
-	public Map<String, String> getBillDistributeMoney(String sqlId, Object params);
-	
-	public Map<String, String> getEPPCGeneralDistributeMoney(String sqlId, Object params);
-	
-	public Map<String, String> getEPPCCreditDistributeMoney(String sqlId, Object params);
-	
-	public Map<String, String> getImprestGeneralDistributeMoney(String sqlId, Object params);
-	
-	public Map<String, String> getImprestCreditDistributeMoney(String sqlId, Object params);
-	
-	public Map<String, String> getBigEPPCGeneralDistributeMoney(String sqlId, Object params);
-	
-	public Map<String, String> getBigEPPCCreditDistributeMoney(String sqlId, Object params);
+	//查询EPP和账单分期的派发金额
+	public Double getWhDistributeMoney1(String sqlId, Object params);
+	//下面两个方法的和为EPPC、备用金和大额EPPC的派发金额
+	public Double getWhDistributeMoney2A(String sqlId, Object params);
+	public Double getWhDistributeMoney2B(String sqlId, Object params);
 	
 	public Long getSuccessApproveDataNumA(String sqlId, Object params);
 	public Long getSuccessApproveDataNumB(String sqlId, Object params);

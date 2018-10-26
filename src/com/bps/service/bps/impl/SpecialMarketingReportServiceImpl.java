@@ -199,7 +199,6 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 		for (String ywType : ywTypeArr){
 			SpecialMarketingReport report = (SpecialMarketingReport) parentRepor.clone();
 			report.setYwType(ywType);
-			
 			//如果该用户不存在数据派发,不进行数据库查询直接赋默认值
 			if(!dataFlag){
 				report.setApproveAmount3(0L);
@@ -227,25 +226,14 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 				paramMap.put("userName", userName);
 				paramMap.put("ywType", ywType);
 				
-				double whDistributeMoney = 0.00;
-				Map<String, String> eppDistributeMoney = crossMarketingReportDao.getEPPDistributeMoney("getEPPDistributeMoney", paramMap);
-				Map<String, String> billDistributeMoney = crossMarketingReportDao.getBillDistributeMoney("getBillDistributeMoney", paramMap);
-				Map<String, String> eppcGeneralDistributeMoney = crossMarketingReportDao.getEPPCGeneralDistributeMoney("getEPPCGeneralDistributeMoney", paramMap);
-				Map<String, String> eppcCreditDistributeMoney = crossMarketingReportDao.getEPPCCreditDistributeMoney("getEPPCCreditDistributeMoney", paramMap);
-				Map<String, String> imprestGeneralDistributeMoney = crossMarketingReportDao.getImprestGeneralDistributeMoney("getImprestGeneralDistributeMoney", paramMap);
-				Map<String, String> imprestCreditDistributeMoney = crossMarketingReportDao.getImprestCreditDistributeMoney("getImprestCreditDistributeMoney", paramMap);
-				Map<String, String> bigEPPCGeneralDistributeMoney = crossMarketingReportDao.getBigEPPCGeneralDistributeMoney("getBigEPPCGeneralDistributeMoney", paramMap);
-				Map<String, String> bigEPPCCreditDistributeMoney = crossMarketingReportDao.getBigEPPCCreditDistributeMoney("getBigEPPCCreditDistributeMoney", paramMap);
-				
-				for (String money : eppDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);
-				for (String money : billDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);
-				for (String money : eppcGeneralDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);
-				for (String money : eppcCreditDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);
-				for (String money : imprestGeneralDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);
-				for (String money : imprestCreditDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);
-				for (String money : bigEPPCGeneralDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);
-				for (String money : bigEPPCCreditDistributeMoney.values()) if(money != null) whDistributeMoney += Double.parseDouble(money);
-				report.setWhDistributeMoney(whDistributeMoney);
+				//派发金额
+				if("EPP".equals(ywType) || "账单分期".equals(ywType)){
+					report.setWhDistributeMoney(crossMarketingReportDao.getWhDistributeMoney1("getWhDistributeMoney1", paramMap));
+				}else{
+					double moneyA = crossMarketingReportDao.getWhDistributeMoney2A("getWhDistributeMoney2A", paramMap);
+					double moneyB = crossMarketingReportDao.getWhDistributeMoney2B("getWhDistributeMoney2B", paramMap);
+					report.setWhDistributeMoney(moneyA + moneyB);
+				}
 				
 				if("EPP".equals(ywType)){
 					rate = rateMap.get("EPP");

@@ -90,7 +90,6 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 			
 			//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
 			boolean dataFlag = haveDataUser.contains(user.getUserName());
-			
 			for (String ywType : ywTypeArr){
 				if(!"".equals(params.getYwType()) && !params.getYwType().equals(ywType)){
 					continue;
@@ -132,9 +131,14 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 						obj.setCrossEPPApproveMoney(0.00);
 					}else{
 						dataParam.put("dataType", "EPP");
+						//由于EPPC及备用金业务交叉EPP业务时没有带备用金字段值，修改有关交叉EPP的统计SQL,其他业务不需关联即可查询，不做修改
+						if("EPPC".equals(ywType) || "EPPC备用金".equals(ywType)){
+							dataParam.put("ywType", "EPP-"+ywType);
+						}
 						moneyA = marketingPerformanceDao.getCrossApproveMoneyA("getCrossApproveMoneyA", dataParam);
 						moneyB = marketingPerformanceDao.getCrossApproveMoneyB("getCrossApproveMoneyB", dataParam);
 						obj.setCrossEPPApproveMoney(moneyA + moneyB);
+						dataParam.put("ywType", ywType);
 					}
 					if("大额EPPC".equals(ywType)){
 						obj.setCrossBigEPPCApproveMoney(0.00);

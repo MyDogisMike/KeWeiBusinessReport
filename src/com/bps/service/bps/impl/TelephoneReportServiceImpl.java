@@ -201,7 +201,6 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 			
 			TelephoneReport report = (TelephoneReport) parentRepor.clone();
 			report.setYwType(ywType);
-			
 			//如果该用户不存在数据派发,不进行数据库查询直接赋默认值
 			if(!dataFlag){
 				report.setAcceptDateNum(0L);
