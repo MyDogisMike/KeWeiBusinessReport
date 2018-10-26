@@ -7,38 +7,38 @@
 	<select id="getConnectNum" resultClass="Long" parameterClass="HashMap">
 		select count(DISTINCT a.md_id) AS amount from bps_rw_history a LEFT JOIN 
 		<isEqual property="ywType" compareValue="EPP">
-			internet_ipcc.t_toll_universal b on a.callid=b.invokeId where a.user_name = #userName# AND a.yw_type='EPP' AND a.callid!='' AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;#beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;=#endTime# AND b.invokeId!='';
+			internet_ipcc.t_toll_universal b on a.callid=b.invokeId where a.user_name = #userName# AND a.yw_type='EPP' AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.invokeId!='';
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			internet_ipcc.t_toll_universal b on a.callid=b.invokeId where a.user_name = #userName# AND a.yw_type='账单分期' AND a.callid!='' AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;#beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;=#endTime# AND b.invokeId!='';
+			internet_ipcc.t_toll_universal b on a.callid=b.invokeId where a.user_name = #userName# AND a.yw_type='账单分期' AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.invokeId!='';
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			internet_ipcc.t_toll_universal b on a.callid=b.invokeId where a.user_name = #userName# AND a.yw_type='大额EPPC' AND a.callid!='' AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;#beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;=#endTime# AND b.invokeId!='';
+			internet_ipcc.t_toll_universal b on a.callid=b.invokeId where a.user_name = #userName# AND a.yw_type='大额EPPC' AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.invokeId!='';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			mdx_eppc b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.callid!='' AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;#beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;=#endTime# AND b.Data_type !='新发卡备用金'  AND c.invokeId!='';
+			mdx_eppc b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.Data_type !='新发卡备用金'  AND c.invokeId!='';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			mdx_eppc b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.callid!='' AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;#beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;=#endTime# AND b.Data_type ='新发卡备用金'  AND c.invokeId!='';
+			mdx_eppc b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.Data_type ='新发卡备用金'  AND c.invokeId!='';
 		</isEqual>
 	</select>
 	
 	<select id="getSuccessAcceptAmount" resultClass="Long" parameterClass="HashMap">
 		select count(a.md_id) AS amount from  bps_rw_history a 
 		<isEqual property="ywType" compareValue="EPP">
-			where  user_name = #userName# AND yw_type='EPP' AND gd_type='EPP工单' AND Rw_Status_sn='A' AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;#beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;=#endTime#; 
+			where  user_name = #userName# AND yw_type='EPP' AND gd_type='EPP工单' AND Rw_Status_sn='A' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime#; 
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			where  user_name = #userName# AND yw_type='账单分期' AND gd_type='账单分期工单' AND Rw_Status_sn='A' AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;#beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;=#endTime#; 
+			where  user_name = #userName# AND yw_type='账单分期' AND gd_type='账单分期工单' AND Rw_Status_sn='A' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime#; 
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			where  user_name = #userName# AND yw_type='大额EPPC' AND gd_type='大额EPPC工单' AND Rw_Status_sn='A' AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;#beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;=#endTime#; 
+			where  user_name = #userName# AND yw_type='大额EPPC' AND gd_type='大额EPPC工单' AND Rw_Status_sn='A' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime#; 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.Rw_Status_sn='A' AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;#beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;=#endTime# AND b.Data_type!='新发卡备用金'; 
+			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.Rw_Status_sn='A' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.Data_type!='新发卡备用金'; 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.Rw_Status_sn='A' AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt;#beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;=#endTime# AND b.Data_type='新发卡备用金'; 
+			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.Rw_Status_sn='A' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.Data_type='新发卡备用金'; 
 		</isEqual>
 	</select>
 	
@@ -59,24 +59,24 @@
 		<isEqual property="ywType" compareValue="EPPC备用金">
 			IFNULL(sum(a.amount), 0.00) AS money from   bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type='新发卡备用金' AND a.mainyw='EPPC' AND 
 		</isEqual>
-			a.gdx_exzx=#userName# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime#
+			a.gdx_exzx=#userName# AND a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime#
 	</select>
 	
 	<select id="getSuccessApproveAmountA" resultClass="Long" parameterClass="HashMap">
 		<isEqual property="ywType" compareValue="EPP">
-			select COUNT(DISTINCT md_id) AS A from bps_gdx_epp a where gdx_exzx=#userName# AND mainyw='EPP' AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND forceTransfer !=1 
+			select COUNT(DISTINCT md_id) AS A from bps_gdx_epp a where gdx_exzx=#userName# AND mainyw='EPP' AND gdx_extime &gt;=#beginTime# AND gdx_extime &lt;= #endTime# AND forceTransfer !=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			select COUNT(DISTINCT md_id) AS A from  bps_gdx_zdfq a where  gdx_exzx=#userName# AND mainyw='账单分期' AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND forceTransfer !=1 
+			select COUNT(DISTINCT md_id) AS A from  bps_gdx_zdfq a where  gdx_exzx=#userName# AND mainyw='账单分期' AND gdx_extime &gt;=#beginTime# AND gdx_extime &lt;= #endTime# AND forceTransfer !=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			select COUNT(DISTINCT md_id) AS A from   bps_gdx_deczj a where gdx_exzx=#userName# AND mainyw='大额EPPC' AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND forceTransfer !=1 
+			select COUNT(DISTINCT md_id) AS A from   bps_gdx_deczj a where gdx_exzx=#userName# AND mainyw='大额EPPC' AND gdx_extime &gt;=#beginTime# AND gdx_extime &lt;= #endTime# AND forceTransfer !=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			select COUNT(DISTINCT a.md_id) AS A from   bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type!='新发卡备用金' AND a.gdx_exzx=#userName# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.mainyw='EPPC' AND a.forceTransfer !=1 
+			select COUNT(DISTINCT a.md_id) AS A from   bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type!='新发卡备用金' AND a.gdx_exzx=#userName# AND a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND a.forceTransfer !=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			select COUNT(DISTINCT a.md_id) AS A from   bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type='新发卡备用金' AND a.gdx_exzx=#userName# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.mainyw='EPPC' AND a.forceTransfer !=1 
+			select COUNT(DISTINCT a.md_id) AS A from   bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type='新发卡备用金' AND a.gdx_exzx=#userName# AND a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND a.forceTransfer !=1 
 		</isEqual>
 		
 		<isEqual property="period" compareValue="3期">
@@ -138,19 +138,19 @@
 	
 	<select id="getSuccessApproveMoneyA" resultClass="Double" parameterClass="HashMap">
 		<isEqual property="ywType" compareValue="EPP">
-			select IFNULL(sum(transAmt), 0.00) AS money from bps_gdx_epp a where gdx_exzx=#userName# AND mainyw='EPP' AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND forceTransfer !=1  
+			select IFNULL(sum(transAmt), 0.00) AS money from bps_gdx_epp a where gdx_exzx=#userName# AND mainyw='EPP' AND gdx_extime &gt;=#beginTime# AND gdx_extime &lt;= #endTime# AND forceTransfer !=1  
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			select IFNULL(sum(acceptAmt), 0.00) AS money from  bps_gdx_zdfq a where  gdx_exzx=#userName# AND mainyw='账单分期' AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND forceTransfer !=1 
+			select IFNULL(sum(acceptAmt), 0.00) AS money from  bps_gdx_zdfq a where  gdx_exzx=#userName# AND mainyw='账单分期' AND gdx_extime &gt;=#beginTime# AND gdx_extime &lt;= #endTime# AND forceTransfer !=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			select IFNULL(sum(applyAmt), 0.00) AS money  from bps_gdx_deczj a where gdx_exzx=#userName# AND mainyw='大额EPPC' AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND forceTransfer !=1 
+			select IFNULL(sum(applyAmt), 0.00) AS money  from bps_gdx_deczj a where gdx_exzx=#userName# AND mainyw='大额EPPC' AND gdx_extime &gt;=#beginTime# AND gdx_extime &lt;= #endTime# AND forceTransfer !=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			select  IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type!='新发卡备用金' AND a.gdx_exzx=#userName# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.mainyw='EPPC' AND a.forceTransfer !=1 
+			select  IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type!='新发卡备用金' AND a.gdx_exzx=#userName# AND a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND a.forceTransfer !=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			select  IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type='新发卡备用金' AND a.gdx_exzx=#userName# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.mainyw='EPPC' AND a.forceTransfer !=1 
+			select  IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid WHERE b.Data_type='新发卡备用金' AND a.gdx_exzx=#userName# AND a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND a.forceTransfer !=1 
 		</isEqual>
 		
 		<isEqual property="period" compareValue="3期">

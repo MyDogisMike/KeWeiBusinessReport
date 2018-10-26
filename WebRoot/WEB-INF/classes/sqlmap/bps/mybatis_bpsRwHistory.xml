@@ -74,19 +74,19 @@
 	<select id="getWhDateNum" parameterClass="HashMap" resultClass="Long">
 		SELECT COUNT(DISTINCT a.md_id) AS amount from bps_rw_history a 
 		<isEqual property="ywType" compareValue="EPP">
-			 WHERE str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &gt; #beginTime# AND str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.callid !='' and user_name= #userName# AND yw_type ='EPP';
+			 WHERE rw_ctime &gt; #beginTime# AND rw_ctime &lt;= #endTime# AND a.callid !='' and user_name= #userName# AND yw_type ='EPP';
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			 WHERE str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &gt; #beginTime# AND str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.callid !='' and user_name= #userName# AND yw_type ='账单分期';
+			 WHERE rw_ctime &gt; #beginTime# AND rw_ctime &lt;= #endTime# AND a.callid !='' and user_name= #userName# AND yw_type ='账单分期';
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			 WHERE str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &gt; #beginTime# AND str_to_date(rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.callid !='' and user_name= #userName# AND yw_type ='大额EPPC';
+			 WHERE rw_ctime &gt; #beginTime# AND rw_ctime &lt;= #endTime# AND a.callid !='' and user_name= #userName# AND yw_type ='大额EPPC';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt; #beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.yw_type ='EPPC' AND b.Data_type!='新发卡备用金' and a.user_name= #userName#;
+			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime &gt; #beginTime# AND a.rw_ctime &lt;= #endTime# AND a.yw_type ='EPPC' AND b.Data_type!='新发卡备用金' and a.user_name= #userName#;
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &gt; #beginTime# AND str_to_date(a.rw_ctime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.yw_type ='EPPC' AND b.Data_type='新发卡备用金'  and a.user_name= #userName#;
+			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime &gt; #beginTime# AND a.rw_ctime &lt;= #endTime# AND a.yw_type ='EPPC' AND b.Data_type='新发卡备用金'  and a.user_name= #userName#;
 		</isEqual>
 		
 	</select>

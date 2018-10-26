@@ -81,7 +81,7 @@
 			 left join md_success b on a.md_id = b.md_id where a.mainyw='EPPC' and b.pettycash = '新发卡备用金' 
 		</isEqual>
 		
-		 and gdx_exzx=#userName# AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND forceTransfer !=1;
+		 and gdx_exzx=#userName# AND gdx_extime &gt;=#beginTime# AND gdx_extime &lt;= #endTime# AND forceTransfer !=1;
 	</select>
 	
 	<select id="getSuccessApproveDataNumB" resultClass="Long" parameterClass="HashMap">
@@ -161,7 +161,7 @@
 			 left join md_success b on a.md_id = b.md_id where a.mainyw='EPPC' and b.pettycash = '新发卡备用金' 
 		</isEqual>
 		
-		 and gdx_exzx=#userName# AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND forceTransfer !=1 
+		 and gdx_exzx=#userName# AND gdx_extime &gt;=#beginTime# AND gdx_extime &lt;= #endTime# AND forceTransfer !=1 
 		<isEqual property="period" compareValue="3期">
 			 and  bills='3';
 		</isEqual>
@@ -243,19 +243,19 @@
 	<select id="getCrossEPPBinding" parameterClass="HashMap" resultClass="Long">
 		select 
 		<isEqual property="ywType" compareValue="EPP">
-			 COUNT(DISTINCT md_id) AS amount from bps_gdx_autofq a WHERE installment='YY01' AND czlx != 'C' AND gdx_exzx =#userName# and str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s')&gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND mainyw='EPP';
+			 COUNT(DISTINCT md_id) AS amount from bps_gdx_autofq a WHERE installment='YY01' AND czlx != 'C' AND gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND mainyw='EPP';
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			 COUNT(DISTINCT md_id) AS amount from bps_gdx_autofq a WHERE installment='YY01' AND czlx != 'C' AND gdx_exzx =#userName# and str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s')&gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND mainyw='账单分期';
+			 COUNT(DISTINCT md_id) AS amount from bps_gdx_autofq a WHERE installment='YY01' AND czlx != 'C' AND gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND mainyw='账单分期';
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			 COUNT(DISTINCT md_id) AS amount from bps_gdx_autofq a WHERE installment='YY01' AND czlx != 'C' AND gdx_exzx =#userName# and str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s')&gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND mainyw='大额EPPC';
+			 COUNT(DISTINCT md_id) AS amount from bps_gdx_autofq a WHERE installment='YY01' AND czlx != 'C' AND gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND mainyw='大额EPPC';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='YY01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s')&gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
+			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='YY01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='YY01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s')&gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
+			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='YY01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
 		</isEqual>
 	</select>
 	
@@ -281,38 +281,38 @@
 	<select id="getCrossInsuranceWill" parameterClass="HashMap" resultClass="Long">
 		SELECT COUNT(DISTINCT a.md_id) AS amount FROM insurance_reg a 
 		<isEqual property="ywType" compareValue="EPP">
-			 WHERE yw_id=1 AND user_name=#userName# AND rec_card='1' AND str_to_date(a.cur_time,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.cur_time,'%Y-%m-%d %H:%i:%s') &lt;= #endTime#;
+			 WHERE yw_id=1 AND user_name=#userName# AND rec_card='1' AND a.cur_time &gt;=#beginTime# AND a.cur_time &lt;= #endTime#;
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			 WHERE yw_id=10 AND user_name=#userName# AND rec_card='1' AND str_to_date(a.cur_time,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.cur_time,'%Y-%m-%d %H:%i:%s') &lt;= #endTime#;
+			 WHERE yw_id=10 AND user_name=#userName# AND rec_card='1' AND a.cur_time &gt;=#beginTime# AND a.cur_time &lt;= #endTime#;
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			 WHERE yw_id=11 AND user_name=#userName# AND rec_card='1' AND str_to_date(a.cur_time,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.cur_time,'%Y-%m-%d %H:%i:%s') &lt;= #endTime#;
+			 WHERE yw_id=11 AND user_name=#userName# AND rec_card='1' AND a.cur_time &gt;=#beginTime# AND a.cur_time &lt;= #endTime#;
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			 LEFT JOIN md_success b on a.md_id=b.md_id  WHERE a.yw_id=2 AND a.user_name=#userName# AND a.rec_card='1' AND str_to_date(a.cur_time,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.cur_time,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND b.pettycash!='新发卡备用金';
+			 LEFT JOIN md_success b on a.md_id=b.md_id  WHERE a.yw_id=2 AND a.user_name=#userName# AND a.rec_card='1' AND a.cur_time &gt;=#beginTime# AND a.cur_time &lt;= #endTime# AND b.pettycash!='新发卡备用金';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 LEFT JOIN md_success b on a.md_id=b.md_id  WHERE a.yw_id=2 AND a.user_name=#userName# AND a.rec_card='1' AND str_to_date(a.cur_time,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.cur_time,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND b.pettycash='新发卡备用金';
+			 LEFT JOIN md_success b on a.md_id=b.md_id  WHERE a.yw_id=2 AND a.user_name=#userName# AND a.rec_card='1' AND a.cur_time &gt;=#beginTime# AND a.cur_time &lt;= #endTime# AND b.pettycash='新发卡备用金';
 		</isEqual>
 	</select>
 	
 	<select id="getCrossBillBinding" parameterClass="HashMap" resultClass="Long">
 		select  
 		<isEqual property="ywType" compareValue="EPP">
-			 COUNT(DISTINCT md_id) AS amount from bps_gdx_autofq a WHERE installment='ZD01' AND czlx != 'C' AND gdx_exzx =#userName# and str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND mainyw='EPP';
+			 COUNT(DISTINCT md_id) AS amount from bps_gdx_autofq a WHERE installment='ZD01' AND czlx != 'C' AND gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND mainyw='EPP';
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			 COUNT(DISTINCT md_id) AS amount from bps_gdx_autofq a WHERE installment='ZD01' AND czlx != 'C' AND gdx_exzx =#userName# and str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND mainyw='账单分期';
+			 COUNT(DISTINCT md_id) AS amount from bps_gdx_autofq a WHERE installment='ZD01' AND czlx != 'C' AND gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND mainyw='账单分期';
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			 COUNT(DISTINCT md_id) AS amount from bps_gdx_autofq a WHERE installment='ZD01' AND czlx != 'C' AND gdx_exzx =#userName# and str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND mainyw='大额EPPC';
+			 COUNT(DISTINCT md_id) AS amount from bps_gdx_autofq a WHERE installment='ZD01' AND czlx != 'C' AND gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND mainyw='大额EPPC';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='ZD01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
+			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='ZD01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='ZD01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &gt;=#beginTime# AND str_to_date(a.gdx_extime,'%Y-%m-%d %H:%i:%s') &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
+			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='ZD01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
 		</isEqual>
 	</select>
 	
