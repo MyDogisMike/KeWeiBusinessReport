@@ -34,22 +34,6 @@
 	background-color: #E6E7E7;
 }
 
-.datagrid-header-inner,.datagrid-header-rownumber {
-	background-color: #00CCFF;
-}
-
-td.datagrid-header-over:hover,.datagrid-header-rownumber:hover {
-	background-color: #00CCFF;
-}
-
-.datagrid-header-row td {
-	border-color: black;
-	border-style: solid;
-}
-
-.datagrid-wrap {
-	border-color: black;
-}
 
 button {
 	margin-left: 20px;
@@ -303,6 +287,7 @@ button {
 				loadMsg : '努力展开中...',
 				fitColumns : true,
 				scrollbarSize:0,
+				nowrap:false, 
 				checkOnSelect : true,
 				onClickRow : function(rowIndex, rowData) {
 					$(this).datagrid('unselectRow', rowIndex);
@@ -316,7 +301,7 @@ button {
 					width : 70,
 				}, {
 					field : 'ywType',
-					title : '数据业务类型',
+					title : '数据业务<br />类型',
 					align : 'center',
 					sortable : false,
 					resizable : true,
@@ -327,108 +312,109 @@ button {
 					align : 'center',
 					sortable : false,
 					resizable : true,
-					width : 35
+					width : 40
 				}, {
 					field : 'userName',
-					title : '营销员工号',
+					title : '营销员<br />工号',
 					align : 'center',
 					sortable : false,
 					resizable : true,
-					width : 80
+					width : 60
 				}, {
 					field : 'userRealName',
-					title : '营销员姓名',
+					title : '营销员<br />姓名',
 					align : 'center',
 					sortable : false,
 					resizable : true,
-					width : 70
+					width : 60
 				}, {
 					field : 'approveMoney',
 					title : '批核收入',
 					align : 'center',
 					sortable : false,
 					resizable : true,
-					width : 60
+					width : 65
 				}, {
 					field : 'mainAcceptNum',
-					title : '主营成功受理量',
+					title : '主营成功<br />受理量',
 					align : 'center',
 					sortable : false,
 					resizable : true,
+					fixed:true,
 					width : 80
 				},{
 					field : 'mainApproveMoney',
-					title : '主营成功批核金额',
+					title : '主营成功<br />批核金额',
 					align : 'center',
 					sortable : false,
 					resizable : true,
 					width : 80
 				},{
 					field : 'approveMoney18',
-					title : '18期批核金额',
+					title : '18期<br />批核金额',
 					align : 'center',
 					sortable : false,
 					resizable : true,
 					width : 80
 				},{
 					field : 'approveMoney24',
-					title : '24期批核金额',
+					title : '24期<br />批核金额',
 					align : 'center',
 					sortable : false,
 					resizable : true,
 					width : 80
 				},{
 					field : 'approveMoney36',
-					title : '36期批核金额',
+					title : '36期<br />批核金额',
 					align : 'center',
 					sortable : false,
 					resizable : true,
 					width : 80
 				},{
 					field : 'crossEPPApproveMoney',
-					title : '交叉EPP批核金额',
+					title : '交叉EPP<br />批核金额',
 					align : 'center',
 					sortable : false,
 					resizable : true,
 					width : 80
 				},{
 					field : 'crossBillApproveMoney',
-					title : '交叉账单批核金额',
+					title : '交叉账单<br />批核金额',
 					align : 'center',
 					sortable : false,
 					resizable : true,
 					width : 80
 				},{
 					field : 'crossEPPCApproveMoney',
-					title : '交叉EPPC批核金额',
+					title : '交叉EPPC<br />批核金额',
 					align : 'center',
 					sortable : false,
 					resizable : true,
 					width : 80
 				},{
 					field : 'crossBigEPPCApproveMoney',
-					title : '交叉大额EPPC批核金额',
+					title : '交叉大额EPPC<br />批核金额',
 					align : 'center',
 					sortable : false,
 					resizable : true,
-					width : 80
+					width : 100
 				},{
 					field : 'autoBindEPPNum',
-					title : '自动绑定EPP量',
+					title : '自动绑定<br />EPP量',
 					align : 'center',
 					sortable : false,
 					resizable : true,
 					width : 80
 				},{
 					field : 'autoBindBillNum',
-					title : '自动绑定账单分期量',
+					title : '自动绑定<br />账单分期量',
 					align : 'center',
 					sortable : false,
 					resizable : true,
 					width : 80
 				},{
 					field : 'communicateTotleTime',
-					title : '接通通话总时长',
+					title : '接通通话<br />总时长',
 					align : 'center',
 					sortable : false,
 					resizable : true,

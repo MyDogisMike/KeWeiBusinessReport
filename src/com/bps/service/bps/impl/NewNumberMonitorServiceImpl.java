@@ -18,6 +18,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bps.dal.dao.bps.BpsRwHistoryDao;
@@ -168,7 +169,9 @@ public class NewNumberMonitorServiceImpl implements NewNumberMonitorService{
 		
 		try{
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			ex.exportExcel("BPS-新数监控报表", headers, result.getRows(), "yyyy-MM-dd", fields).write(os);
+			HSSFWorkbook workbook = ex.exportExcel("BPS-新数监控报表", headers, result.getRows(), fields);
+			workbook.write(os);
+			workbook.close();
 			byte[] content = os.toByteArray();
 			InputStream is = new BufferedInputStream(new ByteArrayInputStream(content));
 			byte[] buffer = new byte[is.available()];

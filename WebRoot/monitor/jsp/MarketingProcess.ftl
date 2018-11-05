@@ -34,22 +34,6 @@
 	background-color: #E6E7E7;
 }
 
-.datagrid-header-inner,.datagrid-header-rownumber {
-	background-color: #00CCFF;
-}
-
-td.datagrid-header-over:hover,.datagrid-header-rownumber:hover {
-	background-color: #00CCFF;
-}
-
-.datagrid-header-row td {
-	border-color: black;
-	border-style: solid;
-}
-
-.datagrid-wrap {
-	border-color: black;
-}
 
 button {
 	margin-left: 20px;

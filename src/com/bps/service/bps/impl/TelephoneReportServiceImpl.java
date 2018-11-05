@@ -4,6 +4,7 @@ package com.bps.service.bps.impl;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bps.bean.ReportSaveObj;
@@ -49,7 +51,7 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 		if(!beginDate.equals(endDate)){
 			dateStr = beginDate + "~" + endDate;
 		}
-		reportName += "_"+dateStr.trim()+".txt";
+		reportName += "_"+dateStr.trim()+".xls";
 		System.out.println(dateStr+"话务报表生成开始"+DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss"));
 		try{
 			if(centerMap == null){
@@ -93,22 +95,47 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 			SimpleDateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			ReportSaveObj reportSave = new ReportSaveObj("BPS-话务报表");	//文件保存对象
 			StringBuffer allStrBuf = new StringBuffer();	//所有的数据
+			List<TelephoneReport> allDataList = new ArrayList<TelephoneReport>();
+			List<String> reportFields = new ArrayList<String>();
+			reportFields.add("beginTime");
+			reportFields.add("endTime");
+			reportFields.add("center");
+			reportFields.add("group");
+			reportFields.add("userName");
+			reportFields.add("userRealName");
+			reportFields.add("ywType");
+			reportFields.add("whDateNum");
+			reportFields.add("acceptDateNum");
+			reportFields.add("totalCalls");
+			reportFields.add("totalMissCallsTime");
+			reportFields.add("totalCallsTime");
+			reportFields.add("totalSuccessCallsTime");
+			FileUtil<TelephoneReport> fileUtil = new FileUtil<TelephoneReport>();
+			String headersStr = "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,成功受理客户量,总外呼次数,总接通次数,未接通呼叫总时长,接通通话总时长,成功数据通话总时长";
+			String[] headers = headersStr.split(",");
+			
+			
 			long allFileNum = 0L;
 			for(String centerId : centerMap.keySet()){
 				StringBuffer centerStrBuf = new StringBuffer();	//中心的数据
+				List<TelephoneReport> centerDataList = new ArrayList<TelephoneReport>();
 				long centerFileNum = 0L;
 				for(String groupId : centerGroupMap.get(centerId).keySet()){
 					StringBuffer groupStrBuf = new StringBuffer();	//小组的数据
 					long groupFileNum = 0L;
 					List<TelephoneReport> groupList = dataMap.get(groupId);
 					if(groupList != null){
-						for(TelephoneReport report : groupList){
-							//System.out.println(report.toString());
-							groupStrBuf.append(report.toString()+"\r\n");
-							groupFileNum++;
-						}
-						centerStrBuf.append(groupStrBuf.toString());
-						centerFileNum += groupFileNum;
+						groupFileNum += groupList.size();
+						centerDataList.addAll(groupList);
+						centerFileNum += groupList.size();
+//						for(TelephoneReport report : groupList){
+//							groupStrBuf.append(report.toString()+"\r\n");
+//							groupFileNum++;
+//						}
+//						centerStrBuf.append(groupStrBuf.toString());
+//						centerFileNum += groupFileNum;
+					}else{
+						groupList = new ArrayList<TelephoneReport>();
 					}
 					groupStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,成功受理客户量,总外呼次数,总接通次数,未接通呼叫总时长,接通通话总时长,成功数据通话总时长\r\n");
 					String groupPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator+groupId.trim()+File.separator;
@@ -119,7 +146,9 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 					if(!groupPathFile.exists()){
 						groupPathFile.mkdirs();
 					}
-					FileUtil.createFile(totalPath, groupStrBuf.toString());
+					//FileUtil.createFile(totalPath, groupStrBuf.toString());
+					
+					fileUtil.createFile(totalPath, "话务报表", headers, groupList, reportFields);
 					
 					reportSave.setFileName(reportName+"&"+centerId+"_"+groupId);
 					reportSave.setFileNum(groupFileNum);
@@ -130,12 +159,15 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 				}
 				List<TelephoneReport> centerList = dataMap.get(centerId);
 				if(centerList != null){
-					for(TelephoneReport report : centerList){
-						//System.out.println(report.toString());
-						centerStrBuf.append(report.toString()+"\r\n");
-						centerFileNum++;
-					}
+					centerDataList.addAll(centerList);
+					centerFileNum += centerList.size();
+//					for(TelephoneReport report : centerList){
+//						centerStrBuf.append(report.toString()+"\r\n");
+//						centerFileNum++;
+//					}
 				}
+				allDataList.addAll(centerDataList);
+				
 				allStrBuf.append(centerStrBuf.toString());
 				allFileNum += centerFileNum;
 				centerStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,成功受理客户量,总外呼次数,总接通次数,未接通呼叫总时长,接通通话总时长,成功数据通话总时长\r\n");
@@ -147,7 +179,9 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 				if(!centerPathFile.exists()){
 					centerPathFile.mkdirs();
 				}
-				FileUtil.createFile(totalPath, centerStrBuf.toString());
+				//FileUtil.createFile(totalPath, centerStrBuf.toString());
+				
+				fileUtil.createFile(totalPath, "话务报表", headers, centerDataList, reportFields);
 				
 				reportSave.setFileName(reportName+"&"+centerId);
 				reportSave.setFileNum(centerFileNum);
@@ -164,7 +198,9 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 			if(!allPathFile.exists()){
 				allPathFile.mkdirs();
 			}
-			FileUtil.createFile(totalPath, allStrBuf.toString());
+//			FileUtil.createFile(totalPath, allStrBuf.toString());
+			
+			fileUtil.createFile(totalPath, "话务报表", headers, allDataList, reportFields);
 			
 			reportSave.setFileName(reportName+"&");
 			reportSave.setFileNum(allFileNum);

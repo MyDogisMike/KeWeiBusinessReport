@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bps.dal.dao.bps.BpsRwHistoryDao;
@@ -157,10 +158,19 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 						obj.setCrossBillApproveMoney(moneyA + moneyB);
 					}
 					
+					Double approveMoneyA = 0.00;
+					Double approveMoneyB = 0.00;
+					//批核收入从3期到36期各个计算再相加
+					dataParam.put("period", "3期");
+					approveMoneyA += marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
+					approveMoneyB += marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
+					dataParam.put("period", "6期");
+					approveMoneyA += marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
+					approveMoneyB += marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
+					dataParam.put("period", "12期");
+					approveMoneyA += marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
+					approveMoneyB += marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
 					
-					moneyA = marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
-					moneyB = marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
-					obj.setApproveMoney(moneyA + moneyB);
 					Long numA = marketingPerformanceDao.getMainAcceptNumA("getMainAcceptNumA", dataParam);
 					Long numB = marketingPerformanceDao.getMainAcceptNumB("getMainAcceptNumB", dataParam);
 					obj.setMainAcceptNum(numA + numB);
@@ -168,17 +178,28 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 					moneyB = marketingPerformanceDao.getMainApproveMoneyB("getMainApproveMoneyB", dataParam);
 					obj.setMainApproveMoney(moneyA + moneyB);
 					dataParam.put("period", "18期");
+					approveMoneyA += marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
+					approveMoneyB += marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
+					
 					moneyA = marketingPerformanceDao.getApproveMoneyWithPeriodA("getApproveMoneyWithPeriodA", dataParam);
 					moneyB = marketingPerformanceDao.getApproveMoneyWithPeriodB("getApproveMoneyWithPeriodB", dataParam);
 					obj.setApproveMoney18(moneyA + moneyB);
 					dataParam.put("period", "24期");
+					approveMoneyA += marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
+					approveMoneyB += marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
+					
 					moneyA = marketingPerformanceDao.getApproveMoneyWithPeriodA("getApproveMoneyWithPeriodA", dataParam);
 					moneyB = marketingPerformanceDao.getApproveMoneyWithPeriodB("getApproveMoneyWithPeriodB", dataParam);
 					obj.setApproveMoney24(moneyA + moneyB);
 					dataParam.put("period", "36期");
+					approveMoneyA += marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
+					approveMoneyB += marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
+					
 					moneyA = marketingPerformanceDao.getApproveMoneyWithPeriodA("getApproveMoneyWithPeriodA", dataParam);
 					moneyB = marketingPerformanceDao.getApproveMoneyWithPeriodB("getApproveMoneyWithPeriodB", dataParam);
 					obj.setApproveMoney36(moneyA + moneyB);
+					//批核收入
+					obj.setApproveMoney(approveMoneyA + approveMoneyB);
 					dataParam.put("dataType", "EPP");
 					obj.setAutoBindEPPNum(marketingPerformanceDao.getAutoBindNum("getAutoBindNum", dataParam));
 					dataParam.put("dataType", "账单分期");
@@ -238,7 +259,10 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 		
 		try{
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			ex.exportExcel("BPS-营销业绩监控", headers, result.getRows(), "yyyy-MM-dd", fields).write(os);
+			
+			HSSFWorkbook workbook = ex.exportExcel("BPS-营销业绩监控", headers, result.getRows(), fields);
+			workbook.write(os);
+			workbook.close();
 			byte[] content = os.toByteArray();
 			InputStream is = new BufferedInputStream(new ByteArrayInputStream(content));
 			byte[] buffer = new byte[is.available()];

@@ -52,8 +52,7 @@ public class DataViewController {
 	 public String checkAction(HttpServletRequest request,HttpSession session) throws Exception {
 	       String target_par = request.getParameter("target");
 	       String roleInfo = request.getParameter("roleInfo");
-//	       String userName = request.getParameter("userName");
-	       String roleName = request.getParameter("roleName");
+	       String roleId = request.getParameter("role_id");
 	       String target="message";
 	       String ipaddress = session.getServletContext().getInitParameter("IpAddress");
 	       String[] ipaddresses=ipaddress.split("_");//合法IP数组
@@ -61,37 +60,26 @@ public class DataViewController {
 	       String referer = request.getHeader("referer");//请求来源url
 	      // System.out.println("获取到的referer:"+referer);
 	       request.setAttribute("roleInfo", roleInfo);
+	       String roleName = bpsRwHistoryDao.getUserRole("getUserRole", roleId);
 	       if("组长".equals(roleName)){
 	    	   request.setAttribute("isGroup", "yes");
 	       }else{
 	    	   request.setAttribute("isGroup", "no");
 	       }
 	       
-//	       if(userName != null){
-//	    	   String roleStr = ","+bpsRwHistoryDao.getUserRole("getUserRole", userName)+",";
-//	    	   if("MarketingProcess".equals(target_par)){
-//	    		   if(roleStr != null && roleStr.contains(",总经理,")){
-//	    			   request.setAttribute("isGroup", "no");
-//	    		   }
-//	    	   }else{
-//	    		   if(roleStr != null && roleStr.contains(",总经理,") && roleStr.contains(",运营经理,") && roleStr.contains(",总监,")){
-//	    			   request.setAttribute("isGroup", "no");
-//	    		   }
-//	    	   }
-//	       }
 	       if(referer!=null){
 	    	   int b=referer.indexOf("/ui/");
 		       String c=referer.substring(7, b);
-		       boolean  returnvlue=ArrayUtils.contains(ipaddresses,c);
+		       boolean returnvlue=ArrayUtils.contains(ipaddresses,c);
 		       if(returnvlue){
 		    	   if(!"".equals(target_par) && target_par!=null){
 			    	   target=target_par;
 			       }
 		       }
 	       }
-	      else{
-	    	   target=target_par;
-	       }
+//	      else{
+//	    	  target=target_par;
+//	      }
 	       //System.out.println(target);
 		   return target; 
 	    }
@@ -111,8 +99,8 @@ public class DataViewController {
 //					System.out.println("哈哈");
 					return result;
 				}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
+				System.out.println("失败");
 				e.printStackTrace();
 				return null;
 			}

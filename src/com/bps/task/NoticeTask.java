@@ -104,11 +104,11 @@ public class NoticeTask {
 		Worker specialMarketingReport = new Worker("specialMarketingReport");
 		Worker definedReport = new Worker("definedReport");
 		executor.execute(telephoneReport);
-		executor.execute(superscriptReport);
-		executor.execute(crossMarketingReport);
-		executor.execute(newDataDistributeReport);
-		executor.execute(specialMarketingReport);
-		executor.execute(definedReport);
+//		executor.execute(superscriptReport);
+//		executor.execute(crossMarketingReport);
+//		executor.execute(newDataDistributeReport);
+//		executor.execute(specialMarketingReport);
+//		executor.execute(definedReport);
 		executor.shutdown();
 	}
 	

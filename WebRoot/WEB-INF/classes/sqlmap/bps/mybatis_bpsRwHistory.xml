@@ -9,6 +9,7 @@
 		<result property="userRealName" column="user_real_name" jdbcType="VARCHAR"/> 
 		<result property="groupId" column="groupId" jdbcType="VARCHAR"/> 
 		<result property="centerId" column="centerId" jdbcType="VARCHAR"/> 
+		<result property="roleIds" column="user_role_id" jdbcType="VARCHAR"/> 
 	</resultMap>
 	
 	<resultMap id="centerMap" class="java.util.HashMap">  
@@ -33,7 +34,7 @@
 	</resultMap>
 	
 	<select id="getUserInfoByTime" parameterClass="HashMap" resultMap="bpsUserInfoMap">
-		SELECT user_name, user_real_name, bm_id AS groupId, SUBSTRING_INDEX(SUBSTRING_INDEX(bm_path,'_',2),'_',-1) AS centerId FROM `user_list` WHERE user_status in ('正常','冻结') AND CONCAT(',',user_role_id,',') LIKE '%,161,%'
+		SELECT user_name, user_real_name, user_role_id, bm_id AS groupId, SUBSTRING_INDEX(SUBSTRING_INDEX(bm_path,'_',2),'_',-1) AS centerId FROM `user_list` WHERE user_status in ('正常','冻结') AND CONCAT(',',user_role_id,',') LIKE '%,161,%'
 		
 		<isNotEmpty property="center" prepend="and">
 			SUBSTRING_INDEX(SUBSTRING_INDEX(bm_path,'_',2),'_',-1) = #center#
@@ -129,7 +130,7 @@
 	</update>
 	
 	<select id="getUserRole" parameterClass="String" resultClass="String">
-		SELECT user_role FROM user_list WHERE user_name = #userName#;
+		SELECT role_name FROM aa_role WHERE role_id = #roleId#;
 	</select>
 	
 	<select id="getTextById" resultClass="String" parameterClass="String">

@@ -34,22 +34,6 @@
 	background-color: #E6E7E7;
 }
 
-.datagrid-header-inner,.datagrid-header-rownumber {
-	background-color: #00CCFF;
-}
-
-td.datagrid-header-over:hover,.datagrid-header-rownumber:hover {
-	background-color: #00CCFF;
-}
-
-.datagrid-header-row td {
-	border-color: black;
-	border-style: solid;
-}
-
-.datagrid-wrap {
-	border-color: black;
-}
 
 button {
 	margin-left: 20px;
@@ -437,11 +421,15 @@ button {
 				    	$('.pagination-info').hide(); 
 				    	$('.pagination-page-list').hide();
 			        },onLoadError:function(data){	//数据加载失败函数，将按钮变为不可点击，防止重复提交
-				    	$.messager.alert('提示','现在查询的人数过多，请稍后再试');
-				    	$("#searchBtn").attr('disabled',true);
-				    	$("#exportBtn").attr('disabled',true);
-				    	//启动定时器，每一秒去查看是否有线程空余
-				    	t = window.setInterval(isLeisure,1000); 
+			        	if(typeof(data.total) == "undefined"){
+			        		$.messager.alert('提示','现在查询的人数过多，请稍后再试');
+				    	
+					    	$("#searchBtn").attr('disabled',true);
+					    	$("#exportBtn").attr('disabled',true);
+					    	//启动定时器，每一秒去查看是否有线程空余
+					    	t = window.setInterval(isLeisure,1000); 
+			        	}
+			        	
 				    }
 				});
 				

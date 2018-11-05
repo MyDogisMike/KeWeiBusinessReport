@@ -18,7 +18,6 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.util.CellRangeAddress;
 
 
 /**
@@ -46,8 +45,7 @@ public class ExcelExport<T> {
      *            如果有时间数据，设定输出格式。默认为"yyyy-MM-dd"
      */
     
-    public HSSFWorkbook exportExcel(String title, String[] headers, Collection<T> dataset, String pattern,
-            List<String> usefulFields) {
+    public HSSFWorkbook exportExcel(String title, String[] headers, Collection<T> dataset, List<String> usefulFields) {
         // 声明一个工作簿
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
@@ -92,21 +90,21 @@ public class ExcelExport<T> {
 
 
         // 产生标题（第一行）
-        HSSFRow titleRow = sheet.createRow(0);
-        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, usefulFields.size() - 1));
-        HSSFCell titleCell = titleRow.createCell(0);
-        titleCell.setCellStyle(style);
-        if(title == null || title.equals("")){
-        	HSSFRichTextString titleText = new HSSFRichTextString("交易流水报表");
-            titleCell.setCellValue(titleText);
-        }else{
-        	HSSFRichTextString titleText = new HSSFRichTextString(title);
-            titleCell.setCellValue(titleText);
-        }
+//        HSSFRow titleRow = sheet.createRow(0);
+//        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, usefulFields.size() - 1));
+//        HSSFCell titleCell = titleRow.createCell(0);
+//        titleCell.setCellStyle(style);
+//        if(title == null || title.equals("")){
+//        	HSSFRichTextString titleText = new HSSFRichTextString("交易流水报表");
+//            titleCell.setCellValue(titleText);
+//        }else{
+//        	HSSFRichTextString titleText = new HSSFRichTextString(title);
+//            titleCell.setCellValue(titleText);
+//        }
         
         
         // 产生表格标题行（第2行）
-        HSSFRow row = sheet.createRow(1);
+        HSSFRow row = sheet.createRow(0);
         for (int i = 0; i < headers.length; i++) {
             HSSFCell cell = row.createCell(i);
             cell.setCellStyle(style);
@@ -116,7 +114,7 @@ public class ExcelExport<T> {
 
         // 遍历集合数据，产生数据行
         Iterator<T> it = dataset.iterator();
-        int index = 1; //第3行开始导出数据
+        int index = 0; //第3行开始导出数据
         while (it.hasNext()) {
             index++;
             row = sheet.createRow(index);

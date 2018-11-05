@@ -8,6 +8,16 @@ public class BpsUserInfo {
 	private String groupId;	//所在小组id
 	
 	private String centerId;	//所在中心ID
+	
+	private String roleIds;	//角色ID列表
+
+	public String getRoleIds() {
+		return roleIds;
+	}
+
+	public void setRoleIds(String roleIds) {
+		this.roleIds = roleIds;
+	}
 
 	public String getUserName() {
 		return userName;

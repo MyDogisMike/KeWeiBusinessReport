@@ -44,6 +44,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 	
 	@Override
 	public boolean createReport(String beginTime, String endTime, String saveUrl, String reportName) {
+		Map<String, List<String>> bpoCenterGroup = new HashMap<String, List<String>>();
 		String beginDate = beginTime.split(" ")[0];
 		String endDate = endTime.split(" ")[0];
 		String dateStr = beginDate;
@@ -70,6 +71,16 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 			for(BpsUserInfo user : userList){
 				String centerId = user.getCenterId();
 				String groupId = user.getGroupId();
+				//判断是否为BPO成员，如果是则将其所在小组ID添加进bpoCenterGroup以便区分
+				String roleIds = ","+user.getRoleIds()+",";
+				if(roleIds.contains(",172,")){	//如果包含172，那就是营销员（BPO）
+					List<String> bpoList = bpoCenterGroup.get(centerId);
+					if(bpoList == null){
+						bpoList = new ArrayList<String>();
+					}
+					bpoList.add(groupId);
+					bpoCenterGroup.put(centerId, bpoList);
+				}
 				
 				List<SpecialMarketingReport> dataList = null;
 				if(centerGroupMap.get(centerId).get(groupId) != null){	//表示有组别信息，否则只有中心信息
@@ -99,7 +110,14 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 			for(String centerId : centerMap.keySet()){
 				StringBuffer centerStrBuf = new StringBuffer();	//中心的数据
 				long centerFileNum = 0L;
+				//获取该中心下的bpo小组IDList
+				List<String> bpoList = bpoCenterGroup.get(centerId);
 				for(String groupId : centerGroupMap.get(centerId).keySet()){
+					//如果是bpo小组则这里不生成文件，放到下面bpo文件生成代码块统一生成
+					if(bpoList != null && bpoList.contains(groupId)){
+						continue;
+					}
+					
 					StringBuffer groupStrBuf = new StringBuffer();	//小组的数据
 					long groupFileNum = 0L;
 					List<SpecialMarketingReport> groupList = dataMap.get(groupId);
@@ -112,6 +130,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 						centerStrBuf.append(groupStrBuf.toString());
 						centerFileNum += groupFileNum;
 					}
+					
 					groupStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,呼数据派发金额,接通量,成功受理量,成功受理金额,成功批核量,成功批核金额,3期批核量,3期批核金额,6期批核量,6期批核金额,12期批核量,12期批核金额,18期批核量,18期批核金额,24期批核量,24期批核金额,36期批核量,36期批核金额,批核收入\r\n");
 					String groupPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator+groupId.trim()+File.separator;
 					String totalPath = groupPath + reportName;
@@ -170,6 +189,87 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 			reportSave.setFilePath(allPath);
 			reportSave.setTime(format.format(new Date()));
 			bpsRwHistoryDao.insertReportSave("insertReportSave", reportSave);
+			
+			//bpo文件生成
+			reportName = "BPO-BPS-"+reportName;
+			reportSave.setType("BPO-BPS-专项营销成效");	//文件保存对象
+			allStrBuf.setLength(0);	//所有的数据
+			allFileNum = 0L;
+			for(String centerId : bpoCenterGroup.keySet()){
+				StringBuffer centerStrBuf = new StringBuffer();	//中心的数据
+				long centerFileNum = 0L;
+				for(String groupId : bpoCenterGroup.get(centerId)){
+					StringBuffer groupStrBuf = new StringBuffer();	//小组的数据
+					long groupFileNum = 0L;
+					List<SpecialMarketingReport> groupList = dataMap.get(groupId);
+					if(groupList != null){
+						for(SpecialMarketingReport report : groupList){
+							//System.out.println(report.toString());
+							groupStrBuf.append(report.toString()+"\r\n");
+							groupFileNum++;
+						}
+						centerStrBuf.append(groupStrBuf.toString());
+						centerFileNum += groupFileNum;
+					}
+					groupStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,呼数据派发金额,接通量,成功受理量,成功受理金额,成功批核量,成功批核金额,3期批核量,3期批核金额,6期批核量,6期批核金额,12期批核量,12期批核金额,18期批核量,18期批核金额,24期批核量,24期批核金额,36期批核量,36期批核金额,批核收入\r\n");
+					String groupPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator+groupId.trim()+File.separator;
+					String bpoTotalPath = groupPath + reportName;
+					//System.out.println(groupPath);
+					File groupFile = new File(bpoTotalPath);
+					File groupPathFile = groupFile.getParentFile();
+					if(!groupPathFile.exists()){
+						groupPathFile.mkdirs();
+					}
+					FileUtil.createFile(bpoTotalPath, groupStrBuf.toString());
+
+					reportSave.setFileName(reportName+"&"+centerId+"_"+groupId);
+					reportSave.setFileNum(groupFileNum);
+					reportSave.setFilePath(groupPath);
+					reportSave.setTime(format.format(new Date()));
+					bpsRwHistoryDao.insertReportSave("insertReportSave", reportSave);
+				}
+				List<SpecialMarketingReport> centerList = dataMap.get(centerId);
+				if(centerList != null){
+					for(SpecialMarketingReport report : centerList){
+						//System.out.println(report.toString());
+						centerStrBuf.append(report.toString()+"\r\n");
+						centerFileNum++;
+					}
+				}
+				allStrBuf.append(centerStrBuf.toString());
+				allFileNum += centerFileNum;
+				centerStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,呼数据派发金额,接通量,成功受理量,成功受理金额,成功批核量,成功批核金额,3期批核量,3期批核金额,6期批核量,6期批核金额,12期批核量,12期批核金额,18期批核量,18期批核金额,24期批核量,24期批核金额,36期批核量,36期批核金额,批核收入\r\n");
+				String centerPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator;
+				String bpoTotalPath = centerPath + reportName;
+				File centerFile = new File(bpoTotalPath);
+				File centerPathFile = centerFile.getParentFile();
+				if(!centerPathFile.exists()){
+					centerPathFile.mkdirs();
+				}
+				FileUtil.createFile(bpoTotalPath, centerStrBuf.toString());
+				
+				reportSave.setFileName(reportName+"&"+centerId);
+				reportSave.setFileNum(centerFileNum);
+				reportSave.setFilePath(centerPath);
+				reportSave.setTime(format.format(new Date()));
+				bpsRwHistoryDao.insertReportSave("insertReportSave", reportSave);
+			}
+			allStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,呼数据派发金额,接通量,成功受理量,成功受理金额,成功批核量,成功批核金额,3期批核量,3期批核金额,6期批核量,6期批核金额,12期批核量,12期批核金额,18期批核量,18期批核金额,24期批核量,24期批核金额,36期批核量,36期批核金额,批核收入\r\n");
+			allPath = saveUrl+dateStr+File.separator;
+			totalPath = allPath + reportName;
+			allFile = new File(totalPath);
+			allPathFile = allFile.getParentFile();
+			if(!allPathFile.exists()){
+				allPathFile.mkdirs();
+			}
+			FileUtil.createFile(totalPath, allStrBuf.toString());
+			
+			reportSave.setFileName(reportName+"&");
+			reportSave.setFileNum(allFileNum);
+			reportSave.setFilePath(allPath);
+			reportSave.setTime(format.format(new Date()));
+			bpsRwHistoryDao.insertReportSave("insertReportSave", reportSave);
+			
 			System.out.println(dateStr+"专项营销成效报表生成结束"+DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss"));
 		}catch (BaseException e) {
 			e.printStackTrace();
