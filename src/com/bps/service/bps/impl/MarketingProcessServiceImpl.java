@@ -98,7 +98,6 @@ public class MarketingProcessServiceImpl implements MarketingProcessService{
 				
 				obj.setCenter(centerText);
 				obj.setGroup(groupText);
-				
 				//如果该用户不存在数据派发,不进行数据库查询直接赋默认值
 				if(!dataFlag){
 					obj.setCommunicateTotleTime(0L);
@@ -181,7 +180,7 @@ public class MarketingProcessServiceImpl implements MarketingProcessService{
 		    toClient.write(buffer);
 		    toClient.flush();
 		    toClient.close();
-		}catch (IOException e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

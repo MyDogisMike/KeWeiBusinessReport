@@ -26,7 +26,7 @@
 	</select>
 	
 	<select id="getTotalCalls" parameterClass="HashMap" resultClass="Long">
-		SELECT COUNT(a.md_id) AS amount from bps_rw_history a 
+		SELECT COUNT(DISTINCT a.md_id) AS amount from bps_rw_history a 
 		<isEqual property="ywType" compareValue="EPP">
 			 WHERE rw_ctime &gt; #beginTime# AND rw_ctime &lt;= #endTime# AND a.callid !='' and user_name= #userName# AND yw_type ='EPP';
 		</isEqual>
@@ -85,7 +85,7 @@
 	</select>
 	
 	<select id="getDataList" parameterClass="HashMap" resultClass="String">
-		SELECT DISTINCT a.md_id AS 数据名单id from bps_rw_history a 
+		SELECT DISTINCT a.md_id AS id from bps_rw_history a 
 		<isEqual property="ywType" compareValue="EPP">
 			 WHERE user_name= #userName# AND Rw_Status_sn = 'A' and a.rw_ctime &gt;=#beginTime# and a.rw_ctime &lt;=#endTime# and yw_type='EPP';
 		</isEqual>

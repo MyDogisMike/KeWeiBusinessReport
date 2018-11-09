@@ -101,7 +101,6 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 				
 				obj.setCenter(centerText);
 				obj.setGroup(groupText);
-				
 				//如果该用户不存在数据派发,不进行数据库查询直接赋默认值
 				if(!dataFlag){
 					obj.setApproveMoney(0.0);
@@ -280,7 +279,7 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 		    toClient.write(buffer);
 		    toClient.flush();
 		    toClient.close();
-		}catch (IOException e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

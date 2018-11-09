@@ -164,22 +164,22 @@
 		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime);
 	</select>
 	
-	<select id="getSuccessApproveDataA" parameterClass="HashMap" resultClass="String">
+	<select id="getSuccessApproveDataA" resultClass="String" parameterClass="HashMap">
 		select DISTINCT 
 		<isEqual property="ywType" compareValue="EPP">
-			a.mdx_eppid from  bps_gdx_epp a LEFT JOIN mdx_epp b ON a.mdx_eppid=b.mdx_eppid where 1=1 
+			a.mdx_eppid AS id from  bps_gdx_epp a LEFT JOIN mdx_epp b ON a.mdx_eppid=b.mdx_eppid where 1=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			a.mdx_zdfqid from  bps_gdx_zdfq a LEFT JOIN mdx_zdfq b ON a.mdx_zdfqid=b.mdx_eppid where 1=1 
+			a.mdx_zdfqid AS id from  bps_gdx_zdfq a LEFT JOIN mdx_zdfq b ON a.mdx_zdfqid=b.mdx_eppid where 1=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			a.mdx_deczjid from  bps_gdx_deczj a LEFT JOIN mdx_deczj b ON a.mdx_deczjid=b.mdx_deczjid where 1=1 
+			a.mdx_deczjid AS id from  bps_gdx_deczj a LEFT JOIN mdx_deczj b ON a.mdx_deczjid=b.mdx_deczjid where 1=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			a.mdx_eppcid from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
+			a.mdx_eppcid AS id from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			a.mdx_eppcid from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
+			a.mdx_eppcid AS id from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
 		</isEqual>
 		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime) AND a.forceTransfer !=1;
 	</select>
@@ -187,19 +187,19 @@
 	<select id="getSuccessApproveDataB" parameterClass="HashMap" resultClass="String">
 		select DISTINCT 
 		<isEqual property="ywType" compareValue="EPP">
-			a.mdx_eppid from  bps_gdx_epp a LEFT JOIN mdx_epp b ON a.mdx_eppid=b.mdx_eppid where 1=1 
+			a.mdx_eppid AS id from  bps_gdx_epp a LEFT JOIN mdx_epp b ON a.mdx_eppid=b.mdx_eppid where 1=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			a.mdx_zdfqid from  bps_gdx_zdfq a LEFT JOIN mdx_zdfq b ON a.mdx_zdfqid=b.mdx_eppid where 1=1 
+			a.mdx_zdfqid AS id from  bps_gdx_zdfq a LEFT JOIN mdx_zdfq b ON a.mdx_zdfqid=b.mdx_eppid where 1=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			a.mdx_deczjid from  bps_gdx_deczj a LEFT JOIN mdx_deczj b ON a.mdx_deczjid=b.mdx_deczjid where 1=1 
+			a.mdx_deczjid AS id from  bps_gdx_deczj a LEFT JOIN mdx_deczj b ON a.mdx_deczjid=b.mdx_deczjid where 1=1 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			a.mdx_eppcid from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
+			a.mdx_eppcid AS id from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			a.mdx_eppcid from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
+			a.mdx_eppcid AS id from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
 		</isEqual>
 		   AND a.Update_t &gt;=#beginTime# AND a.Update_t &lt;=#endTime# AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime) AND a.forceTransfer =1 AND a.approve_rst = '成功' and a.status_Approved = '已批核';
 	</select>

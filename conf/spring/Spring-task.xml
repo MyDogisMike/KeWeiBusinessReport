@@ -17,13 +17,13 @@
 	<bean id="MonthNoticeTask" class="com.bps.task.MonthNoticeTask"/>
 	
 	<task:scheduled-tasks>
-	    <task:scheduled ref="NoticeTask" method="run" cron="0 04 17 * * ?"/>
-	    <task:scheduled ref="WeekNoticeTask" method="run" cron="0 31 16 * * ?"/>
-	    <task:scheduled ref="MonthNoticeTask" method="run" cron="0 31 16 * * ?"/>
+	    <task:scheduled ref="NoticeTask" method="run" cron="0 44 11 * * ?"/>
+	    <task:scheduled ref="WeekNoticeTask" method="run" cron="0 45 11 * * ?"/>
+	    <task:scheduled ref="MonthNoticeTask" method="run" cron="0 45 11 * * ?"/>
 	    
-<!--	    <task:scheduled ref="NoticeTask" method="run" cron="0 00 00 * * ?"/>-->
-<!--	    <task:scheduled ref="WeekNoticeTask" method="run" cron="0 05 00 ? * MON"/>-->
-<!--	    <task:scheduled ref="MonthNoticeTask" method="run" cron="0 05 00 1 * ?"/>-->
+<!-- 	    <task:scheduled ref="NoticeTask" method="run" cron="0 00 00 * * ?"/> -->
+<!-- 	    <task:scheduled ref="WeekNoticeTask" method="run" cron="0 05 00 ? * MON"/> -->
+<!-- 	    <task:scheduled ref="MonthNoticeTask" method="run" cron="0 05 00 1 * ?"/> -->
 	</task:scheduled-tasks>
 
 <!-- 

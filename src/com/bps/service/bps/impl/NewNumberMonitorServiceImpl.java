@@ -189,7 +189,7 @@ public class NewNumberMonitorServiceImpl implements NewNumberMonitorService{
 		    toClient.write(buffer);
 		    toClient.flush();
 		    toClient.close();
-		}catch (IOException e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

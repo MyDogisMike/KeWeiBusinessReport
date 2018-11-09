@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bps.dal.dao.bps.BpsRwHistoryDao;
@@ -23,6 +24,7 @@ import com.bps.service.bps.NewDataDistributeReportService;
 import com.bps.service.bps.SpecialMarketingReportService;
 import com.bps.service.bps.SuperscriptReportService;
 import com.bps.service.bps.TelephoneReportService;
+import com.bps.util.DateUtil;
 import com.bps.util.RedisUtil;
 
 public class NoticeTask {
@@ -40,6 +42,7 @@ public class NoticeTask {
 	private NewDataDistributeReportService newDataDistributeReportService;
 	@Resource
 	private SpecialMarketingReportService specialMarketingReportService;
+	private static final Logger logger = Logger.getLogger("logs");
 	
 	private Properties properties = new Properties();
 	private String beginTime = null;
@@ -73,6 +76,7 @@ public class NoticeTask {
 		} catch (Exception e) {
 			System.out.println("读取properties文件出错");
 			e.printStackTrace();
+			logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  读取properties文件出错===>  "+e.toString());
 		}finally{
 			if(in != null)
 				try {
@@ -88,9 +92,16 @@ public class NoticeTask {
 			Map<String, String> groupMap = bpsRwHistoryDao.getGroupByCenterId("getGroupByCenterId", centerKey);
 			centerGroupMap.put(centerKey, groupMap);
 		}
+		
+		redisUtil.getJedis().del(RedisUtil.BPS_CENTER);
+		redisUtil.getJedis().del(RedisUtil.BPS_GROUP.getBytes());
+		
 		redisUtil.getJedis().hmset(RedisUtil.BPS_CENTER, centerMap);
 		redisUtil.getJedis().set(RedisUtil.BPS_GROUP.getBytes(), RedisUtil.serialize(centerGroupMap));
 
+		centerMap = (Map<String, String>) redisUtil.getJedis().hgetAll(RedisUtil.BPS_CENTER);
+		centerGroupMap = (Map<String, Map<String, String>>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_GROUP.getBytes()));
+		
 		runReckon();
 		System.out.println("日报结束了");
 	}
@@ -103,12 +114,12 @@ public class NoticeTask {
 		Worker newDataDistributeReport = new Worker("newDataDistributeReport");
 		Worker specialMarketingReport = new Worker("specialMarketingReport");
 		Worker definedReport = new Worker("definedReport");
-		executor.execute(telephoneReport);
-//		executor.execute(superscriptReport);
-//		executor.execute(crossMarketingReport);
-//		executor.execute(newDataDistributeReport);
-//		executor.execute(specialMarketingReport);
-//		executor.execute(definedReport);
+		executor.execute(telephoneReport); 
+		executor.execute(superscriptReport);
+		executor.execute(crossMarketingReport);
+		executor.execute(newDataDistributeReport);
+		executor.execute(specialMarketingReport);
+		executor.execute(definedReport);
 		executor.shutdown();
 	}
 	
@@ -142,6 +153,7 @@ public class NoticeTask {
 			} catch (Exception e) {
 				System.out.println("生成"+beginTime+"~"+endTime+"的话务报表错误");
 				e.printStackTrace();
+				logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  生成"+beginTime+"~"+endTime+"的话务报表错误===>  "+e.toString());
 			}
 		}
 		
@@ -151,6 +163,7 @@ public class NoticeTask {
 			} catch (Exception e) {
 				System.out.println("生成"+beginTime+"~"+endTime+"的每日上标及跟进库存报表错误");
 				e.printStackTrace();
+				logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  生成"+beginTime+"~"+endTime+"的每日上标及跟进库存报表错误===>  "+e.toString());
 			}
 		}
 		
@@ -160,6 +173,7 @@ public class NoticeTask {
 			} catch (Exception e) {
 				System.out.println("生成"+beginTime+"~"+endTime+"的交叉营销成效报表错误");
 				e.printStackTrace();
+				logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  生成"+beginTime+"~"+endTime+"的交叉营销成效报表报表错误===>  "+e.toString());
 			}
 		}
 		
@@ -169,6 +183,7 @@ public class NoticeTask {
 			} catch (Exception e) {
 				System.out.println("生成"+beginTime+"~"+endTime+"的新数据派发及成效报表错误");
 				e.printStackTrace();
+				logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  生成"+beginTime+"~"+endTime+"的新数据派发及成效报表错误===>  "+e.toString());
 			}
 		}
 		
@@ -178,6 +193,7 @@ public class NoticeTask {
 			} catch (Exception e) {
 				System.out.println("生成"+beginTime+"~"+endTime+"的专项营销成效报表错误");
 				e.printStackTrace();
+				logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  生成"+beginTime+"~"+endTime+"的专项营销成效报表错误===>  "+e.toString());
 			}
 		}
 		
@@ -202,6 +218,7 @@ public class NoticeTask {
 			} catch (Exception e) {
 				System.out.println("生成自定义区间报表错误");
 				e.printStackTrace();
+				logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  生成自定义区间报表错误===>  "+e.toString());
 			}
 		}
 	}

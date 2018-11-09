@@ -26,7 +26,7 @@ import com.bps.util.FileUtil;
 import com.bps.util.RedisUtil;
 
 public class SuperscriptReportServiceImpl implements SuperscriptReportService{
-	private static final Logger logger = Logger.getLogger(SuperscriptReportServiceImpl.class);
+	private static final Logger logger = Logger.getLogger("logs");
 	@Resource
 	private BpsRwHistoryDao bpsRwHistoryDao;
 	@Resource
@@ -35,6 +35,7 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 	private RedisUtil redisUtil;
 	private Map<String, String> centerMap = null;
 	private Map<String, Map<String, String>> centerGroupMap = null;
+	private final String headersStr = "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量";
 	
 	@Override
 	public boolean createReport(String beginTime, String endTime, String saveUrl, String reportName)
@@ -45,12 +46,14 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 		if(!beginDate.equals(endDate)){
 			dateStr = beginDate + "~" + endDate;
 		}
-		reportName += "_"+dateStr.trim()+".txt";
+		reportName += "_"+dateStr.trim()+".xls";
 		System.out.println(dateStr+"每日上标及跟进库存报表生成开始"+DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss"));
 		
 		try{
 			if(centerMap == null){
 				centerMap = (Map<String, String>) redisUtil.getJedis().hgetAll(RedisUtil.BPS_CENTER);
+			}
+			if(centerGroupMap == null) {
 				centerGroupMap = (Map<String, Map<String, String>>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_GROUP.getBytes()));
 			}
 			Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -88,25 +91,87 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 			
 			SimpleDateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			ReportSaveObj reportSave = new ReportSaveObj("BPS-每日上标及跟进库存");	//文件保存对象
-			StringBuffer allStrBuf = new StringBuffer();	//所有的数据
+//			StringBuffer allStrBuf = new StringBuffer();	//所有的数据
+			List<SuperscriptReport> allDataList = new ArrayList<SuperscriptReport>();
+			FileUtil<SuperscriptReport> fileUtil = new FileUtil<SuperscriptReport>();
+			String[] headers = headersStr.split(",");
+			List<String> reportFields = new ArrayList<String>();
+			reportFields.add("beginTime");
+			reportFields.add("endTime");
+			reportFields.add("center");
+			reportFields.add("group");
+			reportFields.add("userName");
+			reportFields.add("userRealName");
+			reportFields.add("ywType");
+			reportFields.add("whDateNum");
+			reportFields.add("bidAMainBusi");
+			reportFields.add("bidACrossEPP");
+			reportFields.add("bidACrossBill");
+			reportFields.add("bidACrossEPPC");
+			reportFields.add("bidACrossBigEPPC");
+			reportFields.add("bidBMainBusi");
+			reportFields.add("bidBCrossEPP");
+			reportFields.add("bidBCrossBill");
+			reportFields.add("bidBCrossEPPC");
+			reportFields.add("bidBCrossBigEPPC");
+			reportFields.add("bidF");
+			reportFields.add("bidF00MainBusi");
+			reportFields.add("bidF00CrossEPP");
+			reportFields.add("bidF00CrossBill");
+			reportFields.add("bidF00CrossEPPC");
+			reportFields.add("bidF00CrossBigEPPC");
+			reportFields.add("bidF01MainBusi");
+			reportFields.add("bidF01CrossEPP");
+			reportFields.add("bidF01CrossBill");
+			reportFields.add("bidF01CrossEPPC");
+			reportFields.add("bidF01CrossBigEPPC");
+			reportFields.add("bidF02MainBusi");
+			reportFields.add("bidF02CrossEPP");
+			reportFields.add("bidF02CrossBill");
+			reportFields.add("bidF02CrossEPPC");
+			reportFields.add("bidF02CrossBigEPPC");
+			reportFields.add("bidG01MainBusi");
+			reportFields.add("bidG01CrossEPP");
+			reportFields.add("bidG01CrossBill");
+			reportFields.add("bidG01CrossEPPC");
+			reportFields.add("bidG01CrossBigEPPC");
+			reportFields.add("bidG02MainBusi");
+			reportFields.add("bidG02CrossEPP");
+			reportFields.add("bidG02CrossBill");
+			reportFields.add("bidG02CrossEPPC");
+			reportFields.add("bidG02CrossBigEPPC");
+			reportFields.add("bidMMainBusi");
+			reportFields.add("bidMCrossEPP");
+			reportFields.add("bidMCrossBill");
+			reportFields.add("bidMCrossEPPC");
+			reportFields.add("bidMCrossBigEPPC");
+			reportFields.add("dgjDataNum");
+			reportFields.add("gqDataNum");
+			reportFields.add("wwhDataNum");
+			
 			long allFileNum = 0L;
 			for(String centerId : centerMap.keySet()){
-				StringBuffer centerStrBuf = new StringBuffer();	//中心的数据
+//				StringBuffer centerStrBuf = new StringBuffer();	//中心的数据
+				List<SuperscriptReport> centerDataList = new ArrayList<SuperscriptReport>();
 				long centerFileNum = 0L;
 				for(String groupId : centerGroupMap.get(centerId).keySet()){
-					StringBuffer groupStrBuf = new StringBuffer();	//小组的数据
+//					StringBuffer groupStrBuf = new StringBuffer();	//小组的数据
 					long groupFileNum = 0L;
 					List<SuperscriptReport> groupList = dataMap.get(groupId);
 					if(groupList != null){
-						for(SuperscriptReport report : groupList){
-							//System.out.println(report.toString());
-							groupStrBuf.append(report.toString()+"\r\n");
-							groupFileNum++;
-						}
-						centerStrBuf.append(groupStrBuf.toString());
-						centerFileNum += groupFileNum;
+						groupFileNum += groupList.size();
+						centerDataList.addAll(groupList);
+						centerFileNum += groupList.size();
+//						for(SuperscriptReport report : groupList){
+//							groupStrBuf.append(report.toString()+"\r\n");
+//							groupFileNum++;
+//						}
+//						centerStrBuf.append(groupStrBuf.toString());
+//						centerFileNum += groupFileNum;
+					}else{
+						groupList = new ArrayList<SuperscriptReport>();
 					}
-					groupStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
+//					groupStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
 					String groupPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator+groupId.trim()+File.separator;
 					String totalPath = groupPath + reportName;
 					//System.out.println(groupPath);
@@ -115,7 +180,8 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 					if(!groupPathFile.exists()){
 						groupPathFile.mkdirs();
 					}
-					FileUtil.createFile(totalPath, groupStrBuf.toString());
+//					FileUtil.createFile(totalPath, groupStrBuf.toString());
+					fileUtil.createFile(totalPath, "BPS-每日上标及跟进库存", headers, groupList, reportFields);
 
 					reportSave.setFileName(reportName+"&"+centerId+"_"+groupId);
 					reportSave.setFileNum(groupFileNum);
@@ -125,15 +191,17 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 				}
 				List<SuperscriptReport> centerList = dataMap.get(centerId);
 				if(centerList != null){
-					for(SuperscriptReport report : centerList){
-						//System.out.println(report.toString());
-						centerStrBuf.append(report.toString()+"\r\n");
-						centerFileNum++;
-					}
+					centerDataList.addAll(centerList);
+					centerFileNum += centerList.size();
+//					for(SuperscriptReport report : centerList){
+//						centerStrBuf.append(report.toString()+"\r\n");
+//						centerFileNum++;
+//					}
 				}
-				allStrBuf.append(centerStrBuf.toString());
+				allDataList.addAll(centerDataList);
+//				allStrBuf.append(centerStrBuf.toString());
 				allFileNum += centerFileNum;
-				centerStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
+//				centerStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
 				String centerPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator;
 				String totalPath = centerPath + reportName;
 				File centerFile = new File(totalPath);
@@ -141,7 +209,8 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 				if(!centerPathFile.exists()){
 					centerPathFile.mkdirs();
 				}
-				FileUtil.createFile(totalPath, centerStrBuf.toString());
+//				FileUtil.createFile(totalPath, centerStrBuf.toString());
+				fileUtil.createFile(totalPath, "BPS-每日上标及跟进库存", headers, centerDataList, reportFields);
 				
 				reportSave.setFileName(reportName+"&"+centerId);
 				reportSave.setFileNum(centerFileNum);
@@ -149,7 +218,7 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 				reportSave.setTime(format.format(new Date()));
 				bpsRwHistoryDao.insertReportSave("insertReportSave", reportSave);
 			}
-			allStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
+//			allStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
 			String allPath = saveUrl+dateStr+File.separator;
 			String totalPath = allPath + reportName;
 			File allFile = new File(totalPath);
@@ -157,7 +226,8 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 			if(!allPathFile.exists()){
 				allPathFile.mkdirs();
 			}
-			FileUtil.createFile(totalPath, allStrBuf.toString());
+//			FileUtil.createFile(totalPath, allStrBuf.toString());
+			fileUtil.createFile(totalPath, "BPS-每日上标及跟进库存", headers, allDataList, reportFields);
 			
 			reportSave.setFileName(reportName+"&");
 			reportSave.setFileNum(allFileNum);
@@ -165,9 +235,9 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 			reportSave.setTime(format.format(new Date()));
 			bpsRwHistoryDao.insertReportSave("insertReportSave", reportSave);
 			System.out.println(dateStr+"每日上标及跟进库存报表生成结束"+DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss"));
-		}catch (BaseException e) {
+		}catch (Exception e) {
 			e.printStackTrace();
-			logger.warn(e.toString());
+			logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  生成"+dateStr+"每日上标及跟进库存报表错误===>  "+e.toString());
 			return false;
 		}
 		return true;
@@ -474,12 +544,14 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		if(centerMap == null){
 			centerMap = (Map<String, String>) redisUtil.getJedis().hgetAll(RedisUtil.BPS_CENTER);
+		}
+		if(centerGroupMap == null) {
 			centerGroupMap = (Map<String, Map<String, String>>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_GROUP.getBytes()));
 		}
 		paramMap.put("beginTime", reportInfo.getStartTime());
 		paramMap.put("endTime", reportInfo.getEndTime());
 		String centerText = reportInfo.getZhongxin();
-		//设置生成的报表名称 例如：BPS-新数据派发及成效_20180605 09:00~20180608 12:00_广四中心_一组.txt
+		//设置生成的报表名称 例如：BPS-新数据派发及成效_20180605 09:00~20180608 12:00_广四中心_一组.xls
 		String beginTime = reportInfo.getStartTime().replaceAll("-", "").substring(0, 14);
 		String endTime = reportInfo.getEndTime().replaceAll("-", "").substring(0, 14);
 		beginTime = beginTime.replaceAll(" ", "_");
@@ -511,9 +583,9 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 				}
 			}
 		}
-		reportName.append(".txt");
+		reportName.append(".xls");
 		reportInfo.setFilezuName(reportName.toString());
-		realReportName.append(".txt");
+		realReportName.append(".xls");
 		reportInfo.setFilezuRealname(realReportName.toString());
 		try{
 			//获取有数据派发的用户名List
@@ -528,13 +600,68 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 			}
 			
 			SimpleDateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			StringBuffer dataStrBuf = new StringBuffer();
-			long fileNum = 0;
-			dataStrBuf.append("开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
-			for (SuperscriptReport report : dataList){
-				dataStrBuf.append(report.toString()+"\r\n");
-				fileNum++;
-			}
+//			StringBuffer dataStrBuf = new StringBuffer();
+//			long fileNum = 0;
+//			dataStrBuf.append("开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
+//			for (SuperscriptReport report : dataList){
+//				dataStrBuf.append(report.toString()+"\r\n");
+//				fileNum++;
+//			}
+			FileUtil<SuperscriptReport> fileUtil = new FileUtil<SuperscriptReport>();
+			String[] headers = headersStr.split(",");
+			List<String> reportFields = new ArrayList<String>();
+			reportFields.add("beginTime");
+			reportFields.add("endTime");
+			reportFields.add("center");
+			reportFields.add("group");
+			reportFields.add("userName");
+			reportFields.add("userRealName");
+			reportFields.add("ywType");
+			reportFields.add("whDateNum");
+			reportFields.add("bidAMainBusi");
+			reportFields.add("bidACrossEPP");
+			reportFields.add("bidACrossBill");
+			reportFields.add("bidACrossEPPC");
+			reportFields.add("bidACrossBigEPPC");
+			reportFields.add("bidBMainBusi");
+			reportFields.add("bidBCrossEPP");
+			reportFields.add("bidBCrossBill");
+			reportFields.add("bidBCrossEPPC");
+			reportFields.add("bidBCrossBigEPPC");
+			reportFields.add("bidF");
+			reportFields.add("bidF00MainBusi");
+			reportFields.add("bidF00CrossEPP");
+			reportFields.add("bidF00CrossBill");
+			reportFields.add("bidF00CrossEPPC");
+			reportFields.add("bidF00CrossBigEPPC");
+			reportFields.add("bidF01MainBusi");
+			reportFields.add("bidF01CrossEPP");
+			reportFields.add("bidF01CrossBill");
+			reportFields.add("bidF01CrossEPPC");
+			reportFields.add("bidF01CrossBigEPPC");
+			reportFields.add("bidF02MainBusi");
+			reportFields.add("bidF02CrossEPP");
+			reportFields.add("bidF02CrossBill");
+			reportFields.add("bidF02CrossEPPC");
+			reportFields.add("bidF02CrossBigEPPC");
+			reportFields.add("bidG01MainBusi");
+			reportFields.add("bidG01CrossEPP");
+			reportFields.add("bidG01CrossBill");
+			reportFields.add("bidG01CrossEPPC");
+			reportFields.add("bidG01CrossBigEPPC");
+			reportFields.add("bidG02MainBusi");
+			reportFields.add("bidG02CrossEPP");
+			reportFields.add("bidG02CrossBill");
+			reportFields.add("bidG02CrossEPPC");
+			reportFields.add("bidG02CrossBigEPPC");
+			reportFields.add("bidMMainBusi");
+			reportFields.add("bidMCrossEPP");
+			reportFields.add("bidMCrossBill");
+			reportFields.add("bidMCrossEPPC");
+			reportFields.add("bidMCrossBigEPPC");
+			reportFields.add("dgjDataNum");
+			reportFields.add("gqDataNum");
+			reportFields.add("wwhDataNum");
 			
 			
 			String path = saveUrl+realReportName;
@@ -543,14 +670,15 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 			if(!pathFile.exists()){
 				pathFile.mkdirs();
 			}
-			FileUtil.createFile(path, dataStrBuf.toString());
+//			FileUtil.createFile(path, dataStrBuf.toString());
+			fileUtil.createFile(path, "BPS-每日上标及跟进库存", headers, dataList, reportFields);
 			
 			//是否生成营销员报表
 			if("是".equals(reportInfo.getYxyData())){
 				paramMap.put("userName", reportInfo.getAssignName());
-				String specificReportName = prefix + "_" +reportInfo.getAssignName() + ".txt";
+				String specificReportName = prefix + "_" +reportInfo.getAssignName() + ".xls";
 				reportInfo.setFileyxyName(specificReportName);
-				String realSpecificReportName = realPreFix + "_" +reportInfo.getAssignName() + ".txt";
+				String realSpecificReportName = realPreFix + "_" +reportInfo.getAssignName() + ".xls";
 				reportInfo.setFileyxyRealname(realSpecificReportName);
 				List<BpsUserInfo> specificUserList = bpsRwHistoryDao.getUserInfoByTime("getUserInfoByTime", paramMap);
 				
@@ -562,13 +690,13 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 					specificDataList.addAll(tempDataList);
 				}
 				
-				StringBuffer specificDataStrBuf = new StringBuffer();
-				long specificFileNum = 0;
-				specificDataStrBuf.append("开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
-				for (SuperscriptReport report : specificDataList){
-					specificDataStrBuf.append(report.toString()+"\r\n");
-					specificFileNum++;
-				}
+//				StringBuffer specificDataStrBuf = new StringBuffer();
+//				long specificFileNum = 0;
+//				specificDataStrBuf.append("开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
+//				for (SuperscriptReport report : specificDataList){
+//					specificDataStrBuf.append(report.toString()+"\r\n");
+//					specificFileNum++;
+//				}
 				
 				
 				String specificPath = saveUrl+realSpecificReportName;
@@ -577,15 +705,16 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 				if(!specificPathFile.exists()){
 					specificPathFile.mkdirs();
 				}
-				FileUtil.createFile(specificPath, specificDataStrBuf.toString());
+//				FileUtil.createFile(specificPath, specificDataStrBuf.toString());
+				fileUtil.createFile(specificPath, "BPS-每日上标及跟进库存", headers, specificDataList, reportFields);
 			}
 			
 			reportInfo.setZhixingTime(format.format(new Date()));
 			reportInfo.setState("已执行");
 			bpsRwHistoryDao.updateDefinedReportInfo("updateDefinedReportInfo", reportInfo);
-		}catch (BaseException e) {
+		}catch (Exception e) {
 			e.printStackTrace();
-			logger.warn(e.toString());
+			logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  生成"+reportInfo.getStartTime()+"~"+reportInfo.getEndTime()+"自定义每日上标及跟进库存报表错误===>  "+e.toString());
 			return false;
 		}
 		return true;

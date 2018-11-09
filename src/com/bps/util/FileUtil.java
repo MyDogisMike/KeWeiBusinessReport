@@ -71,7 +71,7 @@ public class FileUtil<T> {
 		}
 	}
 	
-	public void createFile(String path, String title, String[] headers, Collection<T> dataset, List<String> usefulFields){
+	public void createFile(String path, String title, String[] headers, Collection<T> dataset, List<String> usefulFields) throws Exception{
 		FileOutputStream out = null;
 		ExcelExport<T> ex = new ExcelExport<T>();
 		try{
@@ -79,8 +79,9 @@ public class FileUtil<T> {
 			HSSFWorkbook workbook = ex.exportExcel(title, headers, dataset, usefulFields);
 			workbook.write(out);
 			workbook.close();
-		}catch (IOException e) {
+		}catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}finally{
 			if(out != null){
 				try {

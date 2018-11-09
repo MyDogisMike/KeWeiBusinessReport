@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ import com.bps.service.bps.MarketingPerformanceService;
 import com.bps.service.bps.MarketingProcessService;
 import com.bps.service.bps.NewNumberMonitorService;
 import com.bps.service.dianying.VoiceFileService;
+import com.bps.util.DateUtil;
 import com.bps.bean.SelectObj;
 
 
@@ -46,6 +48,9 @@ public class DataViewController {
 	MarketingProcessService marketingProcessService;
 	@Resource
 	private BpsRwHistoryDao bpsRwHistoryDao;
+	
+	private static final Logger logger = Logger.getLogger("logs");
+	
 	private final Semaphore semaphore = new Semaphore(50, true);
 	 
 	 @RequestMapping(value={"checkAction"})
@@ -77,9 +82,9 @@ public class DataViewController {
 			       }
 		       }
 	       }
-//	      else{
-//	    	  target=target_par;
-//	      }
+	      else{
+	    	  target=target_par;
+	      }
 	       //System.out.println(target);
 		   return target; 
 	    }
@@ -102,6 +107,7 @@ public class DataViewController {
 			} catch (Exception e) {
 				System.out.println("失败");
 				e.printStackTrace();
+				logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  查询新数监控报表报表错误===>  "+e.toString());
 				return null;
 			}
 			System.out.println("失败");
@@ -126,6 +132,7 @@ public class DataViewController {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  查询营销业绩监控报表错误===>  "+e.toString());
 				return null;
 			}
 			System.out.println("失败");
@@ -150,6 +157,7 @@ public class DataViewController {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  查询营销过程监控报表错误===>  "+e.toString());
 				return null;
 			}
 			System.out.println("失败");
@@ -197,6 +205,7 @@ public class DataViewController {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  导出新数监控报表错误===>  "+e.toString());
 				return "error";
 			}
 			System.out.println("失败");
@@ -218,6 +227,7 @@ public class DataViewController {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  导出营销业绩监控报表错误===>  "+e.toString());
 				return "error";
 			}
 			System.out.println("失败");
@@ -239,6 +249,7 @@ public class DataViewController {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				logger.info(DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss")+"  导出营销过程监控报表错误===>  "+e.toString());
 				return "error";
 			}
 			System.out.println("失败");
