@@ -1,4 +1,3 @@
-#Tue Oct 16 14:57:14 CST 2018
 eclipse.preferences.version=1
 encoding//WebRoot/monitor/jsp/MarketingPerformance.ftl=UTF-8
 encoding//WebRoot/monitor/jsp/MarketingProcess.ftl=UTF-8
@@ -8,5 +7,7 @@ encoding//conf/ReportSaveUrl.properties=UTF-8
 encoding//conf/conf.properties=UTF-8
 encoding//conf/jdbc.properties=UTF-8
 encoding//conf/log4j.properties=UTF-8
+encoding//conf/rate.properties=UTF-8
+encoding//conf/redis.properties=UTF-8
 encoding//src/com/bps/util/ExcelExport.java=UTF-8
 encoding/<project>=UTF-8

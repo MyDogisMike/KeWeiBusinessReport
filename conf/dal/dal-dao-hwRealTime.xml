@@ -8,9 +8,6 @@
 	<!-- DAO定义。 -->
 	<!-- ======================================================================== -->
 	
-    <!--用户 -->
-	<bean id="voiceFileDao" class="com.bps.dal.dao.dianying.impl.VoiceFileDaoImpl"  parent="daoDefinitionDianying"  autowire="byName" />
-    <!--用户 -->
-	<bean id="dianYingDao" class="com.bps.dal.dao.dianying.impl.DianYingDaoImpl"  parent="daoDefinitionDianying"  autowire="byName" />
+	<bean id="tNottollUniversalDaoRealTime" class="com.bps.dal.dao.hw.impl.TNottollUniversalDaoImpl" parent="daoDefinitionHwRealTime"  autowire="byName" />
 
 </beans>

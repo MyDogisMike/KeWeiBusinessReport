@@ -4,6 +4,51 @@
 	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
 	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap>
+
+	<resultMap class="com.bps.bean.MoneyObj" id="moneyMap">
+		<result property="drKey" column="drKey" /> 
+		<result property="money" column="money" /> 
+	</resultMap>
+	
+	<select id="getWhDistributeMoney1" parameterClass="HashMap" resultMap="moneyMap">
+		select DISTINCT b.dr_key AS drKey, b.TRAN_AMT AS money from bps_rw_history a LEFT JOIN 
+		<isEqual property="ywType" compareValue="EPP">
+			mdx_epp b ON a.dr_key =b.dr_key where a.yw_type='EPP' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			mdx_zdfq b ON a.dr_key =b.dr_key where a.yw_type='账单分期' 
+		</isEqual>
+		 and a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime#; 
+	</select>
+	
+	<select id="getWhDistributeMoney2A" parameterClass="HashMap" resultMap="moneyMap">
+		select DISTINCT b.dr_key AS drKey, b.YSED AS money from bps_rw_history a LEFT JOIN 
+		<isEqual property="ywType" compareValue="大额EPPC">
+			mdx_deczj b ON a.dr_key = b.dr_key where a.yw_type='大额EPPC' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			mdx_eppc b ON a.dr_key = b.dr_key where a.yw_type='EPPC' and b.Data_type!='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			mdx_eppc b ON a.dr_key = b.dr_key where a.yw_type='EPPC' and b.Data_type='新发卡备用金' 
+		</isEqual>
+		  AND b.md_source ='get' and a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime#; 
+	</select>
+	
+	<select id="getWhDistributeMoney2B" parameterClass="HashMap" resultMap="moneyMap">
+		select DISTINCT b.dr_key AS drKey, IFNULL(sum(b.PHJE), 0.00) AS money from bps_rw_history a LEFT JOIN 
+		<isEqual property="ywType" compareValue="大额EPPC">
+			mdx_deczj b ON a.dr_key = b.dr_key where a.yw_type='大额EPPC' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			mdx_eppc b ON a.dr_key = b.dr_key where a.yw_type='EPPC' and b.Data_type!='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			mdx_eppc b ON a.dr_key = b.dr_key where a.yw_type='EPPC' and b.Data_type='新发卡备用金' 
+		</isEqual>
+		  AND b.md_source in('S','T','U') and a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime#; 
+	</select>
+
 	<select id="getConnectNum" resultClass="Long" parameterClass="HashMap">
 		select count(DISTINCT a.md_id) AS amount from bps_rw_history a LEFT JOIN 
 		<isEqual property="ywType" compareValue="EPP">
@@ -24,7 +69,7 @@
 	</select>
 	
 	<select id="getSuccessAcceptAmount" resultClass="Long" parameterClass="HashMap">
-		select count(a.md_id) AS amount from  bps_rw_history a 
+		select count(DISTINCT a.md_id) AS amount from  bps_rw_history a 
 		<isEqual property="ywType" compareValue="EPP">
 			where  user_name = #userName# AND yw_type='EPP' AND gd_type='EPP工单' AND Rw_Status_sn='A' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime#; 
 		</isEqual>
@@ -38,7 +83,7 @@
 			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.Rw_Status_sn='A' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.Data_type!='新发卡备用金'; 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.Rw_Status_sn='A' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.Data_type='新发卡备用金'; 
+			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.gd_type='备用金工单' AND a.Rw_Status_sn='A' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.Data_type='新发卡备用金'; 
 		</isEqual>
 	</select>
 	

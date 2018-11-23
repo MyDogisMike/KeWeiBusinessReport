@@ -15,7 +15,7 @@
 	 <!-- 读.properties的配置文件 -->
    <context:property-placeholder location="classpath*:jdbc.properties,classpath*:redis.properties,classpath*:ReportSaveUrl.properties" />
 
-<!-- 配置bpsdataSource数据源(连接bps源数据库) 支持oracel与mybatis -->
+<!-- 配置bpsdataSource数据源(连接bps源数据库) 支持oracel与mybatis （定时报表数据源）-->
 	<bean id="bpsdataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${bpsjdbc.driverClassName}" />
 		<property name="url" value="${bpsjdbc.url}" />
@@ -54,7 +54,46 @@
 		</property>
 	</bean>
 	
-	<!-- 配置hwjdbcdataSource数据源(连接ibreport源数据库) 支持oracel与mybatis -->
+	<!-- 配置bpsdataSource数据源(连接bps源数据库) 支持oracel与mybatis（实时报表数据源） -->
+	<bean id="bpsdataSourceRealTime" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${bpsjdbcRealTime.driverClassName}" />
+		<property name="url" value="${bpsjdbcRealTime.url}" />
+		<property name="username" value="${bpsjdbcRealTime.username}" />
+		<property name="password" value="${bpsjdbcRealTime.password}" />
+		 <!-- 初始化连接大小 -->
+        <property name="initialSize" value="${jdbc.initialSize}" />
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="${jdbc.maxActive}" />
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="${jdbc.maxIdle}" />
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="${jdbc.minIdle}" />
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="${jdbc.maxWait}" />
+	</bean> 
+	<!-- TransactionManager定义。 -->
+	<bean id="transactionManagerBpsRealTime"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="bpsdataSourceRealTime" />
+	</bean>
+	<bean id="transactionTemplateBpsRealTime"
+		class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager" ref="transactionManagerBpsRealTime" />
+	</bean>
+	<!-- iBatis SQL map定义。 -->
+	<bean id="sqlMapClientBpsRealTime" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:dal/sqlmap-config-bpsRealTime.xml" />
+	</bean>
+	<bean id="daoDefinitionBpsRealTime" abstract="true">
+		<property name="sqlMapClient">
+			<ref local="sqlMapClientBpsRealTime" />
+		</property>
+		<property name="dataSource">
+			<ref local="bpsdataSourceRealTime" />
+		</property>
+	</bean>
+	
+	<!-- 配置hwjdbcdataSource数据源(连接ibreport源数据库) 支持oracel与mybatis （定时报表数据源）-->
 	<bean id="hwdataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${hwjdbc.driverClassName}" />
 		<property name="url" value="${hwjdbc.url}" />
@@ -93,12 +132,13 @@
 		</property>
 	</bean>
 
-	<!-- 配置dianyingdataSource数据源(连接dianying源数据库) 支持oracel与mybatis -->
-	<bean id="DianyingdataSource" class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="${dianyingjdbc.driverClassName}" />
-		<property name="url" value="${dianyingjdbc.url}" />
-		<property name="username" value="${dianyingjdbc.username}" />
-		<property name="password" value="${dianyingjdbc.password}" />
+
+	<!-- 配置hwjdbcdataSource数据源(连接ibreport源数据库) 支持oracel与mybatis （实时报表数据源）-->
+	<bean id="hwdataSourceRealTime" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${hwjdbcRealTime.driverClassName}" />
+		<property name="url" value="${hwjdbcRealTime.url}" />
+		<property name="username" value="${hwjdbcRealTime.username}" />
+		<property name="password" value="${hwjdbcRealTime.password}" />
 		 <!-- 初始化连接大小 -->
         <property name="initialSize" value="${jdbc.initialSize}" />
         <!-- 连接池最大数量 -->
@@ -111,24 +151,24 @@
         <property name="maxWait" value="${jdbc.maxWait}" />
 	</bean> 
 	<!-- TransactionManager定义。 -->
-	<bean id="transactionManagerDianying"
+	<bean id="transactionManagerhwRealTime"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="DianyingdataSource" />
+		<property name="dataSource" ref="hwdataSourceRealTime" />
 	</bean>
-	<bean id="transactionTemplatedianying"
+	<bean id="transactionTemplatehwRealTime"
 		class="org.springframework.transaction.support.TransactionTemplate">
-		<property name="transactionManager" ref="transactionManagerDianying" />
+		<property name="transactionManager" ref="transactionManagerhwRealTime" />
 	</bean>
 	<!-- iBatis SQL map定义。 -->
-	<bean id="sqlMapClientDianying" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
-		<property name="configLocation" value="classpath:dal/sqlmap-config-dianying.xml" />
+	<bean id="sqlMapClienthwRealTime" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:dal/sqlmap-config-hwRealTime.xml" />
 	</bean>
-	<bean id="daoDefinitionDianying" abstract="true">
+	<bean id="daoDefinitionHwRealTime" abstract="true">
 		<property name="sqlMapClient">
-			<ref local="sqlMapClientDianying" />
+			<ref local="sqlMapClienthwRealTime" />
 		</property>
 		<property name="dataSource">
-			<ref local="DianyingdataSource" />
+			<ref local="hwdataSourceRealTime" />
 		</property>
 	</bean>
 </beans>

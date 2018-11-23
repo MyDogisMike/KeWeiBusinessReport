@@ -19,7 +19,4 @@
 	<!-- 新数据派发及成效 -->
 	<bean id="newDataDistributeReportDao" class="com.bps.dal.dao.bps.impl.NewDataDistributeReportDaoImpl" parent="daoDefinitionBps"  autowire="byName" />
 	
-	<bean id="newNumberMonitorDao" class="com.bps.dal.dao.bps.impl.NewNumberMonitorDaoImpl" parent="daoDefinitionBps"  autowire="byName" />
-	<bean id="marketingPerformanceDao" class="com.bps.dal.dao.bps.impl.MarketingPerformanceDaoImpl" parent="daoDefinitionBps"  autowire="byName" />
-	<bean id="marketingProcess" class="com.bps.dal.dao.bps.impl.MarketingProcessDaoImpl" parent="daoDefinitionBps"  autowire="byName" />
 </beans>

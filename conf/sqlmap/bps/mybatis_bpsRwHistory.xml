@@ -52,6 +52,11 @@
 		</isNotEqual>
 	</select>
 	
+	<select id="getBPOUserInfo" parameterClass="HashMap" resultMap="bpsUserInfoMap">
+		SELECT user_name, user_real_name, user_role_id, bm_id AS groupId, SUBSTRING_INDEX(SUBSTRING_INDEX(bm_path,'_',2),'_',-1) AS centerId FROM `user_list` WHERE user_status in ('正常','冻结') AND CONCAT(',',user_role_id,',') LIKE '%,172,%' and SUBSTRING_INDEX(SUBSTRING_INDEX(bm_path,'_',2),'_',-1) != '' 
+		
+	</select>
+	
 	<select id="getAllCenter" resultMap="centerMap">
 		SELECT DISTINCT b.bm_id AS bm_id, b.bm_name AS bm_name FROM bm_list a LEFT JOIN bm_list b ON SUBSTRING_INDEX( SUBSTRING_INDEX(a.bm_path, '_', 2), '_' ,- 1 ) = b.bm_id AND SUBSTRING_INDEX( SUBSTRING_INDEX(a.bm_path, '_', 2), '_' ,- 1 ) != "" WHERE a.bm_feiqi = 0 AND a.bm_id != 0 AND b.bm_feiqi = 0 
 	</select>
@@ -69,7 +74,7 @@
 	</select>
 	
 	<select id="getUserByGroupIdToSelect" resultClass="String" parameterClass="String">
-		SELECT user_name FROM user_list WHERE bm_id = #groupId#;
+		SELECT user_name FROM user_list WHERE bm_id = #groupId# and user_status in ('正常','冻结') AND CONCAT(',',user_role_id,',') LIKE '%,161,%' and SUBSTRING_INDEX(SUBSTRING_INDEX(bm_path,'_',2),'_',-1) != ''
 	</select>
 	
 	<select id="getWhDateNum" parameterClass="HashMap" resultClass="Long">
@@ -84,10 +89,10 @@
 			 WHERE rw_ctime &gt; #beginTime# AND rw_ctime &lt;= #endTime# AND a.callid !='' and user_name= #userName# AND yw_type ='大额EPPC';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime &gt; #beginTime# AND a.rw_ctime &lt;= #endTime# AND a.yw_type ='EPPC' AND b.Data_type!='新发卡备用金' and a.user_name= #userName#;
+			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime &gt; #beginTime# AND a.rw_ctime &lt;= #endTime# AND a.callid !='' AND a.yw_type ='EPPC' AND b.Data_type!='新发卡备用金' and a.user_name= #userName#;
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime &gt; #beginTime# AND a.rw_ctime &lt;= #endTime# AND a.yw_type ='EPPC' AND b.Data_type='新发卡备用金'  and a.user_name= #userName#;
+			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime &gt; #beginTime# AND a.rw_ctime &lt;= #endTime# AND a.callid !='' AND a.yw_type ='EPPC' AND b.Data_type='新发卡备用金'  and a.user_name= #userName#;
 		</isEqual>
 		
 	</select>

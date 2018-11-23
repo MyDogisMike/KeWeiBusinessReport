@@ -96,4 +96,10 @@ public class BpsRwHistoryDaoImp extends IbatisBaseDao implements BpsRwHistoryDao
 		return (List<String>)getSqlMapClientTemplate().queryForList(sqlId, params);
 	}
 
+
+	@Override
+	public List<BpsUserInfo> getBPOUserInfo(String sqlId, Object params) {
+		return (List<BpsUserInfo>)getSqlMapClientTemplate().queryForList(sqlId, params);
+	}
+
 }

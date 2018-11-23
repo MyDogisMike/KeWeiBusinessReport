@@ -31,4 +31,9 @@ public class SuperscriptDaoImpl extends IbatisBaseDao  implements SuperscriptRep
 		return (Long) getSqlMapClientTemplate().queryForObject(sqlId, params);
 	}
 
+	@Override
+	public Long getBidFData(String sqlId, Object params) {
+		return (Long) getSqlMapClientTemplate().queryForObject(sqlId, params);
+	}
+
 }

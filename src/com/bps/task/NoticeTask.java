@@ -99,8 +99,8 @@ public class NoticeTask {
 		redisUtil.getJedis().hmset(RedisUtil.BPS_CENTER, centerMap);
 		redisUtil.getJedis().set(RedisUtil.BPS_GROUP.getBytes(), RedisUtil.serialize(centerGroupMap));
 
-		centerMap = (Map<String, String>) redisUtil.getJedis().hgetAll(RedisUtil.BPS_CENTER);
-		centerGroupMap = (Map<String, Map<String, String>>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_GROUP.getBytes()));
+//		centerMap = (Map<String, String>) redisUtil.getJedis().hgetAll(RedisUtil.BPS_CENTER);
+//		centerGroupMap = (Map<String, Map<String, String>>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_GROUP.getBytes()));
 		
 		runReckon();
 		System.out.println("日报结束了");

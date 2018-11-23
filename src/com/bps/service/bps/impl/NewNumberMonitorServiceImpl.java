@@ -33,7 +33,7 @@ import com.bps.util.RedisUtil;
 
 public class NewNumberMonitorServiceImpl implements NewNumberMonitorService{
 	@Resource
-	private BpsRwHistoryDao bpsRwHistoryDao;
+	private BpsRwHistoryDao bpsRwHistoryDaoRealTime;
 	@Resource
 	private NewNumberMonitorDao newNumberMonitorDao;
 	@Autowired
@@ -45,11 +45,11 @@ public class NewNumberMonitorServiceImpl implements NewNumberMonitorService{
 		Map<String, String> centerMap = (Map<String, String>) redisUtil.getJedis().hgetAll(RedisUtil.BPS_CENTER);;
 		Map<String, Map<String, String>> centerGroupMap = (Map<String, Map<String, String>>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_GROUP.getBytes()));
 		if(centerMap == null || centerGroupMap == null){
-			centerMap = bpsRwHistoryDao.getAllCenter("getAllCenter");
+			centerMap = bpsRwHistoryDaoRealTime.getAllCenter("getAllCenter");
 			
 			centerGroupMap = new HashMap<String, Map<String, String>>();
 			for(String centerKey : centerMap.keySet()){
-				Map<String, String> groupMap = bpsRwHistoryDao.getGroupByCenterId("getGroupByCenterId", centerKey);
+				Map<String, String> groupMap = bpsRwHistoryDaoRealTime.getGroupByCenterId("getGroupByCenterId", centerKey);
 				centerGroupMap.put(centerKey, groupMap);
 			}
 			redisUtil.getJedis().hmset(RedisUtil.BPS_CENTER, centerMap);
@@ -71,12 +71,13 @@ public class NewNumberMonitorServiceImpl implements NewNumberMonitorService{
 		userParam.put("rows", params.getRows());
 		userParam.put("skipRow", params.getSkipRow());
 		//获取有数据派发的用户名List
-		List<String> haveDataUser = bpsRwHistoryDao.getHaveDataUser("getHaveDataUser", userParam);
-		List<BpsUserInfo> userList = bpsRwHistoryDao.getUserInfoByTime("getUserInfoByTime", userParam);
-		Long count = bpsRwHistoryDao.getCountUserInfoByTime("getCountUserInfoByTime", userParam);
+		List<String> haveDataUser = bpsRwHistoryDaoRealTime.getHaveDataUser("getHaveDataUser", userParam);
+		List<BpsUserInfo> userList = bpsRwHistoryDaoRealTime.getUserInfoByTime("getUserInfoByTime", userParam);
+		Long count = bpsRwHistoryDaoRealTime.getCountUserInfoByTime("getCountUserInfoByTime", userParam);
 		if(count == null) count = 0L;
 		for (BpsUserInfo user : userList){
-			dataParam.put("userName", user.getUserName());
+			String userName = user.getUserName();
+			dataParam.put("userName", userName);
 			
 			//先从Redis中获取中心和组别信息，如果没有则从数据库中获取再保存到Redis中
 			String centerId = user.getCenterId();
@@ -84,20 +85,26 @@ public class NewNumberMonitorServiceImpl implements NewNumberMonitorService{
 			
 			String centerText = centerMap.get(centerId);
 			if(centerText == null){
-				centerText = bpsRwHistoryDao.getTextById("getTextById", centerId);
+				centerText = bpsRwHistoryDaoRealTime.getTextById("getTextById", centerId);
 				centerMap.put(centerId, centerText);
 				Map<String, String> groupMap = new HashMap<String, String>();
 				centerGroupMap.put(centerId, groupMap);
 			}
 			String groupText = centerGroupMap.get(centerId).get(groupId);
 			if(groupText == null){
-				groupText = bpsRwHistoryDao.getTextById("getTextById", groupId);
+				groupText = bpsRwHistoryDaoRealTime.getTextById("getTextById", groupId);
 				Map<String, String> groupMap = centerGroupMap.get(centerId);
 				groupMap.put(groupId, groupText);
 				centerGroupMap.put(centerId, groupMap);
 			}
 			//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
-			boolean dataFlag = haveDataUser.contains(user.getUserName());
+			boolean dataFlag = false;
+			for(String dataUser : haveDataUser) {
+				if(dataUser.equalsIgnoreCase(userName)) {
+					dataFlag = true;
+					break;
+				}
+			}
 			for (String ywType : ywTypeArr){
 				if(!"".equals(params.getYwType()) && !params.getYwType().equals(ywType)){
 					continue;
@@ -130,7 +137,7 @@ public class NewNumberMonitorServiceImpl implements NewNumberMonitorService{
 					if(obj.getDistributeNum()==0 || obj.getOutboundNum()==0) {
 						obj.setPercentageComplete("0");
 					}else{
-						double percent = Double.parseDouble(obj.getDistributeNum()+"") / obj.getOutboundNum() * 100;
+						double percent = Double.parseDouble(obj.getOutboundNum()+"") / obj.getDistributeNum() * 100;
 						percent = (double)Math.round(percent*100)/100;
 						obj.setPercentageComplete(percent + "%");
 					}

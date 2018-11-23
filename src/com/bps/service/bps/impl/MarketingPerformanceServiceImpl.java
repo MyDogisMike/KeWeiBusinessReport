@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -34,13 +33,13 @@ import com.bps.util.RedisUtil;
 
 public class MarketingPerformanceServiceImpl implements MarketingPerformanceService{
 	@Resource
-	private BpsRwHistoryDao bpsRwHistoryDao;
+	private BpsRwHistoryDao bpsRwHistoryDaoRealTime;
 	@Resource
 	private MarketingPerformanceDao marketingPerformanceDao;
 	@Resource
 	private MarketingProcessDao marketingProcessDao;
 	@Resource
-	private TNottollUniversalDao tNottollUniversalDao;
+	private TNottollUniversalDao tNottollUniversalDaoRealTime;
 	@Autowired
 	private RedisUtil redisUtil;
 
@@ -49,6 +48,7 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 		//中心和小组Map
 		Map<String, String> centerMap = (Map<String, String>) redisUtil.getJedis().hgetAll(RedisUtil.BPS_CENTER);;
 		Map<String, Map<String, String>> centerGroupMap = (Map<String, Map<String, String>>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_GROUP.getBytes()));
+		Map<String, String[]> rateMap = (Map<String, String[]>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_RATE.getBytes()));
 		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "EPPC备用金"};
 		PageResult<MarketingPerformance> result = new PageResult<MarketingPerformance>();
 		List<MarketingPerformance> dataList = new ArrayList<MarketingPerformance>();
@@ -63,12 +63,13 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 		userParam.put("rows", params.getRows());
 		userParam.put("skipRow", params.getSkipRow());
 		//获取有数据派发的用户名List
-		List<String> haveDataUser = bpsRwHistoryDao.getHaveDataUser("getHaveDataUser", userParam);
-		List<BpsUserInfo> userList = bpsRwHistoryDao.getUserInfoByTime("getUserInfoByTime", userParam);
-		Long count = bpsRwHistoryDao.getCountUserInfoByTime("getCountUserInfoByTime", userParam);
+		List<String> haveDataUser = bpsRwHistoryDaoRealTime.getHaveDataUser("getHaveDataUser", userParam);
+		List<BpsUserInfo> userList = bpsRwHistoryDaoRealTime.getUserInfoByTime("getUserInfoByTime", userParam);
+		Long count = bpsRwHistoryDaoRealTime.getCountUserInfoByTime("getCountUserInfoByTime", userParam);
 		if(count == null) count = 0L;
 		for (BpsUserInfo user : userList){
-			dataParam.put("userName", user.getUserName());
+			String userName = user.getUserName();
+			dataParam.put("userName", userName);
 			
 			//先从Redis中获取中心和组别信息，如果没有则从数据库中获取再保存到Redis中
 			String centerId = user.getCenterId();
@@ -76,21 +77,27 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 			
 			String centerText = centerMap.get(centerId);
 			if(centerText == null){
-				centerText = bpsRwHistoryDao.getTextById("getTextById", centerId);
+				centerText = bpsRwHistoryDaoRealTime.getTextById("getTextById", centerId);
 				centerMap.put(centerId, centerText);
 				Map<String, String> groupMap = new HashMap<String, String>();
 				centerGroupMap.put(centerId, groupMap);
 			}
 			String groupText = centerGroupMap.get(centerId).get(groupId);
 			if(groupText == null){
-				groupText = bpsRwHistoryDao.getTextById("getTextById", groupId);
+				groupText = bpsRwHistoryDaoRealTime.getTextById("getTextById", groupId);
 				Map<String, String> groupMap = centerGroupMap.get(centerId);
 				groupMap.put(groupId, groupText);
 				centerGroupMap.put(centerId, groupMap);
 			}
 			
 			//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
-			boolean dataFlag = haveDataUser.contains(user.getUserName());
+			boolean dataFlag = false;
+			for(String dataUser : haveDataUser) {
+				if(dataUser.equalsIgnoreCase(userName)) {
+					dataFlag = true;
+					break;
+				}
+			}
 			for (String ywType : ywTypeArr){
 				if(!"".equals(params.getYwType()) && !params.getYwType().equals(ywType)){
 					continue;
@@ -160,13 +167,28 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 					Double approveMoneyA = 0.00;
 					Double approveMoneyB = 0.00;
 					//批核收入从3期到36期各个计算再相加
+					String[] rate = {};
+					if("EPP".equals(ywType)){
+						rate = rateMap.get("EPP");
+					}else if("账单分期".equals(ywType)){
+						rate = rateMap.get("BILL");
+					}else if("大额EPPC".equals(ywType)){
+						rate = rateMap.get("BIGEPPC");
+					}else if("EPPC".equals(ywType)){
+						rate = rateMap.get("EPPC");
+					}else if("EPPC备用金".equals(ywType)){
+						rate = rateMap.get("EPPCCash");
+					}
 					dataParam.put("period", "3期");
+					dataParam.put("rate", Double.parseDouble(rate[0]));
 					approveMoneyA += marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
 					approveMoneyB += marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
 					dataParam.put("period", "6期");
+					dataParam.put("rate", Double.parseDouble(rate[1]));
 					approveMoneyA += marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
 					approveMoneyB += marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
 					dataParam.put("period", "12期");
+					dataParam.put("rate", Double.parseDouble(rate[2]));
 					approveMoneyA += marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
 					approveMoneyB += marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
 					
@@ -177,6 +199,7 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 					moneyB = marketingPerformanceDao.getMainApproveMoneyB("getMainApproveMoneyB", dataParam);
 					obj.setMainApproveMoney(moneyA + moneyB);
 					dataParam.put("period", "18期");
+					dataParam.put("rate", Double.parseDouble(rate[3]));
 					approveMoneyA += marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
 					approveMoneyB += marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
 					
@@ -184,6 +207,7 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 					moneyB = marketingPerformanceDao.getApproveMoneyWithPeriodB("getApproveMoneyWithPeriodB", dataParam);
 					obj.setApproveMoney18(moneyA + moneyB);
 					dataParam.put("period", "24期");
+					dataParam.put("rate", Double.parseDouble(rate[4]));
 					approveMoneyA += marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
 					approveMoneyB += marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
 					
@@ -191,6 +215,7 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 					moneyB = marketingPerformanceDao.getApproveMoneyWithPeriodB("getApproveMoneyWithPeriodB", dataParam);
 					obj.setApproveMoney24(moneyA + moneyB);
 					dataParam.put("period", "36期");
+					dataParam.put("rate", Double.parseDouble(rate[5]));
 					approveMoneyA += marketingPerformanceDao.getApproveMoneyA("getApproveMoneyA", dataParam);
 					approveMoneyB += marketingPerformanceDao.getApproveMoneyB("getApproveMoneyB", dataParam);
 					
@@ -208,7 +233,7 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 						obj.setCommunicateTotleTime(0L);
 					}else{
 						dataParam.put("recordList", recordList);
-						Long unConnectTotalTime = tNottollUniversalDao.getTodayTotalCallsTime("getTodayTotalCallsTime", dataParam);
+						Long unConnectTotalTime = tNottollUniversalDaoRealTime.getTodayTotalCallsTime("getTodayTotalCallsTime", dataParam);
 						if(unConnectTotalTime == null) {//没有总时长则为0
 							obj.setCommunicateTotleTime(0L);
 						}else{

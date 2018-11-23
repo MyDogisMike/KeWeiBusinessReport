@@ -87,19 +87,19 @@
 	<select id="getWhNum" parameterClass="HashMap" resultClass="Long">
 		select COUNT(DISTINCT a.md_id) AS num from  bps_rw_history a LEFT JOIN 
 		<isEqual property="ywType" compareValue="EPP">
-			mdx_epp b ON a.dr_key=b.dr_key where a.yw_type='EPP' AND a.gd_type='EPP工单' 
+			mdx_epp b ON a.dr_key=b.dr_key where a.yw_type='EPP' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			mdx_zdfq b ON a.dr_key=b.dr_key where a.yw_type='账单分期' AND a.gd_type='账单分期工单' 
+			mdx_zdfq b ON a.dr_key=b.dr_key where a.yw_type='账单分期' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			mdx_deczj b ON a.dr_key=b.dr_key where a.yw_type='大额EPPC' AND a.gd_type='大额EPPC工单' 
+			mdx_deczj b ON a.dr_key=b.dr_key where a.yw_type='大额EPPC' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND a.gd_type='EPPC工单' and b.Data_type !='新发卡备用金' 
+			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' and b.Data_type !='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND a.gd_type='EPPC工单' and b.Data_type ='新发卡备用金' 
+			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' and b.Data_type ='新发卡备用金' 
 		</isEqual>
 		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;=#beginTime# AND a.rw_ctime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.rw_ctime);
 	</select>
@@ -107,19 +107,19 @@
 	<select id="getNewConnectNum" parameterClass="HashMap" resultClass="Long">
 		select COUNT(DISTINCT a.md_id) AS num from  bps_rw_history a LEFT JOIN 
 		<isEqual property="ywType" compareValue="EPP">
-			mdx_epp b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='EPP' AND a.gd_type='EPP工单' 
+			mdx_epp b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='EPP' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			mdx_zdfq b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='账单分期' AND a.gd_type='账单分期工单' 
+			mdx_zdfq b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='账单分期'  
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			mdx_deczj b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='大额EPPC' AND a.gd_type='大额EPPC工单' 
+			mdx_deczj b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='大额EPPC' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			mdx_eppc b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='EPPC' AND a.gd_type='EPPC工单' and b.Data_type !='新发卡备用金' 
+			mdx_eppc b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='EPPC' and b.Data_type !='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			mdx_eppc b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='EPPC' AND a.gd_type='EPPC工单' and b.Data_type ='新发卡备用金' 
+			mdx_eppc b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='EPPC' and b.Data_type ='新发卡备用金' 
 		</isEqual>
 		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;=#beginTime# AND a.rw_ctime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.rw_ctime) AND c.invokeId!='';
 	</select>
@@ -247,21 +247,21 @@
 	<select id="getWrongDataNum" parameterClass="HashMap" resultClass="Long">
 		select COUNT(DISTINCT a.md_id) AS num from  bps_rw_history a LEFT JOIN 
 		<isEqual property="ywType" compareValue="EPP">
-			mdx_epp b ON a.dr_key=b.dr_key where a.yw_type='EPP' AND a.gd_type='EPP工单' AND a.Rw_Status='M数据错误'
+			mdx_epp b ON a.dr_key=b.dr_key where a.yw_type='EPP' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="账单分期">
-			mdx_zdfq b ON a.dr_key=b.dr_key where a.yw_type='账单分期' AND a.gd_type='账单分期工单' AND a.Rw_Status='M数据错误' 
+			mdx_zdfq b ON a.dr_key=b.dr_key where a.yw_type='账单分期'  
 		</isEqual>
 		<isEqual property="ywType" compareValue="大额EPPC">
-			 mdx_deczj b ON a.dr_key=b.dr_key where a.yw_type='大额EPPC' AND a.gd_type='大额EPPC工单' AND a.Rw_Status='M数据' 
+			 mdx_deczj b ON a.dr_key=b.dr_key where a.yw_type='大额EPPC' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC">
-			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND b.Data_type !='新发卡备用金' AND a.Rw_Status='M数据错误' 
+			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND b.Data_type !='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND b.Data_type ='新发卡备用金' AND a.Rw_Status='M数据错误' 
+			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND b.Data_type ='新发卡备用金' 
 		</isEqual>
-		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.user_name = #userName# AND a.rw_ctime &gt;=#beginTime# AND a.rw_ctime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.rw_ctime);
+		   AND a.Rw_Status_sn='M' AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.user_name = #userName# AND a.rw_ctime &gt;=#beginTime# AND a.rw_ctime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.rw_ctime);
 	</select>
 	
 </sqlMap>

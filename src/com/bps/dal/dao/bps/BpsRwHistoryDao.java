@@ -77,4 +77,6 @@ public interface BpsRwHistoryDao {
 	
 	public List<String> getHaveDataUser(String sqlId, Object params);
 	
+	public List<BpsUserInfo> getBPOUserInfo(String sqlId, Object params);
+	
 }

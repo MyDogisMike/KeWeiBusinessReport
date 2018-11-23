@@ -64,7 +64,7 @@
 	</select>
 	
 	<select id="getOutboundNum" parameterClass="HashMap" resultClass="Long">
-		SELECT COUNT(DISTINCT a.rw_hid) AS amount FROM `bps_rw_history` a left join md_success b on a.md_id=b.md_id where a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00')
+		SELECT COUNT(DISTINCT a.md_id) AS amount FROM `bps_rw_history` a left join md_success b on a.md_id=b.md_id where a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00')
  		AND a.rw_ctime &lt;=CONCAT(CURDATE(),' 23:59:59') AND a.callid !=' ' AND b.md_atime &gt;=CONCAT(CURDATE(),' 00:00:00') AND b.md_atime &lt;=CONCAT(CURDATE(),' 23:59:59')  AND a.user_name=#userName#
 		<isEqual property="ywType" compareValue="EPP">
 			and b.yw_id=1

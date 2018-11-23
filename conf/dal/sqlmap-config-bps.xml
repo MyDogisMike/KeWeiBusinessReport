@@ -8,7 +8,4 @@
 	<sqlMap resource="sqlmap/bps/mybatis_crossMarketingReport.xml" />
 	<sqlMap resource="sqlmap/bps/mybatis_specialMarketingReport.xml" />
 	<sqlMap resource="sqlmap/bps/mybatis_newDataDistributeReport.xml" />
-	<sqlMap resource="sqlmap/bps/mybatis_newNumberMonitor.xml" />
-	<sqlMap resource="sqlmap/bps/mybatis_marketingPerformance.xml" />
-	<sqlMap resource="sqlmap/bps/mybatis_marketingProcess.xml" />
 </sqlMapConfig>

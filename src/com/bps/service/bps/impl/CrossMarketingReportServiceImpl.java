@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.bps.bean.MoneyObj;
 import com.bps.bean.ReportSaveObj;
 import com.bps.dal.dao.bps.BpsRwHistoryDao;
 import com.bps.dal.dao.bps.CrossMarketingReportDao;
@@ -37,7 +38,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 	
 	private Map<String, String> centerMap = null;
 	private Map<String, Map<String, String>> centerGroupMap = null;
-	private final String headersStr = "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,外呼数据派发金额,交叉EPP批核量,交叉账单批核量,交叉EPPC批核量,交叉大额EPPC批核量,交叉EPP批核金额,交叉账单批核金额,交叉EPPC批核金额,交叉大额EPPC批核金额,交叉EPP自动绑定量,交叉MGL意愿量,交叉保险意愿量,交叉自动绑定账单分期量,交叉EPP批核金额（3期）,交叉EPP批核金额（6期）,交叉EPP批核金额（12期）,交叉EPP批核金额（18期）,交叉EPP批核金额（24期）,交叉EPP批核金额（36期）,交叉账单批核金额（3期）,交叉账单批核金额（6期）,交叉账单批核金额（12期）,交叉账单批核金额（18期）,交叉账单批核金额（24期）,交叉账单批核金额（36期）,交叉EPPC批核金额（3期）,交叉EPPC批核金额（6期）,交叉EPPC批核金额（12期）,交叉EPPC批核金额（18期）,交叉EPPC批核金额（24期）,交叉EPPC批核金额（36期）,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额";
+	private final String headersStr = "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,外呼数据派发金额,交叉EPP批核量,交叉账单批核量,交叉EPPC批核量,交叉大额EPPC批核量,交叉EPP批核金额,交叉账单批核金额,交叉EPPC批核金额,交叉大额EPPC批核金额,交叉EPP自动绑定量,交叉MGL意愿量,交叉保险意愿量,交叉自动绑定账单分期量,交叉EPP批核金额（3期）,交叉EPP批核金额（6期）,交叉EPP批核金额（12期）,交叉EPP批核金额（18期）,交叉EPP批核金额（24期）,交叉EPP批核金额（36期）,交叉账单批核金额（3期）,交叉账单批核金额（6期）,交叉账单批核金额（12期）,交叉账单批核金额（18期）,交叉账单批核金额（24期）,交叉账单批核金额（36期）,交叉EPPC批核金额（3期）,交叉EPPC批核金额（6期）,交叉EPPC批核金额（12期）,交叉EPPC批核金额（18期）,交叉EPPC批核金额（24期）,交叉EPPC批核金额（36期）,交叉大额EPPC批核金额（3期）,交叉大额EPPC批核金额（6期）,交叉大额EPPC批核金额（12期）,交叉大额EPPC批核金额（18期）,交叉大额EPPC批核金额（24期）,交叉大额EPPC批核金额（36期）";
 	
 	@Override
 	public boolean createReport(String beginTime, String endTime, String saveUrl, String reportName) {
@@ -65,19 +66,10 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 			//获取有数据派发的用户名List
 			List<String> haveDataUser = bpsRwHistoryDao.getHaveDataUser("getHaveDataUser", paramMap);
 			List<BpsUserInfo> userList = bpsRwHistoryDao.getUserInfoByTime("getUserInfoByTime", paramMap);
+			List<BpsUserInfo> bpoUserList = bpsRwHistoryDao.getBPOUserInfo("getBPOUserInfo", paramMap);
 			for(BpsUserInfo user : userList){
 				String centerId = user.getCenterId();
 				String groupId = user.getGroupId();
-				//判断是否为BPO成员，如果是则将其所在小组ID添加进bpoCenterGroup以便区分
-				String roleIds = ","+user.getRoleIds()+",";
-				if(roleIds.contains(",172,")){	//如果包含172，那就是营销员（BPO）
-					Set<String> bpoList = bpoCenterGroup.get(centerId);
-					if(bpoList == null){
-						bpoList = new HashSet<String>();
-					}
-					bpoList.add(groupId);
-					bpoCenterGroup.put(centerId, bpoList);
-				}
 				
 				List<CrossMarketingReport> dataList = null;
 				if(centerGroupMap.get(centerId).get(groupId) != null){	//表示有组别信息，否则只有中心信息
@@ -88,7 +80,55 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 				if(dataList == null) dataList = new ArrayList<CrossMarketingReport>();
 				
 				//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
-				boolean dataFlag = haveDataUser.contains(user.getUserName());
+				String userName = user.getUserName();
+				boolean dataFlag = false;
+				for(String dataUser : haveDataUser) {
+					if(dataUser.equalsIgnoreCase(userName)) {
+						dataFlag = true;
+						break;
+					}
+				}
+				
+				List<CrossMarketingReport> tempDataList = getUserCrossMarketingReport(user, paramMap, dataFlag);
+				if(tempDataList.size() > 0){
+					dataList.addAll(tempDataList);
+					if(centerGroupMap.get(centerId).get(groupId) != null){	//表示有组别信息，否则只有中心信息
+						dataMap.put(groupId, dataList);	//因为中心和小组信息共用一张表，所以两者的id（主键）不可能有相同的情况
+					}else{	//将没有小组信息的数据保存进中心数据的List
+						dataMap.put(centerId, dataList);
+					}
+				}
+			}
+			
+			//bpo用户
+			for(BpsUserInfo user : bpoUserList) {
+				String centerId = user.getCenterId();
+				String groupId = user.getGroupId();
+				
+				Set<String> bpoList = bpoCenterGroup.get(centerId);
+				if(bpoList == null){
+					bpoList = new HashSet<String>();
+				}
+				bpoList.add(groupId);
+				bpoCenterGroup.put(centerId, bpoList);
+				
+				List<CrossMarketingReport> dataList = null;
+				if(centerGroupMap.get(centerId).get(groupId) != null){	//表示有组别信息，否则只有中心信息
+					dataList = dataMap.get(groupId);	//获取该小组的list
+				}else{
+					dataList = dataMap.get(centerId);	//没有小组信息的就获取该中心的list
+				}
+				if(dataList == null) dataList = new ArrayList<CrossMarketingReport>();
+				
+				//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
+				String userName = user.getUserName();
+				boolean dataFlag = false;
+				for(String dataUser : haveDataUser) {
+					if(dataUser.equalsIgnoreCase(userName)) {
+						dataFlag = true;
+						break;
+					}
+				}
 				
 				List<CrossMarketingReport> tempDataList = getUserCrossMarketingReport(user, paramMap, dataFlag);
 				if(tempDataList.size() > 0){
@@ -289,7 +329,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 						groupPathFile.mkdirs();
 					}
 //					FileUtil.createFile(bpoTotalPath, groupStrBuf.toString());
-					fileUtil.createFile(totalPath, "BPO-BPS-交叉营销成效", headers, groupList, reportFields);
+					fileUtil.createFile(bpoTotalPath, "BPO-BPS-交叉营销成效", headers, groupList, reportFields);
 
 					reportSave.setFileName(reportName+"&"+centerId+"_"+groupId);
 					reportSave.setFileNum(groupFileNum);
@@ -318,7 +358,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 					centerPathFile.mkdirs();
 				}
 //				FileUtil.createFile(bpoTotalPath, centerStrBuf.toString());
-				fileUtil.createFile(totalPath, "BPO-BPS-交叉营销成效", headers, centerDataList, reportFields);
+				fileUtil.createFile(bpoTotalPath, "BPO-BPS-交叉营销成效", headers, centerDataList, reportFields);
 				
 				reportSave.setFileName(reportName+"&"+centerId);
 				reportSave.setFileNum(centerFileNum);
@@ -422,10 +462,10 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 				double moneyB = 0.0;
 				//派发金额
 				if("EPP".equals(ywType) || "账单分期".equals(ywType)){
-					report.setWhDistributeMoney(crossMarketingReportDao.getWhDistributeMoney1("getWhDistributeMoney1", paramMap));
+					report.setWhDistributeMoney(crossMarketingReportDao.getCrossWhDistributeMoney1("getCrossWhDistributeMoney1", paramMap));
 				}else{
-					moneyA = crossMarketingReportDao.getWhDistributeMoney2A("getWhDistributeMoney2A", paramMap);
-					moneyB = crossMarketingReportDao.getWhDistributeMoney2B("getWhDistributeMoney2B", paramMap);
+					moneyA = crossMarketingReportDao.getCrossWhDistributeMoney2A("getCrossWhDistributeMoney2A", paramMap);
+					moneyB = crossMarketingReportDao.getCrossWhDistributeMoney2B("getCrossWhDistributeMoney2B", paramMap);
 					report.setWhDistributeMoney(moneyA + moneyB);
 				}
 				
@@ -632,6 +672,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 
 	@Override
 	public boolean createDefinedReport(DefinedReportInfo reportInfo, String saveUrl) {
+		Map<String, Set<String>> bpoCenterGroup = new HashMap<String, Set<String>>();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		if(centerMap == null){
 			centerMap = (Map<String, String>) redisUtil.getJedis().hgetAll(RedisUtil.BPS_CENTER);
@@ -641,6 +682,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 		}
 		paramMap.put("beginTime", reportInfo.getStartTime());
 		paramMap.put("endTime", reportInfo.getEndTime());
+		paramMap.put("skipRow", -1);	//不分页查询所有数据
 		String centerText = reportInfo.getZhongxin();
 		//设置生成的报表名称 例如：BPS-新数据派发及成效_20180605 09:00~20180608 12:00_广四中心_一组.xls
 		String beginTime = reportInfo.getStartTime().replaceAll("-", "").substring(0, 14);
@@ -683,11 +725,39 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 			List<String> haveDataUser = bpsRwHistoryDao.getHaveDataUser("getHaveDataUser", paramMap);
 			List<BpsUserInfo> userList = bpsRwHistoryDao.getUserInfoByTime("getUserInfoByTime", paramMap);
 			List<CrossMarketingReport> dataList = new ArrayList<CrossMarketingReport>();
+			List<CrossMarketingReport> bpoDataList = new ArrayList<CrossMarketingReport>();
+			List<BpsUserInfo> bpoUserList = bpsRwHistoryDao.getBPOUserInfo("getBPOUserInfo", paramMap);
 			for(BpsUserInfo user : userList){
 				//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
-				boolean dataFlag = haveDataUser.contains(user.getUserName());
+				String userName = user.getUserName();
+				boolean dataFlag = false;
+				for(String dataUser : haveDataUser) {
+					if(dataUser.equalsIgnoreCase(userName)) {
+						dataFlag = true;
+						break;
+					}
+				}
 				List<CrossMarketingReport> tempDataList = getUserCrossMarketingReport(user, paramMap, dataFlag);
+				
 				dataList.addAll(tempDataList);
+				
+			}
+			
+			//bpo营销员
+			for(BpsUserInfo user : bpoUserList){
+				//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
+				String userName = user.getUserName();
+				boolean dataFlag = false;
+				for(String dataUser : haveDataUser) {
+					if(dataUser.equalsIgnoreCase(userName)) {
+						dataFlag = true;
+						break;
+					}
+				}
+				List<CrossMarketingReport> tempDataList = getUserCrossMarketingReport(user, paramMap, dataFlag);
+				
+				bpoDataList.addAll(tempDataList);
+
 			}
 			
 			SimpleDateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -757,6 +827,14 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 //			FileUtil.createFile(path, dataStrBuf.toString());
 			fileUtil.createFile(path, "BPS-交叉营销成效", headers, dataList, reportFields);
 			
+			String bpoPath = saveUrl+"BPO-"+realReportName;
+			File bpFfile = new File(bpoPath);
+			File bpoPathFile = bpFfile.getParentFile();
+			if(!bpoPathFile.exists()){
+				bpoPathFile.mkdirs();
+			}
+			fileUtil.createFile(bpoPath, "BPO-BPS-交叉营销成效", headers, bpoDataList, reportFields);
+			
 			//是否生成营销员报表
 			if("是".equals(reportInfo.getYxyData())){
 				paramMap.put("userName", reportInfo.getAssignName());
@@ -769,7 +847,14 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 				List<CrossMarketingReport> specificDataList = new ArrayList<CrossMarketingReport>();
 				for(BpsUserInfo user : specificUserList){
 					//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
-					boolean dataFlag = haveDataUser.contains(user.getUserName());
+					String userName = user.getUserName();
+					boolean dataFlag = false;
+					for(String dataUser : haveDataUser) {
+						if(dataUser.equalsIgnoreCase(userName)) {
+							dataFlag = true;
+							break;
+						}
+					}
 					List<CrossMarketingReport> tempDataList = getUserCrossMarketingReport(user, paramMap, dataFlag);
 					specificDataList.addAll(tempDataList);
 				}

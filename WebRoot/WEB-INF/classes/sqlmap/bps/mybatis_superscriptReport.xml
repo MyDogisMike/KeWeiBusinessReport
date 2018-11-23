@@ -20,7 +20,7 @@
 			 LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.Data_type!='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.Data_type='新发卡备用金'  
+			 LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.gd_type='备用金工单' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.Data_type='新发卡备用金'  
 		</isEqual>
 		
 		<isEqual property="bidType" compareValue="A">
@@ -28,9 +28,6 @@
 		</isEqual>
 		<isEqual property="bidType" compareValue="B">
 			AND a.Rw_Status_sn='B'
-		</isEqual>
-		<isEqual property="bidType" compareValue="F">
-			AND a.Rw_Status_sn='F'
 		</isEqual>
 		<isEqual property="bidType" compareValue="F00">
 			AND a.Rw_Status_sn='F' AND Rw_Reason_sn='F00'
@@ -78,23 +75,26 @@
 		<isEqual property="bidType" compareValue="B">
 			AND a.Rw_Status_sn='B' 
 		</isEqual>
+		<isEqual property="bidType" compareValue="F">
+			AND a.Rw_Status_sn='F'
+		</isEqual>
 		<isEqual property="bidType" compareValue="F00">
-			AND a.Rw_Reason_sn='F00' 
+			AND a.Rw_Status_sn='F' AND a.Rw_Reason_sn='F00' 
 		</isEqual>
 		<isEqual property="bidType" compareValue="F01">
-			AND a.Rw_Reason_sn='F01' 
+			AND a.Rw_Status_sn='F' AND a.Rw_Reason_sn='F01' 
 		</isEqual>
 		<isEqual property="bidType" compareValue="F02">
-			AND a.Rw_Reason_sn='F02' 
+			AND a.Rw_Status_sn='F' AND a.Rw_Reason_sn='F02' 
 		</isEqual>
 		<isEqual property="bidType" compareValue="G01">
-			AND a.Rw_Reason_sn='G01' 
+			AND a.Rw_Status_sn='G' AND a.Rw_Reason_sn='G01' 
 		</isEqual>
 		<isEqual property="bidType" compareValue="G02">
-			AND a.Rw_Reason_sn='G02' 
+			AND a.Rw_Status_sn='G' AND a.Rw_Reason_sn='G02' 
 		</isEqual>
 		<isEqual property="bidType" compareValue="M">
-			AND a.Rw_Status_sn='M' 
+			AND a.Rw_Status_sn='M'
 		</isEqual>
 		
 		<isEqual property="dataType" compareValue="EPP">
@@ -105,6 +105,9 @@
 		</isEqual>
 		<isEqual property="dataType" compareValue="EPPC">
 			AND a.gd_type='EPPC工单' 
+		</isEqual>
+		<isEqual property="dataType" compareValue="EPPC备用金">
+			AND a.gd_type='备用金工单' 
 		</isEqual>
 		<isEqual property="dataType" compareValue="大额EPPC">
 			AND a.gd_type='大额EPPC工单' 
@@ -167,5 +170,25 @@
 		<isEqual property="ywType" compareValue="EPPC备用金">
 			 AND yw_id= 2 AND pettycash='新发卡备用金';
 		</isEqual>
+	</select>
+	
+	<select id="getBidFData" parameterClass="HashMap" resultClass="Long">
+		select count(distinct md_id) from  bps_rw_history a 
+		<isEqual property="ywType" compareValue="EPP">
+			where a.yw_type='EPP' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			where a.yw_type='账单分期' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			where a.yw_type='大额EPPC' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND b.Data_type!='新发卡备用金' 
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND b.Data_type='新发卡备用金' 
+		</isEqual>
+		 AND a.user_name = #userName# AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND a.Rw_Status_sn='F' 
 	</select>
 </sqlMap>

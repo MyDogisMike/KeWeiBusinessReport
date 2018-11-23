@@ -38,7 +38,7 @@
 			 left join mdx_eppc b on a.dr_key=b.dr_key where a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.Rw_Status_sn='A' and a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.user_name=#userName# AND b.Data_type!= '新发卡备用金';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 left join mdx_eppc b on a.dr_key=b.dr_key where a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.Rw_Status_sn='A' and a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.user_name=#userName# AND b.Data_type= '新发卡备用金';
+			 left join mdx_eppc b on a.dr_key=b.dr_key where a.rw_ctime &gt;=CONCAT(CURDATE(),' 00:00:00') AND a.Rw_Status_sn='A' and a.yw_type='EPPC' AND a.gd_type='备用金工单' AND a.user_name=#userName# AND b.Data_type= '新发卡备用金';
 		</isEqual>
 	</select>
 	
@@ -95,7 +95,7 @@
 			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime>=CONCAT(CURDATE(),' 00:00:00') AND a.yw_type ='EPPC' AND b.Data_type!='新发卡备用金' and a.user_name= #userName# ;
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime>=CONCAT(CURDATE(),' 00:00:00') AND a.yw_type ='EPPC' AND b.Data_type!='新发卡备用金' and a.user_name= #userName# ;
+			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime>=CONCAT(CURDATE(),' 00:00:00') AND a.yw_type ='EPPC' AND b.Data_type='新发卡备用金' and a.user_name= #userName# ;
 		</isEqual>
 	</select>
 	

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+    <sqlMap resource="sqlmap/mybatis_common.xml" /><!-- 通用的查询 -->
+    <sqlMap resource="sqlmap/hw/mybatis_tNottollUniversal.xml" />
+</sqlMapConfig>

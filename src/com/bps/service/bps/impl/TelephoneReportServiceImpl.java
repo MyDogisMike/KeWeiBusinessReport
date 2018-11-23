@@ -81,7 +81,14 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 				if(dataList == null) dataList = new ArrayList<TelephoneReport>();
 				
 				//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
-				boolean dataFlag = haveDataUser.contains(user.getUserName());
+				String userName = user.getUserName();
+				boolean dataFlag = false;
+				for(String dataUser : haveDataUser) {
+					if(dataUser.equalsIgnoreCase(userName)) {
+						dataFlag = true;
+						break;
+					}
+				}
 				List<TelephoneReport> tempDataList = getUserTelephoneReport(user, paramMap, dataFlag);
 				if(tempDataList.size() > 0){
 					dataList.addAll(tempDataList);
@@ -324,6 +331,7 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 		}
 		paramMap.put("beginTime", reportInfo.getStartTime());
 		paramMap.put("endTime", reportInfo.getEndTime());
+		paramMap.put("skipRow", -1);	//不分页查询所有数据
 		String centerText = reportInfo.getZhongxin();
 		//设置生成的报表名称 例如：BPS-新数据派发及成效_20180605 09:00~20180608 12:00_广四中心_一组.xls
 		String beginTime = reportInfo.getStartTime().replaceAll("-", "").substring(0, 14);
@@ -369,7 +377,14 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 			List<TelephoneReport> dataList = new ArrayList<TelephoneReport>();
 			for(BpsUserInfo user : userList){
 				//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
-				boolean dataFlag = haveDataUser.contains(user.getUserName());
+				String userName = user.getUserName();
+				boolean dataFlag = false;
+				for(String dataUser : haveDataUser) {
+					if(dataUser.equalsIgnoreCase(userName)) {
+						dataFlag = true;
+						break;
+					}
+				}
 				List<TelephoneReport> tempDataList = getUserTelephoneReport(user, paramMap, dataFlag);
 				dataList.addAll(tempDataList);
 			}
@@ -424,7 +439,14 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 				List<TelephoneReport> specificDataList = new ArrayList<TelephoneReport>();
 				for(BpsUserInfo user : specificUserList){
 					//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
-					boolean dataFlag = haveDataUser.contains(user.getUserName());
+					String userName = user.getUserName();
+					boolean dataFlag = false;
+					for(String dataUser : haveDataUser) {
+						if(dataUser.equalsIgnoreCase(userName)) {
+							dataFlag = true;
+							break;
+						}
+					}
 					List<TelephoneReport> tempDataList = getUserTelephoneReport(user, paramMap, dataFlag);
 					specificDataList.addAll(tempDataList);
 				}

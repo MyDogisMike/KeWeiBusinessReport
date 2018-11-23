@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.bps.bean.MoneyObj;
 import com.bps.bean.ReportSaveObj;
 import com.bps.dal.dao.bps.BpsRwHistoryDao;
 import com.bps.dal.dao.bps.CrossMarketingReportDao;
@@ -33,15 +34,14 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 	private BpsRwHistoryDao bpsRwHistoryDao;
 	@Resource
 	private SpecialMarketingReportDao specialMarketingReportDao;
-	@Resource
-	private CrossMarketingReportDao crossMarketingReportDao;
+
 	@Autowired
 	private RedisUtil redisUtil;
 	
 	private Map<String, String> centerMap = null;
 	private Map<String, Map<String, String>> centerGroupMap = null;
 	private Map<String, String[]> rateMap = null;
-	private final String headersStr = "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,呼数据派发金额,接通量,成功受理量,成功受理金额,成功批核量,成功批核金额,3期批核量,3期批核金额,6期批核量,6期批核金额,12期批核量,12期批核金额,18期批核量,18期批核金额,24期批核量,24期批核金额,36期批核量,36期批核金额,批核收入";
+	private final String headersStr = "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,外呼数据派发金额,接通量,成功受理量,成功受理金额,成功批核量,成功批核金额,3期批核量,3期批核金额,6期批核量,6期批核金额,12期批核量,12期批核金额,18期批核量,18期批核金额,24期批核量,24期批核金额,36期批核量,36期批核金额,批核收入";
 	
 	@Override
 	public boolean createReport(String beginTime, String endTime, String saveUrl, String reportName) {
@@ -73,19 +73,10 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 			//获取有数据派发的用户名List
 			List<String> haveDataUser = bpsRwHistoryDao.getHaveDataUser("getHaveDataUser", paramMap);
 			List<BpsUserInfo> userList = bpsRwHistoryDao.getUserInfoByTime("getUserInfoByTime", paramMap);
+			List<BpsUserInfo> bpoUserList = bpsRwHistoryDao.getBPOUserInfo("getBPOUserInfo", paramMap);
 			for(BpsUserInfo user : userList){
 				String centerId = user.getCenterId();
 				String groupId = user.getGroupId();
-				//判断是否为BPO成员，如果是则将其所在小组ID添加进bpoCenterGroup以便区分
-				String roleIds = ","+user.getRoleIds()+",";
-				if(roleIds.contains(",172,")){	//如果包含172，那就是营销员（BPO）
-					Set<String> bpoList = bpoCenterGroup.get(centerId);
-					if(bpoList == null){
-						bpoList = new HashSet<String>();
-					}
-					bpoList.add(groupId);
-					bpoCenterGroup.put(centerId, bpoList);
-				}
 				
 				List<SpecialMarketingReport> dataList = null;
 				if(centerGroupMap.get(centerId).get(groupId) != null){	//表示有组别信息，否则只有中心信息
@@ -96,7 +87,55 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 				if(dataList == null) dataList = new ArrayList<SpecialMarketingReport>();
 				
 				//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
-				boolean dataFlag = haveDataUser.contains(user.getUserName());
+				String userName = user.getUserName();
+				boolean dataFlag = false;
+				for(String dataUser : haveDataUser) {
+					if(dataUser.equalsIgnoreCase(userName)) {
+						dataFlag = true;
+						break;
+					}
+				}
+				List<SpecialMarketingReport> tempDataList = getUserSpecialMarketingReport(user, paramMap, dataFlag);
+				if(tempDataList.size() > 0){
+					dataList.addAll(tempDataList);
+					if(centerGroupMap.get(centerId).get(groupId) != null){	//表示有组别信息，否则只有中心信息
+						dataMap.put(groupId, dataList);	//因为中心和小组信息共用一张表，所以两者的id（主键）不可能有相同的情况
+					}else{	//将没有小组信息的数据保存进中心数据的List
+						dataMap.put(centerId, dataList);
+					}
+				}
+			}
+			
+			//bpo用户
+			for(BpsUserInfo user : bpoUserList) {
+				String centerId = user.getCenterId();
+				String groupId = user.getGroupId();
+				
+				Set<String> bpoList = bpoCenterGroup.get(centerId);
+				if(bpoList == null){
+					bpoList = new HashSet<String>();
+				}
+				bpoList.add(groupId);
+				bpoCenterGroup.put(centerId, bpoList);
+				
+				List<SpecialMarketingReport> dataList = null;
+				if(centerGroupMap.get(centerId).get(groupId) != null){	//表示有组别信息，否则只有中心信息
+					dataList = dataMap.get(groupId);	//获取该小组的list
+				}else{
+					dataList = dataMap.get(centerId);	//没有小组信息的就获取该中心的list
+				}
+				if(dataList == null) dataList = new ArrayList<SpecialMarketingReport>();
+				
+				//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
+				String userName = user.getUserName();
+				boolean dataFlag = false;
+				for(String dataUser : haveDataUser) {
+					if(dataUser.equalsIgnoreCase(userName)) {
+						dataFlag = true;
+						break;
+					}
+				}
+				
 				List<SpecialMarketingReport> tempDataList = getUserSpecialMarketingReport(user, paramMap, dataFlag);
 				if(tempDataList.size() > 0){
 					dataList.addAll(tempDataList);
@@ -376,7 +415,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 				report.setSuccessAcceptAmount(0L);
 				report.setSuccessAcceptMoney(0.0);
 				report.setSuccessApproveAmount(0L);
-				report.setSuccessAcceptMoney(0.0);
+				report.setSuccessApproveMoney(0.0);
 				report.setWhDateNum(0L);
 				report.setWhDistributeMoney(0.0);
 			}else{
@@ -386,10 +425,23 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 				
 				//派发金额
 				if("EPP".equals(ywType) || "账单分期".equals(ywType)){
-					report.setWhDistributeMoney(crossMarketingReportDao.getWhDistributeMoney1("getWhDistributeMoney1", paramMap));
+					double money = 0.0;
+					List<MoneyObj> moneyObjList = specialMarketingReportDao.getWhDistributeMoney1("getWhDistributeMoney1", paramMap);
+					for (MoneyObj obj : moneyObjList) {
+						money += obj.getMoney();
+					}
+					report.setWhDistributeMoney(money);
 				}else{
-					double moneyA = crossMarketingReportDao.getWhDistributeMoney2A("getWhDistributeMoney2A", paramMap);
-					double moneyB = crossMarketingReportDao.getWhDistributeMoney2B("getWhDistributeMoney2B", paramMap);
+					double moneyA = 0.0;
+					double moneyB = 0.0;
+					List<MoneyObj> moneyObjListA = specialMarketingReportDao.getWhDistributeMoney2A("getWhDistributeMoney2A", paramMap);
+					for (MoneyObj obj : moneyObjListA) {
+						moneyA += obj.getMoney();
+					}
+					List<MoneyObj> moneyObjListB = specialMarketingReportDao.getWhDistributeMoney2B("getWhDistributeMoney2B", paramMap);
+					for (MoneyObj obj : moneyObjListB) {
+						moneyB += obj.getMoney();
+					}
 					report.setWhDistributeMoney(moneyA + moneyB);
 				}
 				
@@ -407,6 +459,8 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 				
 				report.setWhDateNum(bpsRwHistoryDao.getWhDateNum("getWhDateNum", paramMap));
 				report.setConnectNum(specialMarketingReportDao.getConnectNum("getConnectNum", paramMap));
+				//SuccessAcceptAmount和SuccessAcceptMoney和下面的分期指标的计算公用一个SQL但不需要期数所以给period赋个none
+				paramMap.put("period", "none");
 				report.setSuccessAcceptAmount(specialMarketingReportDao.getSuccessAcceptAmount("getSuccessAcceptAmount", paramMap));
 				report.setSuccessAcceptMoney(specialMarketingReportDao.getSuccessAcceptMoney("getSuccessAcceptMoney", paramMap));
 				long numA = specialMarketingReportDao.getSuccessApproveAmountA("getSuccessApproveAmountA", paramMap);
@@ -457,14 +511,15 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 				moneyA = specialMarketingReportDao.getSuccessApproveMoneyA("getSuccessApproveMoneyA", paramMap);
 				moneyB = specialMarketingReportDao.getSuccessApproveMoneyB("getSuccessApproveMoneyB", paramMap);
 				report.setApproveMoney36(moneyA + moneyB);
+				
 				double approveIncome = 0.00;
 				if(rate.length > 5){
-					approveIncome += report.getApproveMoney3()*3*Double.parseDouble(rate[0]);
-					approveIncome += report.getApproveMoney6()*6*Double.parseDouble(rate[1]);
-					approveIncome += report.getApproveMoney12()*12*Double.parseDouble(rate[2]);
-					approveIncome += report.getApproveMoney18()*18*Double.parseDouble(rate[3]);
-					approveIncome += report.getApproveMoney24()*24*Double.parseDouble(rate[4]);
-					approveIncome += report.getApproveMoney36()*36*Double.parseDouble(rate[5]);
+					approveIncome += report.getApproveMoney3()*3*Double.parseDouble(rate[0])/100;
+					approveIncome += report.getApproveMoney6()*6*Double.parseDouble(rate[1])/100;
+					approveIncome += report.getApproveMoney12()*12*Double.parseDouble(rate[2])/100;
+					approveIncome += report.getApproveMoney18()*18*Double.parseDouble(rate[3])/100;
+					approveIncome += report.getApproveMoney24()*24*Double.parseDouble(rate[4])/100;
+					approveIncome += report.getApproveMoney36()*36*Double.parseDouble(rate[5])/100;
 				}
 				report.setApproveIncome(approveIncome);
 			}
@@ -485,11 +540,9 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 		if(centerGroupMap == null) {
 			centerGroupMap = (Map<String, Map<String, String>>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_GROUP.getBytes()));
 		}
-		if(rateMap == null) {
-			rateMap = (Map<String, String[]>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_RATE.getBytes()));
-		}
 		paramMap.put("beginTime", reportInfo.getStartTime());
 		paramMap.put("endTime", reportInfo.getEndTime());
+		paramMap.put("skipRow", -1);	//不分页查询所有数据
 		String centerText = reportInfo.getZhongxin();
 		//设置生成的报表名称 例如：BPS-新数据派发及成效_20180605 09:00~20180608 12:00_广四中心_一组.xls
 		String beginTime = reportInfo.getStartTime().replaceAll("-", "").substring(0, 14);
@@ -532,11 +585,37 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 			List<String> haveDataUser = bpsRwHistoryDao.getHaveDataUser("getHaveDataUser", paramMap);
 			List<BpsUserInfo> userList = bpsRwHistoryDao.getUserInfoByTime("getUserInfoByTime", paramMap);
 			List<SpecialMarketingReport> dataList = new ArrayList<SpecialMarketingReport>();
+			List<SpecialMarketingReport> bpoDataList = new ArrayList<SpecialMarketingReport>();
+			List<BpsUserInfo> bpoUserList = bpsRwHistoryDao.getBPOUserInfo("getBPOUserInfo", paramMap);
 			for(BpsUserInfo user : userList){
 				//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
-				boolean dataFlag = haveDataUser.contains(user.getUserName());
+				String userName = user.getUserName();
+				boolean dataFlag = false;
+				for(String dataUser : haveDataUser) {
+					if(dataUser.equalsIgnoreCase(userName)) {
+						dataFlag = true;
+						break;
+					}
+				}
 				List<SpecialMarketingReport> tempDataList = getUserSpecialMarketingReport(user, paramMap, dataFlag);
+				
 				dataList.addAll(tempDataList);
+			}
+			
+			//bpo营销员
+			for(BpsUserInfo user : userList){
+				//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
+				String userName = user.getUserName();
+				boolean dataFlag = false;
+				for(String dataUser : haveDataUser) {
+					if(dataUser.equalsIgnoreCase(userName)) {
+						dataFlag = true;
+						break;
+					}
+				}
+				List<SpecialMarketingReport> tempDataList = getUserSpecialMarketingReport(user, paramMap, dataFlag);
+				
+				bpoDataList.addAll(tempDataList);
 			}
 			
 			SimpleDateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -588,6 +667,14 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 //			FileUtil.createFile(path, dataStrBuf.toString());
 			fileUtil.createFile(path, "BPS-专项营销成效", headers, dataList, reportFields);
 			
+			String bpoPath = saveUrl+"BPO-"+realReportName;
+			File bpFfile = new File(bpoPath);
+			File bpoPathFile = bpFfile.getParentFile();
+			if(!bpoPathFile.exists()){
+				bpoPathFile.mkdirs();
+			}
+			fileUtil.createFile(bpoPath, "BPO-BPS-专项营销成效", headers, bpoDataList, reportFields);
+			
 			//是否生成营销员报表
 			if("是".equals(reportInfo.getYxyData())){
 				paramMap.put("userName", reportInfo.getAssignName());
@@ -600,7 +687,14 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 				List<SpecialMarketingReport> specificDataList = new ArrayList<SpecialMarketingReport>();
 				for(BpsUserInfo user : specificUserList){
 					//判断该用户是否在haveDataUser中，如果不在则表示没有数据，则所有数据为0；
-					boolean dataFlag = haveDataUser.contains(user.getUserName());
+					String userName = user.getUserName();
+					boolean dataFlag = false;
+					for(String dataUser : haveDataUser) {
+						if(dataUser.equalsIgnoreCase(userName)) {
+							dataFlag = true;
+							break;
+						}
+					}
 					List<SpecialMarketingReport> tempDataList = getUserSpecialMarketingReport(user, paramMap, dataFlag);
 					specificDataList.addAll(tempDataList);
 				}

@@ -47,10 +47,12 @@ public class ExcelExport<T> {
      */
     
     public HSSFWorkbook exportExcel(String title, String[] headers, Collection<T> dataset, List<String> usefulFields) throws Exception{
-        // 声明一个工作簿
+    	if(title == null) title = "";
+    	String encodeTitle = new String(title.getBytes(FileUtil.getSystemFileCharset()),  "UTF-8");
+    	// 声明一个工作簿
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
-        HSSFSheet sheet = workbook.createSheet(title);
+        HSSFSheet sheet = workbook.createSheet(encodeTitle);
         // 设置表格默认列宽度为15个字节
         sheet.setDefaultColumnWidth(15);
         // 生成一个样式
@@ -95,11 +97,11 @@ public class ExcelExport<T> {
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, usefulFields.size() - 1));
         HSSFCell titleCell = titleRow.createCell(0);
         titleCell.setCellStyle(style);
-        if(title == null || title.equals("")){
-        	HSSFRichTextString titleText = new HSSFRichTextString("bps报表");
+        if(encodeTitle == null || encodeTitle.equals("")){
+        	HSSFRichTextString titleText = new HSSFRichTextString(new String("bps报表".getBytes(FileUtil.getSystemFileCharset()),  "UTF-8"));
             titleCell.setCellValue(titleText);
         }else{
-        	HSSFRichTextString titleText = new HSSFRichTextString(title);
+        	HSSFRichTextString titleText = new HSSFRichTextString(encodeTitle);
             titleCell.setCellValue(titleText);
         }
         
@@ -109,7 +111,7 @@ public class ExcelExport<T> {
         for (int i = 0; i < headers.length; i++) {
             HSSFCell cell = row.createCell(i);
             cell.setCellStyle(style);
-            HSSFRichTextString text = new HSSFRichTextString(headers[i]);
+            HSSFRichTextString text = new HSSFRichTextString(new String(headers[i].getBytes(FileUtil.getSystemFileCharset()),  "UTF-8"));
             cell.setCellValue(text);
         }
 
@@ -159,7 +161,7 @@ public class ExcelExport<T> {
                     if (value != null) {
                         String textValue = null;
                         // 数据类型都当作字符串简单处理
-                        textValue = value.toString();
+                        textValue = new String(value.toString().getBytes(FileUtil.getSystemFileCharset()), "UTF-8");
                         // 如果不是图片数据，就利用正则表达式判断textValue是否全部由数字组成
                         if (textValue != null) {
                             Pattern p = Pattern.compile("^//d+(//.//d+)?$");

@@ -11,4 +11,6 @@ public interface SuperscriptReportDao {
 	public Long getGqDataNum(String sqlId, Object params);
 	
 	public Long getWwhDataNum(String sqlId, Object params);
+	
+	public Long getBidFData(String sqlId, Object params);
 }

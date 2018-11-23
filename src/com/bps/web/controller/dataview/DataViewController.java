@@ -1,8 +1,6 @@
 package com.bps.web.controller.dataview;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -11,16 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bps.bean.SelectObj;
 import com.bps.dal.dao.bps.BpsRwHistoryDao;
 import com.bps.dal.object.PageResult;
 import com.bps.dal.object.QueryParams;
@@ -30,16 +27,12 @@ import com.bps.dal.object.bps.NewNumberMonitor;
 import com.bps.service.bps.MarketingPerformanceService;
 import com.bps.service.bps.MarketingProcessService;
 import com.bps.service.bps.NewNumberMonitorService;
-import com.bps.service.dianying.VoiceFileService;
 import com.bps.util.DateUtil;
-import com.bps.bean.SelectObj;
 
 
 @Controller
 @RequestMapping("/dataview")
 public class DataViewController {
-	@Autowired
-	private VoiceFileService voiceFileService;
 	@Autowired
 	private NewNumberMonitorService newNumberMonitorService;
 	@Autowired
@@ -47,7 +40,7 @@ public class DataViewController {
 	@Autowired 
 	MarketingProcessService marketingProcessService;
 	@Resource
-	private BpsRwHistoryDao bpsRwHistoryDao;
+	private BpsRwHistoryDao bpsRwHistoryDaoRealTime;
 	
 	private static final Logger logger = Logger.getLogger("logs");
 	
@@ -65,7 +58,7 @@ public class DataViewController {
 	       String referer = request.getHeader("referer");//请求来源url
 	      // System.out.println("获取到的referer:"+referer);
 	       request.setAttribute("roleInfo", roleInfo);
-	       String roleName = bpsRwHistoryDao.getUserRole("getUserRole", roleId);
+	       String roleName = bpsRwHistoryDaoRealTime.getUserRole("getUserRole", roleId);
 	       if("组长".equals(roleName)){
 	    	   request.setAttribute("isGroup", "yes");
 	       }else{
@@ -175,19 +168,19 @@ public class DataViewController {
 	 	@ResponseBody
 		@RequestMapping(value = {"getCenterList"}, method = RequestMethod.POST)
 		public List<SelectObj> getCenterList(){
-	 		return bpsRwHistoryDao.getAllCenterToSelect("getAllCenterToSelect");
+	 		return bpsRwHistoryDaoRealTime.getAllCenterToSelect("getAllCenterToSelect");
 	 	}
 	 	
 	 	@ResponseBody
 		@RequestMapping(value = {"getGroupList"}, method = RequestMethod.POST)
 		public List<SelectObj> getGroupList(String centerId){
-	 		return bpsRwHistoryDao.getGroupByCenterIdToSelect("getGroupByCenterIdToSelect", centerId);
+	 		return bpsRwHistoryDaoRealTime.getGroupByCenterIdToSelect("getGroupByCenterIdToSelect", centerId);
 	 	}
 	 	
 	 	@ResponseBody
 		@RequestMapping(value = {"getUserList"}, method = RequestMethod.POST)
 		public List<String> getUserList(String groupId){
-	 		return bpsRwHistoryDao.getUserByGroupIdToSelect("getUserByGroupIdToSelect", groupId);
+	 		return bpsRwHistoryDaoRealTime.getUserByGroupIdToSelect("getUserByGroupIdToSelect", groupId);
 	 	}
 	 	
 	 	@ResponseBody
@@ -257,41 +250,4 @@ public class DataViewController {
 	 	}
 	 
 	 
-		@ResponseBody
-		@RequestMapping(value = {"kewei"}, method = RequestMethod.POST)
-		public Map<String, Object> keweiView( 
-				@RequestParam("center") String center_par,
-				@RequestParam("area") String area_par,
-				@RequestParam("group") String group_par,
-				@RequestParam("date") String date_par,
-				@RequestParam("isreport") String isreport_par,
-				@RequestParam("username") String username_par,
-				@RequestParam("currentUser") String currentUser_par,
-				@RequestParam("currentTime") String currentTime_par){
-			String username="";
-			String date="";
-			String currentUser="";
-			String currentTime="";
-		       if(!"null".equals(username_par) && !"".equals(username_par)){
-		    	   byte[] encode=Base64.decodeBase64(username_par.getBytes());
-		    	   username=new String(encode);
-		       }
-		       if(!"null".equals(date_par) && !"".equals(date_par)){
-		    	   byte[] encode=Base64.decodeBase64(date_par.getBytes());
-		    	   date=new String(encode);
-		       }
-		       if(!"null".equals(currentUser_par) && !"".equals(currentUser_par)){
-		        	byte[] encode=Base64.decodeBase64(currentUser_par.getBytes());
-		        	currentUser=new String(encode);
-		        }
-		        if(!"null".equals(currentTime_par) && !"".equals(currentTime_par)){
-		        	byte[] encode=Base64.decodeBase64(currentTime_par.getBytes());
-		        	currentTime=new String(encode);
-		        }
-		        
-			Map<String, Object> resultMap=new HashMap<String, Object>();
-			String returnstr=voiceFileService.getFFile("werq", "F");
-			
-			return resultMap;
-		}
 }

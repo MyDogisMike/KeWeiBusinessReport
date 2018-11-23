@@ -4,9 +4,9 @@
 	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
 	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap>
-	
-	<select id="getWhDistributeMoney1" parameterClass="HashMap" resultClass="Double">
-		select IFNULL(sum(b.TRAN_AMT), 0.00) AS money from bps_rw_history a LEFT JOIN 
+
+	<select id="getCrossWhDistributeMoney1" parameterClass="HashMap" resultClass="Double">
+		select IFNULL(SUM(b.TRAN_AMT), 0.00) AS money from bps_rw_history a LEFT JOIN 
 		<isEqual property="ywType" compareValue="EPP">
 			mdx_epp b ON a.dr_key =b.dr_key where a.yw_type='EPP' 
 		</isEqual>
@@ -16,8 +16,8 @@
 		 and a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime#; 
 	</select>
 	
-	<select id="getWhDistributeMoney2A" parameterClass="HashMap" resultClass="Double">
-		select IFNULL(sum(b.YSED), 0.00) AS money from bps_rw_history a LEFT JOIN 
+	<select id="getCrossWhDistributeMoney2A" parameterClass="HashMap" resultClass="Double">
+		select IFNULL(SUM(b.YSED), 0.00) AS money from bps_rw_history a LEFT JOIN 
 		<isEqual property="ywType" compareValue="大额EPPC">
 			mdx_deczj b ON a.dr_key = b.dr_key where a.yw_type='大额EPPC' 
 		</isEqual>
@@ -30,8 +30,8 @@
 		  AND b.md_source ='get' and a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime#; 
 	</select>
 	
-	<select id="getWhDistributeMoney2B" parameterClass="HashMap" resultClass="Double">
-		select IFNULL(sum(b.PHJE), 0.00) AS money from bps_rw_history a LEFT JOIN 
+	<select id="getCrossWhDistributeMoney2B" parameterClass="HashMap" resultClass="Double">
+		select IFNULL(SUM(b.PHJE), 0.00) AS money from bps_rw_history a LEFT JOIN 
 		<isEqual property="ywType" compareValue="大额EPPC">
 			mdx_deczj b ON a.dr_key = b.dr_key where a.yw_type='大额EPPC' 
 		</isEqual>
@@ -43,7 +43,7 @@
 		</isEqual>
 		  AND b.md_source in('S','T','U') and a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime#; 
 	</select>
-	
+		
 	<select id="getSuccessApproveDataNumA" resultClass="Long" parameterClass="HashMap">
 		select COUNT(DISTINCT a.md_id) AS A from 
 		<isEqual property="dataType" compareValue="EPP">
@@ -255,30 +255,11 @@
 			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='YY01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='YY01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
+			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='YY01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash='新发卡备用金';
 		</isEqual>
 	</select>
 	
 	<select id="getCrossMGLWill" parameterClass="HashMap" resultClass="Long">
-		SELECT COUNT(DISTINCT a.md_id) AS amount FROM insurance_reg a 
-		<isEqual property="ywType" compareValue="EPP">
-			 WHERE yw_id=1 AND user_name=#userName# AND if_insurance='1' AND save_time &gt;=#beginTime# AND save_time &lt;= #endTime#;
-		</isEqual>
-		<isEqual property="ywType" compareValue="账单分期">
-			 WHERE yw_id=10 AND user_name=#userName# AND if_insurance='1' AND save_time &gt;=#beginTime# AND save_time &lt;= #endTime#;
-		</isEqual>
-		<isEqual property="ywType" compareValue="大额EPPC">
-			 WHERE yw_id=11 AND user_name=#userName# AND if_insurance='1' AND save_time &gt;=#beginTime# AND save_time &lt;= #endTime#;
-		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC">
-			 LEFT JOIN md_success b on a.md_id=b.md_id  WHERE a.yw_id=2 AND a.user_name=#userName# AND a.if_insurance='1' AND a.save_time &gt;=#beginTime# AND a.save_time &lt;= #endTime# AND b.pettycash!='新发卡备用金';
-		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
-			 LEFT JOIN md_success b on a.md_id=b.md_id  WHERE a.yw_id=2 AND a.user_name=#userName# AND a.if_insurance='1' AND a.save_time &gt;=#beginTime# AND a.save_time &lt;= #endTime# AND b.pettycash='新发卡备用金';
-		</isEqual>
-	</select>
-	
-	<select id="getCrossInsuranceWill" parameterClass="HashMap" resultClass="Long">
 		SELECT COUNT(DISTINCT a.md_id) AS amount FROM insurance_reg a 
 		<isEqual property="ywType" compareValue="EPP">
 			 WHERE yw_id=1 AND user_name=#userName# AND rec_card='1' AND a.cur_time &gt;=#beginTime# AND a.cur_time &lt;= #endTime#;
@@ -297,6 +278,25 @@
 		</isEqual>
 	</select>
 	
+	<select id="getCrossInsuranceWill" parameterClass="HashMap" resultClass="Long">
+		SELECT COUNT(DISTINCT a.md_id) AS amount FROM insurance_reg a 
+		<isEqual property="ywType" compareValue="EPP">
+			 WHERE yw_id=1 AND user_name=#userName# AND if_insurance='1' AND save_time &gt;=#beginTime# AND save_time &lt;= #endTime#;
+		</isEqual>
+		<isEqual property="ywType" compareValue="账单分期">
+			 WHERE yw_id=10 AND user_name=#userName# AND if_insurance='1' AND save_time &gt;=#beginTime# AND save_time &lt;= #endTime#;
+		</isEqual>
+		<isEqual property="ywType" compareValue="大额EPPC">
+			 WHERE yw_id=11 AND user_name=#userName# AND if_insurance='1' AND save_time &gt;=#beginTime# AND save_time &lt;= #endTime#;
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC">
+			 LEFT JOIN md_success b on a.md_id=b.md_id  WHERE a.yw_id=2 AND a.user_name=#userName# AND a.if_insurance='1' AND a.save_time &gt;=#beginTime# AND a.save_time &lt;= #endTime# AND b.pettycash!='新发卡备用金';
+		</isEqual>
+		<isEqual property="ywType" compareValue="EPPC备用金">
+			 LEFT JOIN md_success b on a.md_id=b.md_id  WHERE a.yw_id=2 AND a.user_name=#userName# AND a.if_insurance='1' AND a.save_time &gt;=#beginTime# AND a.save_time &lt;= #endTime# AND b.pettycash='新发卡备用金';
+		</isEqual>
+	</select>
+	
 	<select id="getCrossBillBinding" parameterClass="HashMap" resultClass="Long">
 		select  
 		<isEqual property="ywType" compareValue="EPP">
@@ -312,7 +312,7 @@
 			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='ZD01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPPC备用金">
-			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='ZD01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
+			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='ZD01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash='新发卡备用金';
 		</isEqual>
 	</select>
 	

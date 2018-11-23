@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
@@ -75,7 +76,7 @@ public class FileUtil<T> {
 		FileOutputStream out = null;
 		ExcelExport<T> ex = new ExcelExport<T>();
 		try{
-			out = new FileOutputStream(path);
+			out = new FileOutputStream(new String(path.getBytes(getSystemFileCharset()), "UTF-8"));
 			HSSFWorkbook workbook = ex.exportExcel(title, headers, dataset, usefulFields);
 			workbook.write(out);
 			workbook.close();
@@ -91,5 +92,12 @@ public class FileUtil<T> {
 				}
 			}
 		}
+	}
+	
+	//获得系统编码
+	public static String getSystemFileCharset(){
+	    Properties pro = System.getProperties();
+	    return pro.getProperty("file.encoding");
+	    //return "UTF-8";
 	}
 }
