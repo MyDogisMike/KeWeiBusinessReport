@@ -91,7 +91,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime &gt; #beginTime# AND a.rw_ctime &lt;= #endTime# AND a.callid !='' AND a.yw_type ='EPPC' AND b.Data_type!='新发卡备用金' and a.user_name= #userName#;
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 LEFT JOIN mdx_eppc b on a.dr_key =b.dr_key WHERE a.rw_ctime &gt; #beginTime# AND a.rw_ctime &lt;= #endTime# AND a.callid !='' AND a.yw_type ='EPPC' AND b.Data_type='新发卡备用金'  and a.user_name= #userName#;
 		</isEqual>
 		
@@ -113,8 +113,8 @@
 	</select>
 	
 	<insert id="insertReportSave" parameterClass="com.bps.bean.ReportSaveObj">
-		insert into baobiaotj(fileName,file_num,type,time,name,down_num,state,file_path) 
-		values(#fileName#,#fileNum#,#type#,#time#,#name#,#downNum#,#state#,#filePath#)
+		insert into baobiaotj(fileName,file_num,type,time,name,down_num,state,file_path,real_fileName) 
+		values(#fileName#,#fileNum#,#type#,#time#,#name#,#downNum#,#state#,#filePath#,#realFileName#)
 	</insert>
 	
 	<select id="getDefinedReportInfo" resultMap="definedReportMap">

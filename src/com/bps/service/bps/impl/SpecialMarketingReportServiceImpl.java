@@ -53,6 +53,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 			dateStr = beginDate + "~" + endDate;
 		}
 		reportName += "_"+dateStr.trim()+".xls";
+		String realReportName = "SpecialMarketingReport_"+dateStr.trim()+".xls";
 		System.out.println(dateStr+"专项营销成效报表生成开始"+DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss"));
 		try{
 			if(centerMap == null){
@@ -149,6 +150,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 			
 			SimpleDateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			ReportSaveObj reportSave = new ReportSaveObj("BPS-专项营销成效");	//文件保存对象
+			reportSave.setRealFileName(realReportName);
 //			StringBuffer allStrBuf = new StringBuffer();	//所有的数据
 			List<SpecialMarketingReport> allDataList = new ArrayList<SpecialMarketingReport>();
 			FileUtil<SpecialMarketingReport> fileUtil = new FileUtil<SpecialMarketingReport>();
@@ -214,7 +216,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 					
 //					groupStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,呼数据派发金额,接通量,成功受理量,成功受理金额,成功批核量,成功批核金额,3期批核量,3期批核金额,6期批核量,6期批核金额,12期批核量,12期批核金额,18期批核量,18期批核金额,24期批核量,24期批核金额,36期批核量,36期批核金额,批核收入\r\n");
 					String groupPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator+groupId.trim()+File.separator;
-					String totalPath = groupPath + reportName;
+					String totalPath = groupPath + realReportName;
 					//System.out.println(groupPath);
 					File groupFile = new File(totalPath);
 					File groupPathFile = groupFile.getParentFile();
@@ -244,7 +246,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 				allFileNum += centerFileNum;
 //				centerStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,呼数据派发金额,接通量,成功受理量,成功受理金额,成功批核量,成功批核金额,3期批核量,3期批核金额,6期批核量,6期批核金额,12期批核量,12期批核金额,18期批核量,18期批核金额,24期批核量,24期批核金额,36期批核量,36期批核金额,批核收入\r\n");
 				String centerPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator;
-				String totalPath = centerPath + reportName;
+				String totalPath = centerPath + realReportName;
 				File centerFile = new File(totalPath);
 				File centerPathFile = centerFile.getParentFile();
 				if(!centerPathFile.exists()){
@@ -261,7 +263,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 			}
 //			allStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,呼数据派发金额,接通量,成功受理量,成功受理金额,成功批核量,成功批核金额,3期批核量,3期批核金额,6期批核量,6期批核金额,12期批核量,12期批核金额,18期批核量,18期批核金额,24期批核量,24期批核金额,36期批核量,36期批核金额,批核收入\r\n");
 			String allPath = saveUrl+dateStr+File.separator;
-			String totalPath = allPath + reportName;
+			String totalPath = allPath + realReportName;
 			File allFile = new File(totalPath);
 			File allPathFile = allFile.getParentFile();
 			if(!allPathFile.exists()){
@@ -278,7 +280,9 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 			
 			//bpo文件生成
 			reportName = "BPO-BPS-"+reportName;
+			realReportName = "BPO-BPS-"+realReportName;
 			reportSave.setType("BPO-BPS-专项营销成效");	//文件保存对象
+			reportSave.setRealFileName(realReportName);
 //			allStrBuf.setLength(0);	//所有的数据
 			allDataList.clear();
 			allFileNum = 0L;
@@ -305,7 +309,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 					}
 //					groupStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,呼数据派发金额,接通量,成功受理量,成功受理金额,成功批核量,成功批核金额,3期批核量,3期批核金额,6期批核量,6期批核金额,12期批核量,12期批核金额,18期批核量,18期批核金额,24期批核量,24期批核金额,36期批核量,36期批核金额,批核收入\r\n");
 					String groupPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator+groupId.trim()+File.separator;
-					String bpoTotalPath = groupPath + reportName;
+					String bpoTotalPath = groupPath + realReportName;
 					//System.out.println(groupPath);
 					File groupFile = new File(bpoTotalPath);
 					File groupPathFile = groupFile.getParentFile();
@@ -335,7 +339,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 				allFileNum += centerFileNum;
 //				centerStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,呼数据派发金额,接通量,成功受理量,成功受理金额,成功批核量,成功批核金额,3期批核量,3期批核金额,6期批核量,6期批核金额,12期批核量,12期批核金额,18期批核量,18期批核金额,24期批核量,24期批核金额,36期批核量,36期批核金额,批核收入\r\n");
 				String centerPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator;
-				String bpoTotalPath = centerPath + reportName;
+				String bpoTotalPath = centerPath + realReportName;
 				File centerFile = new File(bpoTotalPath);
 				File centerPathFile = centerFile.getParentFile();
 				if(!centerPathFile.exists()){
@@ -352,7 +356,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 			}
 //			allStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,呼数据派发金额,接通量,成功受理量,成功受理金额,成功批核量,成功批核金额,3期批核量,3期批核金额,6期批核量,6期批核金额,12期批核量,12期批核金额,18期批核量,18期批核金额,24期批核量,24期批核金额,36期批核量,36期批核金额,批核收入\r\n");
 			allPath = saveUrl+dateStr+File.separator;
-			totalPath = allPath + reportName;
+			totalPath = allPath + realReportName;
 			allFile = new File(totalPath);
 			allPathFile = allFile.getParentFile();
 			if(!allPathFile.exists()){
@@ -379,7 +383,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 
 	@Override
 	public List<SpecialMarketingReport> getUserSpecialMarketingReport(BpsUserInfo user, Map<String, Object> paramMap, boolean dataFlag) {
-		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "EPPC备用金"};
+		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "备用金"};
 		List<SpecialMarketingReport> tempDataList =new ArrayList<SpecialMarketingReport>();
 		String[] rate = {};
 		
@@ -453,7 +457,7 @@ public class SpecialMarketingReportServiceImpl implements SpecialMarketingReport
 					rate = rateMap.get("BIGEPPC");
 				}else if("EPPC".equals(ywType)){
 					rate = rateMap.get("EPPC");
-				}else if("EPPC备用金".equals(ywType)){
+				}else if("备用金".equals(ywType)){
 					rate = rateMap.get("EPPCCash");
 				}
 				

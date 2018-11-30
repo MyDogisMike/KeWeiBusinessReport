@@ -24,7 +24,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			mdx_eppc b ON a.dr_key = b.dr_key where a.yw_type='EPPC' and b.Data_type!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			mdx_eppc b ON a.dr_key = b.dr_key where a.yw_type='EPPC' and b.Data_type='新发卡备用金' 
 		</isEqual>
 		  AND b.md_source ='get' and a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime#; 
@@ -38,7 +38,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			mdx_eppc b ON a.dr_key = b.dr_key where a.yw_type='EPPC' and b.Data_type!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			mdx_eppc b ON a.dr_key = b.dr_key where a.yw_type='EPPC' and b.Data_type='新发卡备用金' 
 		</isEqual>
 		  AND b.md_source in('S','T','U') and a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime#; 
@@ -71,13 +71,13 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 where mainyw='EPPC' AND pettycash!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 where mainyw='EPPC' AND pettycash='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPP-EPPC">
 			 left join md_success b on a.md_id = b.md_id where a.mainyw='EPPC' and b.pettycash != '新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPP-EPPC备用金">
+		<isEqual property="ywType" compareValue="EPP-备用金">
 			 left join md_success b on a.md_id = b.md_id where a.mainyw='EPPC' and b.pettycash = '新发卡备用金' 
 		</isEqual>
 		
@@ -111,13 +111,13 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 where mainyw='EPPC' AND pettycash!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 where mainyw='EPPC' AND pettycash='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPP-EPPC">
 			 left join md_success b on a.md_id = b.md_id where a.mainyw='EPPC' and b.pettycash != '新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPP-EPPC备用金">
+		<isEqual property="ywType" compareValue="EPP-备用金">
 			 left join md_success b on a.md_id = b.md_id where a.mainyw='EPPC' and b.pettycash = '新发卡备用金' 
 		</isEqual>
 		
@@ -151,13 +151,13 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 where mainyw='EPPC' AND pettycash!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 where mainyw='EPPC' AND pettycash='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPP-EPPC">
 			 left join md_success b on a.md_id = b.md_id where a.mainyw='EPPC' and b.pettycash != '新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPP-EPPC备用金">
+		<isEqual property="ywType" compareValue="EPP-备用金">
 			 left join md_success b on a.md_id = b.md_id where a.mainyw='EPPC' and b.pettycash = '新发卡备用金' 
 		</isEqual>
 		
@@ -209,13 +209,13 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 where mainyw='EPPC' AND pettycash!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 where mainyw='EPPC' AND pettycash='新发卡备用金' 
 		</isEqual>
 		<isEqual property="ywType" compareValue="EPP-EPPC">
 			 left join md_success b on a.md_id = b.md_id where a.mainyw='EPPC' and b.pettycash != '新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPP-EPPC备用金">
+		<isEqual property="ywType" compareValue="EPP-备用金">
 			 left join md_success b on a.md_id = b.md_id where a.mainyw='EPPC' and b.pettycash = '新发卡备用金' 
 		</isEqual>
 		
@@ -254,7 +254,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='YY01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='YY01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash='新发卡备用金';
 		</isEqual>
 	</select>
@@ -273,7 +273,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 LEFT JOIN md_success b on a.md_id=b.md_id  WHERE a.yw_id=2 AND a.user_name=#userName# AND a.rec_card='1' AND a.cur_time &gt;=#beginTime# AND a.cur_time &lt;= #endTime# AND b.pettycash!='新发卡备用金';
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 LEFT JOIN md_success b on a.md_id=b.md_id  WHERE a.yw_id=2 AND a.user_name=#userName# AND a.rec_card='1' AND a.cur_time &gt;=#beginTime# AND a.cur_time &lt;= #endTime# AND b.pettycash='新发卡备用金';
 		</isEqual>
 	</select>
@@ -292,7 +292,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 LEFT JOIN md_success b on a.md_id=b.md_id  WHERE a.yw_id=2 AND a.user_name=#userName# AND a.if_insurance='1' AND a.save_time &gt;=#beginTime# AND a.save_time &lt;= #endTime# AND b.pettycash!='新发卡备用金';
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 LEFT JOIN md_success b on a.md_id=b.md_id  WHERE a.yw_id=2 AND a.user_name=#userName# AND a.if_insurance='1' AND a.save_time &gt;=#beginTime# AND a.save_time &lt;= #endTime# AND b.pettycash='新发卡备用金';
 		</isEqual>
 	</select>
@@ -311,7 +311,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='ZD01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash!='新发卡备用金';
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 COUNT(a.md_id) AS amount from bps_gdx_autofq a LEFT JOIN md_success b on a.md_id=b.md_id WHERE a.installment='ZD01' AND a.czlx != 'C' AND a.gdx_exzx =#userName# and a.gdx_extime &gt;=#beginTime# AND a.gdx_extime &lt;= #endTime# AND a.mainyw='EPPC' AND b.pettycash='新发卡备用金';
 		</isEqual>
 	</select>

@@ -19,7 +19,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			mdx_eppc where Data_type!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			mdx_eppc where Data_type='新发卡备用金' 
 		</isEqual>
 		 and md_atime &gt;=#beginTime#  AND md_atime &lt;=#endTime#
@@ -39,7 +39,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			mdx_eppc where Data_type!='新发卡备用金' AND Remark2=#dataType# AND user_name = #userName# 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			mdx_eppc where Data_type='新发卡备用金' AND Remark2=#dataType# AND user_name = #userName# 
 		</isEqual>
 		 and md_atime &gt;=#beginTime#  AND md_atime &lt;=#endTime#
@@ -64,7 +64,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			mdx_eppc where Data_type!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			mdx_eppc  where Data_type='新发卡备用金' 
 		</isEqual>
 		 AND Remark2=#dataType# AND md_atime &gt;=#beginTime# AND md_atime &lt;=#endTime# and md_source ='get' and user_name =#userName#
@@ -78,7 +78,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			mdx_eppc where Data_type!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			mdx_eppc  where Data_type='新发卡备用金' 
 		</isEqual>
 		 AND Remark2=#dataType# AND md_atime &gt;=#beginTime# AND md_atime &lt;=#endTime# and md_source in('S','T','U') and user_name =#userName#
@@ -98,7 +98,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' and b.Data_type !='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' and b.Data_type ='新发卡备用金' 
 		</isEqual>
 		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;=#beginTime# AND a.rw_ctime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.rw_ctime);
@@ -118,7 +118,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			mdx_eppc b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='EPPC' and b.Data_type !='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			mdx_eppc b ON a.dr_key=b.dr_key LEFT JOIN internet_ipcc.t_toll_universal c on a.callid=c.invokeId where a.yw_type='EPPC' and b.Data_type ='新发卡备用金' 
 		</isEqual>
 		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.user_name = #userName# AND a.callid!='' AND a.rw_ctime &gt;=#beginTime# AND a.rw_ctime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.rw_ctime) AND c.invokeId!='';
@@ -138,7 +138,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			COUNT(DISTINCT a.mdx_eppcid) AS num from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			COUNT(DISTINCT a.mdx_eppcid) AS num from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
 		</isEqual>
 		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime);
@@ -158,7 +158,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
 		</isEqual>
 		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime);
@@ -178,7 +178,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			a.mdx_eppcid AS id from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			a.mdx_eppcid AS id from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
 		</isEqual>
 		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime) AND a.forceTransfer !=1;
@@ -198,7 +198,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			a.mdx_eppcid AS id from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			a.mdx_eppcid AS id from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
 		</isEqual>
 		   AND a.Update_t &gt;=#beginTime# AND a.Update_t &lt;=#endTime# AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime) AND a.forceTransfer =1 AND a.approve_rst = '成功' and a.status_Approved = '已批核';
@@ -218,7 +218,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
 		</isEqual>
 		  AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime) AND a.forceTransfer !=1;
@@ -238,7 +238,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type !='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			IFNULL(sum(a.amount), 0.00) AS money from  bps_gdx_eppc a LEFT JOIN mdx_eppc b ON a.mdx_eppcid=b.mdx_eppcid where b.Data_type ='新发卡备用金' 
 		</isEqual>
 		  AND a.Update_t &gt;=#beginTime# AND a.Update_t &lt;=#endTime# AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.gdx_exzx = #userName# AND a.gdx_extime &gt;#beginTime# AND a.gdx_extime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.gdx_extime) AND a.forceTransfer =1 AND a.approve_rst = '成功' and a.status_Approved = '已批核';
@@ -258,7 +258,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND b.Data_type !='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND b.Data_type ='新发卡备用金' 
 		</isEqual>
 		   AND a.Rw_Status_sn='M' AND b.Remark2 =#dataType# and b.md_atime &gt;=#beginTime# AND b.md_atime &lt;=#endTime# AND a.user_name = #userName# AND a.rw_ctime &gt;=#beginTime# AND a.rw_ctime &lt;=#endTime# AND DATE(b.md_atime)=DATE(a.rw_ctime);

@@ -49,6 +49,7 @@ public class ExcelExport<T> {
     public HSSFWorkbook exportExcel(String title, String[] headers, Collection<T> dataset, List<String> usefulFields) throws Exception{
     	if(title == null) title = "";
     	String encodeTitle = new String(title.getBytes(FileUtil.getSystemFileCharset()),  "UTF-8");
+//    	String encodeTitle = new String(title.getBytes(FileUtil.getSystemFileCharset()),  "UTF-8");
     	// 声明一个工作簿
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
@@ -99,6 +100,7 @@ public class ExcelExport<T> {
         titleCell.setCellStyle(style);
         if(encodeTitle == null || encodeTitle.equals("")){
         	HSSFRichTextString titleText = new HSSFRichTextString(new String("bps报表".getBytes(FileUtil.getSystemFileCharset()),  "UTF-8"));
+//        	HSSFRichTextString titleText = new HSSFRichTextString("bps报表");
             titleCell.setCellValue(titleText);
         }else{
         	HSSFRichTextString titleText = new HSSFRichTextString(encodeTitle);
@@ -112,6 +114,7 @@ public class ExcelExport<T> {
             HSSFCell cell = row.createCell(i);
             cell.setCellStyle(style);
             HSSFRichTextString text = new HSSFRichTextString(new String(headers[i].getBytes(FileUtil.getSystemFileCharset()),  "UTF-8"));
+//            HSSFRichTextString text = new HSSFRichTextString(headers[i]);
             cell.setCellValue(text);
         }
 
@@ -162,6 +165,7 @@ public class ExcelExport<T> {
                         String textValue = null;
                         // 数据类型都当作字符串简单处理
                         textValue = new String(value.toString().getBytes(FileUtil.getSystemFileCharset()), "UTF-8");
+//                        textValue = value.toString();
                         // 如果不是图片数据，就利用正则表达式判断textValue是否全部由数字组成
                         if (textValue != null) {
                             Pattern p = Pattern.compile("^//d+(//.//d+)?$");
@@ -175,6 +179,8 @@ public class ExcelExport<T> {
                                 cell.setCellValue(richString);
                             }
                         }
+                    }else {
+                    	cell.setCellValue("");
                     }
                 } catch (SecurityException e) {
                     e.printStackTrace();

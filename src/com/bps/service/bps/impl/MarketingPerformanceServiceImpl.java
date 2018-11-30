@@ -49,7 +49,7 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 		Map<String, String> centerMap = (Map<String, String>) redisUtil.getJedis().hgetAll(RedisUtil.BPS_CENTER);;
 		Map<String, Map<String, String>> centerGroupMap = (Map<String, Map<String, String>>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_GROUP.getBytes()));
 		Map<String, String[]> rateMap = (Map<String, String[]>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_RATE.getBytes()));
-		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "EPPC备用金"};
+		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "备用金"};
 		PageResult<MarketingPerformance> result = new PageResult<MarketingPerformance>();
 		List<MarketingPerformance> dataList = new ArrayList<MarketingPerformance>();
 		Map<String, Object> userParam = new HashMap<String, Object>();
@@ -126,7 +126,7 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 				}else{
 					Double moneyA = 0.00;
 					Double moneyB = 0.00;
-					if("EPPC".equals(ywType) || "EPPC备用金".equals(ywType)){
+					if("EPPC".equals(ywType) || "备用金".equals(ywType)){
 						obj.setCrossEPPCApproveMoney(0.00);
 					}else{
 						dataParam.put("dataType", "EPPC");
@@ -139,7 +139,7 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 					}else{
 						dataParam.put("dataType", "EPP");
 						//由于EPPC及备用金业务交叉EPP业务时没有带备用金字段值，修改有关交叉EPP的统计SQL,其他业务不需关联即可查询，不做修改
-						if("EPPC".equals(ywType) || "EPPC备用金".equals(ywType)){
+						if("EPPC".equals(ywType) || "备用金".equals(ywType)){
 							dataParam.put("ywType", "EPP-"+ywType);
 						}
 						moneyA = marketingPerformanceDao.getCrossApproveMoneyA("getCrossApproveMoneyA", dataParam);
@@ -176,7 +176,7 @@ public class MarketingPerformanceServiceImpl implements MarketingPerformanceServ
 						rate = rateMap.get("BIGEPPC");
 					}else if("EPPC".equals(ywType)){
 						rate = rateMap.get("EPPC");
-					}else if("EPPC备用金".equals(ywType)){
+					}else if("备用金".equals(ywType)){
 						rate = rateMap.get("EPPCCash");
 					}
 					dataParam.put("period", "3期");

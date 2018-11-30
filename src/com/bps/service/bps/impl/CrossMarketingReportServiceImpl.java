@@ -50,6 +50,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 			dateStr = beginDate + "~" + endDate;
 		}
 		reportName += "_"+dateStr.trim()+".xls";
+		String realReportName = "CrossMarketingReport_"+dateStr.trim()+".xls";
 		System.out.println(dateStr+"交叉营销成效报表生成开始"+DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss"));
 		try{
 			if(centerMap == null){
@@ -143,7 +144,8 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 			
 			SimpleDateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			ReportSaveObj reportSave = new ReportSaveObj("BPS-交叉营销成效");	//文件保存对象
-//			StringBuffer allStrBuf = new StringBuffer();	//所有的数据
+			reportSave.setRealFileName(realReportName);
+			//			StringBuffer allStrBuf = new StringBuffer();	//所有的数据
 			List<CrossMarketingReport> allDataList = new ArrayList<CrossMarketingReport>();
 			FileUtil<CrossMarketingReport> fileUtil = new FileUtil<CrossMarketingReport>();
 			String[] headers = headersStr.split(",");
@@ -228,7 +230,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 					
 //					groupStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,外呼数据派发金额,交叉EPP批核量,交叉账单批核量,交叉EPPC批核量,交叉大额EPPC批核量,交叉EPP批核金额,交叉账单批核金额,交叉EPPC批核金额,交叉大额EPPC批核金额,交叉EPP自动绑定量,交叉MGL意愿量,交叉保险意愿量,交叉自动绑定账单分期量,交叉EPP批核金额（3期）,交叉EPP批核金额（6期）,交叉EPP批核金额（12期）,交叉EPP批核金额（18期）,交叉EPP批核金额（24期）,交叉EPP批核金额（36期）,交叉账单批核金额（3期）,交叉账单批核金额（6期）,交叉账单批核金额（12期）,交叉账单批核金额（18期）,交叉账单批核金额（24期）,交叉账单批核金额（36期）,交叉EPPC批核金额（3期）,交叉EPPC批核金额（6期）,交叉EPPC批核金额（12期）,交叉EPPC批核金额（18期）,交叉EPPC批核金额（24期）,交叉EPPC批核金额（36期）,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额\r\n");
 					String groupPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator+groupId.trim()+File.separator;
-					String totalPath = groupPath + reportName;
+					String totalPath = groupPath + realReportName;
 					//System.out.println(groupPath);
 					File groupFile = new File(totalPath);
 					File groupPathFile = groupFile.getParentFile();
@@ -259,7 +261,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 				allFileNum += centerFileNum;
 //				centerStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,外呼数据派发金额,交叉EPP批核量,交叉账单批核量,交叉EPPC批核量,交叉大额EPPC批核量,交叉EPP批核金额,交叉账单批核金额,交叉EPPC批核金额,交叉大额EPPC批核金额,交叉EPP自动绑定量,交叉MGL意愿量,交叉保险意愿量,交叉自动绑定账单分期量,交叉EPP批核金额（3期）,交叉EPP批核金额（6期）,交叉EPP批核金额（12期）,交叉EPP批核金额（18期）,交叉EPP批核金额（24期）,交叉EPP批核金额（36期）,交叉账单批核金额（3期）,交叉账单批核金额（6期）,交叉账单批核金额（12期）,交叉账单批核金额（18期）,交叉账单批核金额（24期）,交叉账单批核金额（36期）,交叉EPPC批核金额（3期）,交叉EPPC批核金额（6期）,交叉EPPC批核金额（12期）,交叉EPPC批核金额（18期）,交叉EPPC批核金额（24期）,交叉EPPC批核金额（36期）,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额\r\n");
 				String centerPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator;
-				String totalPath = centerPath + reportName;
+				String totalPath = centerPath + realReportName;
 				File centerFile = new File(totalPath);
 				File centerPathFile = centerFile.getParentFile();
 				if(!centerPathFile.exists()){
@@ -276,7 +278,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 			}
 //			allStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,外呼数据派发金额,交叉EPP批核量,交叉账单批核量,交叉EPPC批核量,交叉大额EPPC批核量,交叉EPP批核金额,交叉账单批核金额,交叉EPPC批核金额,交叉大额EPPC批核金额,交叉EPP自动绑定量,交叉MGL意愿量,交叉保险意愿量,交叉自动绑定账单分期量,交叉EPP批核金额（3期）,交叉EPP批核金额（6期）,交叉EPP批核金额（12期）,交叉EPP批核金额（18期）,交叉EPP批核金额（24期）,交叉EPP批核金额（36期）,交叉账单批核金额（3期）,交叉账单批核金额（6期）,交叉账单批核金额（12期）,交叉账单批核金额（18期）,交叉账单批核金额（24期）,交叉账单批核金额（36期）,交叉EPPC批核金额（3期）,交叉EPPC批核金额（6期）,交叉EPPC批核金额（12期）,交叉EPPC批核金额（18期）,交叉EPPC批核金额（24期）,交叉EPPC批核金额（36期）,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额\r\n");
 			String allPath = saveUrl+dateStr+File.separator;
-			String totalPath = allPath + reportName;
+			String totalPath = allPath + realReportName;
 			File allFile = new File(totalPath);
 			File allPathFile = allFile.getParentFile();
 			if(!allPathFile.exists()){
@@ -294,7 +296,9 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 			
 			//bpo文件生成
 			reportName = "BPO-BPS-"+reportName;
+			realReportName = "BPO-BPS-"+realReportName;
 			reportSave.setType("BPO-BPS-交叉营销成效");	//文件保存对象
+			reportSave.setRealFileName(realReportName);
 //			allStrBuf.setLength(0);	//所有的数据
 			allDataList.clear();
 			allFileNum = 0L;
@@ -321,7 +325,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 					}
 //					groupStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,外呼数据派发金额,交叉EPP批核量,交叉账单批核量,交叉EPPC批核量,交叉大额EPPC批核量,交叉EPP批核金额,交叉账单批核金额,交叉EPPC批核金额,交叉大额EPPC批核金额,交叉EPP自动绑定量,交叉MGL意愿量,交叉保险意愿量,交叉自动绑定账单分期量,交叉EPP批核金额（3期）,交叉EPP批核金额（6期）,交叉EPP批核金额（12期）,交叉EPP批核金额（18期）,交叉EPP批核金额（24期）,交叉EPP批核金额（36期）,交叉账单批核金额（3期）,交叉账单批核金额（6期）,交叉账单批核金额（12期）,交叉账单批核金额（18期）,交叉账单批核金额（24期）,交叉账单批核金额（36期）,交叉EPPC批核金额（3期）,交叉EPPC批核金额（6期）,交叉EPPC批核金额（12期）,交叉EPPC批核金额（18期）,交叉EPPC批核金额（24期）,交叉EPPC批核金额（36期）,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额\r\n");
 					String groupPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator+groupId.trim()+File.separator;
-					String bpoTotalPath = groupPath + reportName;
+					String bpoTotalPath = groupPath + realReportName;
 					//System.out.println(groupPath);
 					File groupFile = new File(bpoTotalPath);
 					File groupPathFile = groupFile.getParentFile();
@@ -351,7 +355,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 				allFileNum += centerFileNum;
 //				centerStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,外呼数据派发金额,交叉EPP批核量,交叉账单批核量,交叉EPPC批核量,交叉大额EPPC批核量,交叉EPP批核金额,交叉账单批核金额,交叉EPPC批核金额,交叉大额EPPC批核金额,交叉EPP自动绑定量,交叉MGL意愿量,交叉保险意愿量,交叉自动绑定账单分期量,交叉EPP批核金额（3期）,交叉EPP批核金额（6期）,交叉EPP批核金额（12期）,交叉EPP批核金额（18期）,交叉EPP批核金额（24期）,交叉EPP批核金额（36期）,交叉账单批核金额（3期）,交叉账单批核金额（6期）,交叉账单批核金额（12期）,交叉账单批核金额（18期）,交叉账单批核金额（24期）,交叉账单批核金额（36期）,交叉EPPC批核金额（3期）,交叉EPPC批核金额（6期）,交叉EPPC批核金额（12期）,交叉EPPC批核金额（18期）,交叉EPPC批核金额（24期）,交叉EPPC批核金额（36期）,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额\r\n");
 				String centerPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator;
-				String bpoTotalPath = centerPath + reportName;
+				String bpoTotalPath = centerPath + realReportName;
 				File centerFile = new File(bpoTotalPath);
 				File centerPathFile = centerFile.getParentFile();
 				if(!centerPathFile.exists()){
@@ -368,7 +372,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 			}
 //			allStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,外呼数据派发金额,交叉EPP批核量,交叉账单批核量,交叉EPPC批核量,交叉大额EPPC批核量,交叉EPP批核金额,交叉账单批核金额,交叉EPPC批核金额,交叉大额EPPC批核金额,交叉EPP自动绑定量,交叉MGL意愿量,交叉保险意愿量,交叉自动绑定账单分期量,交叉EPP批核金额（3期）,交叉EPP批核金额（6期）,交叉EPP批核金额（12期）,交叉EPP批核金额（18期）,交叉EPP批核金额（24期）,交叉EPP批核金额（36期）,交叉账单批核金额（3期）,交叉账单批核金额（6期）,交叉账单批核金额（12期）,交叉账单批核金额（18期）,交叉账单批核金额（24期）,交叉账单批核金额（36期）,交叉EPPC批核金额（3期）,交叉EPPC批核金额（6期）,交叉EPPC批核金额（12期）,交叉EPPC批核金额（18期）,交叉EPPC批核金额（24期）,交叉EPPC批核金额（36期）,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额,交叉大额EPPC批核金额\r\n");
 			allPath = saveUrl+dateStr+File.separator;
-			totalPath = allPath + reportName;
+			totalPath = allPath + realReportName;
 			allFile = new File(totalPath);
 			allPathFile = allFile.getParentFile();
 			if(!allPathFile.exists()){
@@ -395,7 +399,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 
 	@Override
 	public List<CrossMarketingReport> getUserCrossMarketingReport(BpsUserInfo user, Map<String, Object> paramMap, boolean dataFlag) {
-		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "EPPC备用金"};
+		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "备用金"};
 		List<CrossMarketingReport> tempDataList = new ArrayList<CrossMarketingReport>();
 		
 		CrossMarketingReport parentRepor = new CrossMarketingReport(user);
@@ -568,7 +572,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 				
 				
 				//交叉EPPC批核量和批核金额
-				if("EPPC".equals(ywType) || "EPPC备用金".equals(ywType)){
+				if("EPPC".equals(ywType) || "备用金".equals(ywType)){
 					report.setCrossEPPCAmount(0L);
 					report.setCrossEPPCMoney(0.00);
 					report.setCrossEPPCMoney3(0.00);
@@ -624,7 +628,7 @@ public class CrossMarketingReportServiceImpl implements CrossMarketingReportServ
 					report.setCrossEPPMoney36(0.00);
 				}else{
 					//由于EPPC及备用金业务交叉EPP业务时没有带备用金字段值，修改有关交叉EPP的统计SQL,其他业务不需关联即可查询，不做修改
-					if("EPPC".equals(ywType) || "EPPC备用金".equals(ywType)){
+					if("EPPC".equals(ywType) || "备用金".equals(ywType)){
 						paramMap.put("ywType", "EPP-"+ywType);
 					}
 					paramMap.put("dataType", "EPP");

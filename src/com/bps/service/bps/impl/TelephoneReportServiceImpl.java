@@ -51,6 +51,7 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 			dateStr = beginDate + "~" + endDate;
 		}
 		reportName += "_"+dateStr.trim()+".xls";
+		String realReportName = "TelephoneReport_"+dateStr.trim()+".xls";
 		System.out.println(dateStr+"话务报表生成开始"+DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss"));
 		try{
 			if(centerMap == null){
@@ -102,6 +103,7 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 			}
 			SimpleDateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			ReportSaveObj reportSave = new ReportSaveObj("BPS-话务报表");	//文件保存对象
+			reportSave.setRealFileName(realReportName);
 //			StringBuffer allStrBuf = new StringBuffer();	//所有的数据
 			List<TelephoneReport> allDataList = new ArrayList<TelephoneReport>();
 			FileUtil<TelephoneReport> fileUtil = new FileUtil<TelephoneReport>();
@@ -147,7 +149,7 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 					}
 //					groupStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,成功受理客户量,总外呼次数,总接通次数,未接通呼叫总时长,接通通话总时长,成功数据通话总时长\r\n");
 					String groupPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator+groupId.trim()+File.separator;
-					String totalPath = groupPath + reportName;
+					String totalPath = groupPath + realReportName;
 					//System.out.println(groupPath);
 					File groupFile = new File(totalPath);
 					File groupPathFile = groupFile.getParentFile();
@@ -180,7 +182,7 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 				allFileNum += centerFileNum;
 //				centerStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,成功受理客户量,总外呼次数,总接通次数,未接通呼叫总时长,接通通话总时长,成功数据通话总时长\r\n");
 				String centerPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator;
-				String totalPath = centerPath + reportName;
+				String totalPath = centerPath + realReportName;
 				//System.out.println(centerPath);
 				File centerFile = new File(totalPath);
 				File centerPathFile = centerFile.getParentFile();
@@ -199,7 +201,7 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 			}
 //			allStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,成功受理客户量,总外呼次数,总接通次数,未接通呼叫总时长,接通通话总时长,成功数据通话总时长\r\n");
 			String allPath = saveUrl+dateStr+File.separator;
-			String totalPath = allPath + reportName;
+			String totalPath = allPath + realReportName;
 			//System.out.println(allPath);
 			File allFile = new File(totalPath);
 			File allPathFile = allFile.getParentFile();
@@ -227,7 +229,7 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 
 	@Override
 	public List<TelephoneReport> getUserTelephoneReport(BpsUserInfo user, Map<String, Object> paramMap, boolean dataFlag) {
-		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "EPPC备用金"};
+		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "备用金"};
 		List<TelephoneReport> tempDataList = new ArrayList<TelephoneReport>();
 		
 		TelephoneReport parentRepor = new TelephoneReport(user);
@@ -266,7 +268,7 @@ public class TelephoneReportServiceImpl implements TelephoneReportService{
 					paramMap.put("ywTypeId", "11");
 				}else if("EPPC".equals(ywType)){
 					paramMap.put("ywTypeId", "2");
-				}else if("EPPC备用金".equals(ywType)){
+				}else if("备用金".equals(ywType)){
 					paramMap.put("ywTypeId", "2");
 				}
 				

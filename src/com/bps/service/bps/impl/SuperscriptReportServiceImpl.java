@@ -47,6 +47,7 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 			dateStr = beginDate + "~" + endDate;
 		}
 		reportName += "_"+dateStr.trim()+".xls";
+		String realReportName = "SuperscriptReport_"+dateStr.trim()+".xls";
 		System.out.println(dateStr+"每日上标及跟进库存报表生成开始"+DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss"));
 		
 		try{
@@ -98,6 +99,7 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 			
 			SimpleDateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			ReportSaveObj reportSave = new ReportSaveObj("BPS-每日上标及跟进库存");	//文件保存对象
+			reportSave.setRealFileName(realReportName);
 //			StringBuffer allStrBuf = new StringBuffer();	//所有的数据
 			List<SuperscriptReport> allDataList = new ArrayList<SuperscriptReport>();
 			FileUtil<SuperscriptReport> fileUtil = new FileUtil<SuperscriptReport>();
@@ -180,7 +182,7 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 					}
 //					groupStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
 					String groupPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator+groupId.trim()+File.separator;
-					String totalPath = groupPath + reportName;
+					String totalPath = groupPath + realReportName;
 					//System.out.println(groupPath);
 					File groupFile = new File(totalPath);
 					File groupPathFile = groupFile.getParentFile();
@@ -210,7 +212,7 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 				allFileNum += centerFileNum;
 //				centerStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
 				String centerPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator;
-				String totalPath = centerPath + reportName;
+				String totalPath = centerPath + realReportName;
 				File centerFile = new File(totalPath);
 				File centerPathFile = centerFile.getParentFile();
 				if(!centerPathFile.exists()){
@@ -227,7 +229,7 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 			}
 //			allStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,外呼数据量,A标（主营）,A标（交叉EPP）,A标（交叉账单分期）,A标（交叉EPPC）,A标（交叉大额EPPC）,B标（主营）,B标（交叉EPP）,B标（交叉账单分期）,B标（交叉EPPC）,B标（交叉大额EPPC）,F标,F00（主营）,F00（交叉EPP）,F00（交叉账单分期）,F00（交叉EPPC）,F00（交叉大额EPPC）,F01（主营）,F01（交叉EPP）,F01（交叉账单分期）,F01（交叉EPPC）,F01（交叉大额EPPC）,F02,F02（交叉EPP）,F02（交叉账单分期）,F02（交叉EPPC）,F02（交叉大额EPPC）,G01（主营）,G01（交叉EPP）,G01（交叉账单分期）,G01（交叉EPPC）,G01（交叉大额EPPC）,G02（主营）,G02（交叉EPP）,G02（交叉账单分期）,G02（交叉EPPC）,G02（交叉大额EPPC）,M标（主营）,M标（交叉EPP）,M标（交叉账单分期）,M标（交叉EPPC）,M标（交叉大额EPPC）,待跟进数据量,未正常结案过期量,未外呼数据量\r\n");
 			String allPath = saveUrl+dateStr+File.separator;
-			String totalPath = allPath + reportName;
+			String totalPath = allPath + realReportName;
 			File allFile = new File(totalPath);
 			File allPathFile = allFile.getParentFile();
 			if(!allPathFile.exists()){
@@ -252,7 +254,7 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 
 	@Override
 	public List<SuperscriptReport> getUserSuperscriptReport(BpsUserInfo user, Map<String, Object> paramMap, boolean dataFlag) {
-		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "EPPC备用金"};
+		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "备用金"};
 		List<SuperscriptReport> tempDataList = new ArrayList<SuperscriptReport>();
 		
 		SuperscriptReport parentRepor = new SuperscriptReport(user);
@@ -435,7 +437,7 @@ public class SuperscriptReportServiceImpl implements SuperscriptReportService{
 					report.setBidG01CrossBill(0L);
 					report.setBidG02CrossBill(0L);
 					report.setBidMCrossBill(0L);
-				}else if("EPPC".equals(ywType) || "EPPC备用金".equals(ywType)){
+				}else if("EPPC".equals(ywType) || "备用金".equals(ywType)){
 					report.setBidACrossEPPC(0L);
 					report.setBidBCrossEPPC(0L);
 					report.setBidF00CrossEPPC(0L);

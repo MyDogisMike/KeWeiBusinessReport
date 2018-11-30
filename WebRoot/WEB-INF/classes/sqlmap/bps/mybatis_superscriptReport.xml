@@ -19,7 +19,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.gd_type='EPPC工单' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.Data_type!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where  a.user_name = #userName# AND a.yw_type='EPPC' AND a.gd_type='备用金工单' AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND b.Data_type='新发卡备用金'  
 		</isEqual>
 		
@@ -64,7 +64,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND b.Data_type!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND b.Data_type='新发卡备用金' 
 		</isEqual>
 		
@@ -106,7 +106,7 @@
 		<isEqual property="dataType" compareValue="EPPC">
 			AND a.gd_type='EPPC工单' 
 		</isEqual>
-		<isEqual property="dataType" compareValue="EPPC备用金">
+		<isEqual property="dataType" compareValue="备用金">
 			AND a.gd_type='备用金工单' 
 		</isEqual>
 		<isEqual property="dataType" compareValue="大额EPPC">
@@ -129,7 +129,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 AND yw_id= 2 AND pettycash!='新发卡备用金'
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 AND yw_id= 2 AND pettycash='新发卡备用金'
 		</isEqual>
 	</select>
@@ -148,7 +148,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 AND yw_id= 2 AND pettycash!='新发卡备用金';
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 AND yw_id= 2 AND pettycash='新发卡备用金';
 		</isEqual>
 	</select>
@@ -167,7 +167,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			 AND yw_id= 2 AND pettycash!='新发卡备用金';
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			 AND yw_id= 2 AND pettycash='新发卡备用金';
 		</isEqual>
 	</select>
@@ -186,7 +186,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND b.Data_type!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			LEFT JOIN mdx_eppc b ON a.dr_key=b.dr_key where a.yw_type='EPPC' AND b.Data_type='新发卡备用金' 
 		</isEqual>
 		 AND a.user_name = #userName# AND a.rw_ctime &gt;#beginTime# AND a.rw_ctime &lt;=#endTime# AND a.Rw_Status_sn='F' 

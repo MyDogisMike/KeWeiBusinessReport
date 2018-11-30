@@ -75,9 +75,9 @@ public class DataViewController {
 			       }
 		       }
 	       }
-	      else{
-	    	  target=target_par;
-	      }
+//	      else{
+//	    	  target=target_par;
+//	      }
 	       //System.out.println(target);
 		   return target; 
 	    }

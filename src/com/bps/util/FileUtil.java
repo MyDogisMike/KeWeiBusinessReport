@@ -76,7 +76,10 @@ public class FileUtil<T> {
 		FileOutputStream out = null;
 		ExcelExport<T> ex = new ExcelExport<T>();
 		try{
+			System.setProperty("file.encoding","utf-8");
+			System.setProperty("sun.jnu.encoding","utf-8");
 			out = new FileOutputStream(new String(path.getBytes(getSystemFileCharset()), "UTF-8"));
+//			out = new FileOutputStream(path);
 			HSSFWorkbook workbook = ex.exportExcel(title, headers, dataset, usefulFields);
 			workbook.write(out);
 			workbook.close();
@@ -96,8 +99,9 @@ public class FileUtil<T> {
 	
 	//获得系统编码
 	public static String getSystemFileCharset(){
-	    Properties pro = System.getProperties();
-	    return pro.getProperty("file.encoding");
-	    //return "UTF-8";
+//	    Properties pro = System.getProperties();
+//	    System.out.println(pro.getProperty("file.encoding"));
+//	    return pro.getProperty("file.encoding");
+	    return "UTF-8";
 	}
 }

@@ -46,7 +46,7 @@ public class MarketingProcessServiceImpl implements MarketingProcessService{
 		//中心和小组Map
 		Map<String, String> centerMap = (Map<String, String>) redisUtil.getJedis().hgetAll(RedisUtil.BPS_CENTER);;
 		Map<String, Map<String, String>> centerGroupMap = (Map<String, Map<String, String>>) RedisUtil.deserialize(redisUtil.getJedis().get(RedisUtil.BPS_GROUP.getBytes()));
-		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "EPPC备用金"};
+		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "备用金"};
 		PageResult<MarketingProcess> result = new PageResult<MarketingProcess>();
 		List<MarketingProcess> dataList = new ArrayList<MarketingProcess>();
 		Map<String, Object> userParam = new HashMap<String, Object>();

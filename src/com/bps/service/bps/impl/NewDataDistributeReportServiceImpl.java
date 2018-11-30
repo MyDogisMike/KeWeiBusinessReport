@@ -48,6 +48,7 @@ public class NewDataDistributeReportServiceImpl implements NewDataDistributeRepo
 			dateStr = beginDate + "~" + endDate;
 		}
 		reportName += "_"+dateStr.trim()+".xls";
+		String realReportName = "NewDataDistributeReport_"+dateStr.trim()+".xls";
 		System.out.println(dateStr+"新数据派发及成效报表生成开始"+DateUtil.getNowDate("yyyy-MM-dd HH:mm:ss"));
 		try{
 			if(centerMap == null){
@@ -98,7 +99,8 @@ public class NewDataDistributeReportServiceImpl implements NewDataDistributeRepo
 			
 			SimpleDateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			ReportSaveObj reportSave = new ReportSaveObj("BPS-新数据派发及成效");	//文件保存对象
-//			StringBuffer allStrBuf = new StringBuffer();	//所有的数据
+			reportSave.setRealFileName(realReportName);
+			//			StringBuffer allStrBuf = new StringBuffer();	//所有的数据
 			List<NewDataDistributeReport> allDataList = new ArrayList<NewDataDistributeReport>();
 			FileUtil<NewDataDistributeReport> fileUtil = new FileUtil<NewDataDistributeReport>();
 			String[] headers = headersStr.split(",");
@@ -145,7 +147,7 @@ public class NewDataDistributeReportServiceImpl implements NewDataDistributeRepo
 					}
 //					groupStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,数据类别,新数派发量,新数派发金额,新数外呼量,新数接通量,新数成功受理量,新数成功受理金额,新数成功批核量,新数成功批核金额,错误数据量（M标）\r\n");
 					String groupPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator+groupId.trim()+File.separator;
-					String totalPath = groupPath + reportName;
+					String totalPath = groupPath + realReportName;
 					//System.out.println(groupPath);
 					File groupFile = new File(totalPath);
 					File groupPathFile = groupFile.getParentFile();
@@ -175,7 +177,7 @@ public class NewDataDistributeReportServiceImpl implements NewDataDistributeRepo
 				allFileNum += centerFileNum;
 //				centerStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,数据类别,新数派发量,新数派发金额,新数外呼量,新数接通量,新数成功受理量,新数成功受理金额,新数成功批核量,新数成功批核金额,错误数据量（M标）\r\n");
 				String centerPath = saveUrl+dateStr+File.separator+centerId.trim()+File.separator;
-				String totalPath = centerPath + reportName;
+				String totalPath = centerPath + realReportName;
 				File centerFile = new File(totalPath);
 				File centerPathFile = centerFile.getParentFile();
 				if(!centerPathFile.exists()){
@@ -192,7 +194,7 @@ public class NewDataDistributeReportServiceImpl implements NewDataDistributeRepo
 			}
 //			allStrBuf.insert(0, "开始时间,结束时间,所属中心,所属组别,座席工号,座席姓名,数据业务类型,数据类别,新数派发量,新数派发金额,新数外呼量,新数接通量,新数成功受理量,新数成功受理金额,新数成功批核量,新数成功批核金额,错误数据量（M标）\r\n");
 			String allPath = saveUrl+dateStr+File.separator;
-			String totalPath = allPath + reportName;
+			String totalPath = allPath + realReportName;
 			File allFile = new File(totalPath);
 			File allPathFile = allFile.getParentFile();
 			if(!allPathFile.exists()){
@@ -218,7 +220,7 @@ public class NewDataDistributeReportServiceImpl implements NewDataDistributeRepo
 
 	@Override
 	public List<NewDataDistributeReport> getUserNewDataDistributeReport(BpsUserInfo user, Map<String, Object> paramMap, boolean dataFlag) {
-		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "EPPC备用金"};
+		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "备用金"};
 		List<NewDataDistributeReport> tempDataList = new ArrayList<NewDataDistributeReport>();
 		String userName = user.getUserName();
 		paramMap.put("userName", userName);

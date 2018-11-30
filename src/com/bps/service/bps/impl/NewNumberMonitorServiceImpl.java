@@ -56,7 +56,7 @@ public class NewNumberMonitorServiceImpl implements NewNumberMonitorService{
 			redisUtil.getJedis().set(RedisUtil.BPS_GROUP.getBytes(), RedisUtil.serialize(centerGroupMap));
 		}
 		
-		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "EPPC备用金"};
+		String[] ywTypeArr = {"EPP", "账单分期", "大额EPPC", "EPPC", "备用金"};
 		PageResult<NewNumberMonitor> result = new PageResult<NewNumberMonitor>();
 		List<NewNumberMonitor> dataList = new ArrayList<NewNumberMonitor>();
 

@@ -9,6 +9,8 @@ public class ReportSaveObj {
 	private int downNum = 0;
 	private String state = "已生成";
 	private String filePath;
+	private String realFileName;
+	
 	
 	public ReportSaveObj(){
 		super();
@@ -68,5 +70,15 @@ public class ReportSaveObj {
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
+
+
+	public String getRealFileName() {
+		return realFileName;
+	}
+
+	public void setRealFileName(String realFileName) {
+		this.realFileName = realFileName;
+	}
+
 	
 }

@@ -19,7 +19,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			and yw_id=2 AND pettycash!= '新发卡备用金'
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			and yw_id=2 AND pettycash= '新发卡备用金'
 		</isEqual>
 	</select>
@@ -43,7 +43,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			mdx_eppc where Data_type!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			mdx_eppc where Data_type='新发卡备用金' 
 		</isEqual>
 		 and baoxianqi &gt;=CURDATE() AND md_atime &gt;=CONCAT(CURDATE(),' 00:00:00')  AND md_atime &lt;=CONCAT(CURDATE(),' 23:59:59') and md_source ='get' and user_name =#userName#
@@ -57,7 +57,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			mdx_eppc where Data_type!='新发卡备用金' 
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			mdx_eppc where Data_type='新发卡备用金' 
 		</isEqual>
 		 and baoxianqi &gt;=CURDATE() AND md_atime &gt;=CONCAT(CURDATE(),' 00:00:00')  AND md_atime &lt;=CONCAT(CURDATE(),' 23:59:59') and md_source in('S','T','U') and user_name =#userName#
@@ -78,7 +78,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			and b.yw_id=2 AND b.pettycash!= '新发卡备用金'
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			and b.yw_id=2 AND b.pettycash= '新发卡备用金'
 		</isEqual>
 	</select>
@@ -98,7 +98,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			and b.yw_id=2 AND b.pettycash!= '新发卡备用金' AND a.yw_type='EPPC'
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			and b.yw_id=2 AND b.pettycash= '新发卡备用金' AND a.yw_type='EPPC'
 		</isEqual>
 	</select>
@@ -118,7 +118,7 @@
 		<isEqual property="ywType" compareValue="EPPC">
 			AND b.pettycash!= '新发卡备用金' AND b.yw_type='EPPC'
 		</isEqual>
-		<isEqual property="ywType" compareValue="EPPC备用金">
+		<isEqual property="ywType" compareValue="备用金">
 			AND b.pettycash= '新发卡备用金' AND b.yw_type='EPPC'
 		</isEqual>
 	</select>
